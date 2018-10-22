@@ -1,0 +1,43 @@
+{
+  "name": "node-red-contrib-german-holidays",
+  "version": "0.0.1",
+  "description": "NodeRED nodes to get german holidays",
+  "main": "german-holidays.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "predev": "npm i -g",
+    "dev": "node-red -v"
+  },
+  "author": {
+    "name": "Hypnos3",
+    "email": "hypnos3@online.de",
+    "url": "https://github.com/hypnos3"
+  },
+  "contributors": [
+    {
+      "name": "Hypnos3",
+      "url": "https://github.com/hypnos3"
+    }
+  ],
+  "keywords": [
+    "node-red",
+    "german-holidays",
+    "holidays",
+    "german"
+  ],
+  "homepage":"https://github.com/Hypnos3/node-red-contrib-german-holidays",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hypnos3/node-red-contrib-german-holidays"
+  },
+  "bugs":{
+    "url" : "https://github.com/Hypnos3/node-red-contrib-german-holidays/issues"
+  },
+  "dependencies": {},
+  "node-red": {
+    "nodes": {
+      "german-holidays": "german-holidays.js"
+    }
+  }
+}

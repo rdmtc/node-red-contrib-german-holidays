@@ -9,11 +9,30 @@
     <!-- By convention, most nodes have a 'name' property. The following div -->
     <!-- provides the necessary field. Should always be the last option      -->
     <div class="form-row">
-        <label for="node-region"><i class="fa fa-tag"></i> Bundesland</label>
-        <input type="text" id="node-input-name" placeholder="Name of this Event">
+        <label for="node-region"><i class="fa fa-globe"></i> state</label>
+        <select type="text" id="node-input-region" style="width:70%;">
+            <option value="ALL" >alle</option>
+            <option value="BUND" >allgemeine</option>
+            <option value="BW" >Baden-Württemberg</option>
+            <option value="BY" >Bayern</option>
+            <option value="BE" >Berlin</option>
+            <option value="BB" >Brandenburg</option>
+            <option value="HB" >Bremen</option>
+            <option value="HH" >Hamburg</option>
+            <option value="HE" >Hessen</option>
+            <option value="MV" >Mecklenburg-Vorpommern</option>
+            <option value="NI" >Niedersachsen</option>
+            <option value="NW" >Nordrhein-Westfalen</option>
+            <option value="RP" >Rheinland-Pfalz</option>
+            <option value="SL" >Saarland</option>
+            <option value="SN" >Sachsen</option>
+            <option value="ST" >Sachsen-Anhalt</option>
+            <option value="SH" >Schleswig-Holstein</option>
+            <option value="TH" >Thüringen</option>
+        </select>
     </div>
 
-    <div class="form-tips"><b>Tip:</b> You can also define the region as part of the incomming message. This would be used priorized than the settings here.<br />
+    <div class="form-tips"><b>Tip:</b> You can also define the region as part of the incomming message. This would be used priorized than the settings here. But then are the shortcuts (BY=Bayern, BE=Berlin) are used.<br />
         <code>msg.region</code> or <code>msg.payload.region</code>
     </div>
 </script>
@@ -21,78 +40,45 @@
 
 <!-- Next, some simple help text is provided for the node.                   -->
 <script type="text/x-red" data-help-name="german-holidays">
+    <body>
     <h3>About</h3>
     <p>Gets german holidays</p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
         <dt>payload
-            <span class="property-type">string | object</span>
+            <span class="property-type">any</span>
         </dt>
-        <dd> the payload of the message to publish. </dd>
+        <dd> the payload is normally only used for trigger calculation of the holidays. </dd>
 
-        <dt>ip <span class="property-type">ip-address</span></dt>
-        <dd> the IP address of the device to cast the media. Could also be defined in the configuration of the node.</dd>
+        <dt>region <span class="property-type">region</span></dt>
+        <dd> the region which should be used for getting holidays. Could also be defined in the configuration of the node. This property must be a string of two letters with the german state shortcut (BY=Bayern, BE=Berlin, ...).</dd>
 
-        <dt class="optional">port <span class="property-type">number</span></dt>
-        <dd> the port of the device (if not given default <code>8009</code> will be used). Could also be defined in the configuration of the node.</dd>
+        <dt class="optional">day <span class="property-type">number</span></dt>
+        <dd> if defined only the Holiday information will get the relative to today = is today, -1 is yesterday; 1 is tomorow, ...</dd>
 
-        <dt>url <span class="property-type">string</span></dt>
-        <dd> url to a media file which should be cast to the cast device. For a chromecast this should be a media or a video file. For a Google Home device without a display this could only be an audio file.</dd>
-
-        <dt>contentType <span class="property-type">string</span></dt>
-        <dd> the content type of the file in the url. This property is required if a url is given. Could also be defined in the configuration of the node.</dd>
-
-        <dt class="optional">message <span class="property-type">string</span></dt>
-        <dd> a text which should be send to the google tts engine to convert to a mp3 file.</dd>
-
-        <dt class="optional">language <span class="property-type">string</span></dt>
-        <dd> the language which should be used for converting the message to the media file.</dd>
-
-        <dt class="optional">volume <span class="property-type">number 0-100</span></dt>
-        <dd> will set the device volume to this level. (if left blank, the volume will be unchanged.)</dd>
-
-        <dt class="optional">lowerVolumeLimit <span class="property-type">number 0-100</span></dt>
-        <dd> will set the volume to this value, if the current volume is below this value.</dd>
-
-        <dt class="optional">upperVolumeLimit <span class="property-type">number 0-100</span></dt>
-        <dd> will set the volume to this value, if the current volume is above this limit.</dd>
-
-        <dt class="optional">muted <span class="property-type">boolean</span></dt>
-        <dd> the volume should be muted if set to false, otherwise the volume will be unmuted.</dd>
-
+        <dt class="optional">date <span class="property-type">Date</span></dt>
+        <dd> if defined only the Holiday information for the defined date will given.</dd>
     </dl>
 
  <h3>Outputs</h3>
      <ol class="node-ports">
          <li>Standard output
              <dl class="message-properties">
-                 <dt>payload <span class="property-type">string</span></dt>
-                 <dd>the given status result by the cast2-client library.</dd>
+                 <dt>payload <span class="property-type">object</span></dt>
+                 <dd>if no `day` or `date` parameter is given, with a lot of holiday informations</dd>
              </dl>
          </li>
      </ol>
 
      <h3>Details</h3>
-     <p>there are 3 different use cases:</p>
-     <ol>
-         <li>play a media file<br />
-         For this the url and the content type needs to be specified. Thus can
-         be done in the configuration or passed as a message property <code>msg.url</code> and <code>msg.contentType</code> or give a payload object with the two properties <code>msg.payload.url</code> and <code>msg.payload.contentType</code><br /></li>
-         <li>speak a given message, converted by google tts<br />
-         For this the message needs to be specified. Thus can
-         be done in the configuration or pass as a message property <code>msg.message</code> or give a payload object with the property <code>msg.payload.message</code></li>
-         <li>get the state of the cast device<br />
-         For this no url or message has to be specified.</li>
-     </ol>
-     <p>If there is a combination of the message and the url, first the media file given by URL will
-     be streamed and then the message.</p>
-     <p>If the payload is a string and no contentType is defined, the payload
-     will be used as a message which should be spoken.</p>
+     <p>tbd</p>
      <h3>References</h3>
     <ul>
-		<li><a href="https://github.com/Hypnos3/node-red-contrib-cast">GitHub</a> - the nodes github repository</li>
+		<li><a href="https://github.com/Hypnos3/node-red-contrib-german-holidays">GitHub</a> - the nodes github repository</li>
     </ul>
+</body>
+
 
 
 </script>
@@ -104,19 +90,19 @@
         category: 'function',
         defaults: {
             region: {
-                value:"",
+                value: "",
                 required: true
             },
         },
-        inputs:1,               // set the number of inputs - only 0 or 1
-        outputs:1,              // set the number of outputs - 0 to n
-        icon: "default.png",     // saved in  icons/myicon.png - myicon.png
+        inputs: 1, // set the number of inputs - only 0 or 1
+        outputs: 1, // set the number of outputs - 0 to n
+        icon: "default.png", // saved in  icons/myicon.png - myicon.png
         color: "#FFFF00",
-        label: function() {
+        label: function () {
             return this.name || "Holidays";
         },
-        labelStyle: function() {
-            return this.name?"node_label_italic":"";
+        labelStyle: function () {
+            return this.name ? "node_label_italic" : "";
         },
         paletteLabel: "Holidays"
     });

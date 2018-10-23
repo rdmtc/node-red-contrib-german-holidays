@@ -13,26 +13,24 @@
     "email": "hypnos3@online.de",
     "url": "https://github.com/hypnos3"
   },
-  "contributors": [
-    {
-      "name": "Hypnos3",
-      "url": "https://github.com/hypnos3"
-    }
-  ],
+  "contributors": [{
+    "name": "Hypnos3",
+    "url": "https://github.com/hypnos3"
+  }],
   "keywords": [
     "node-red",
     "german-holidays",
     "holidays",
     "german"
   ],
-  "homepage":"https://github.com/Hypnos3/node-red-contrib-german-holidays",
-  "license": "Apache-2.0",
+  "homepage": "https://github.com/Hypnos3/node-red-contrib-german-holidays",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/Hypnos3/node-red-contrib-german-holidays"
   },
-  "bugs":{
-    "url" : "https://github.com/Hypnos3/node-red-contrib-german-holidays/issues"
+  "bugs": {
+    "url": "https://github.com/Hypnos3/node-red-contrib-german-holidays/issues"
   },
   "dependencies": {},
   "node-red": {

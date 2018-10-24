@@ -107,34 +107,51 @@ const errorHandler = function (node, err, messageText, stateText) {
   return false;
 }
 /*******************************************************************************************************/
-function getDataForDay(offsetToday) {
-  const date = new Date();
+function getDataForDay(date, offsetToday, holidays) {
   if (offsetToday !== 0) {
-    date.setDate(date.getDate() + offsetToday);
+    let d = new Date(date);
+    d.setDate(d.getDate() + offsetToday);
+    return getDataForDate(d, holidays, offsetToday);
   }
-  let d = date.getDay();
+  return getDataForDate(date, holidays, 0);
+}
 
-  const year = date.getFullYear();
-  const internalDate = toUtcTimestamp(date);
+function getDataForDate(date, holidays, offsetToday) {
+  let d = date.getDay(); //gets the day of week
+  //const internalDate = toUtcTimestamp(date);
 
-  let result = {
-    id: dayNames[d],
-    day: d,
-    month: date.getMonth(),
-    year: date.getFullYear(),
-    date,
-    dateString: _localeDateObjectToDateString(date),
-    dayOffset: offsetToday,
-    holiday: holidays.objects.find(holiday => holiday.equals(date)),
-    isSunday: (d === 0),
-    isSaturday: (d === 6),
-  };
+  let result = _newDay(dayNames[d], date)
+  if (offsetToday) {
+    result.dayOffset = offsetToday;
+  }
+  result.holiday = holidays.objects.find(holiday => holiday.equals(date));
+  result.isSunday = (result.dayOfWeek === 0);
+  result.isSaturday = (result.dayOfWeek === 6);
   result.isHoliday = ((typeof result.holiday !== 'undefined') && (result.holiday != null)); // holidays.integers.indexOf(internalDate) !== -1
-  result.name = germanTranslations[result.id],
-    result.isWeekend = result.isSaturday || result.isSaturday;
+  result.name = germanTranslations[result.id];
+  result.isWeekend = result.isSaturday || result.isSaturday;
   result.isSunOrHoliday = result.isSaturday || result.isHoliday;
   result.isWeekendOrHoliday = result.isSaturday || result.isSaturday || result.isHoliday;
 
+  /*
+  //Brückentag?
+  if (d === 5 && (typeof result.holiday !== 'undefined')) {
+    //Freitag
+    result.isBetweenHolidayAndSaturday = outMsg.payload.today.isHoliday
+
+    holidays.objects.find(holiday => holiday.equals(date))
+
+    ((typeof result.holiday !== 'undefined') && (result.holiday != null))
+  } else {
+    result.isBetweenHolidayAndSaturday = false;
+  }
+
+  if (d === 1 && (typeof result.holiday !== 'undefined')) {
+    //Montag
+    result.isBetweenSundayAndHoliday = outMsg.payload.today.isHoliday
+  } else {
+    result.isBetweenSundayAndHoliday = false;
+  }/* */
   return result;
 }
 
@@ -391,10 +408,11 @@ function _newHoliday(id, date) {
   return {
     id,
     name: germanTranslations[id],
-    day: date.getUTCDay(),
+    dayOfWeek: date.getUTCDay(),
+    day: date.getUTCDate(),
     month: date.getUTCMonth(),
     year: date.getUTCFullYear(),
-    date,
+    date, //: new Date(year, month, day, hours, minutes, seconds, milliseconds),
     dateString: _localeDateObjectToDateString(date),
     getNormalizedDate() {
       return toUtcTimestamp(this.date);
@@ -408,6 +426,26 @@ function _newHoliday(id, date) {
 
 /**
  *
+ * @param d
+ * @param date
+ * @returns day
+ * @private
+ */
+function _newDay(id, date) {
+  return {
+    id,
+    name: germanTranslations[id],
+    dayOfWeek: date.getUTCDay(),
+    day: date.getUTCDate(),
+    month: date.getUTCMonth(),
+    year: date.getUTCFullYear(),
+    date, //: new Date(year, month, day, hours, minutes, seconds, milliseconds),
+    dateString: _localeDateObjectToDateString(date),
+  };
+}
+
+/**
+ *
  * @param date
  * @returns {string}
  * @private
@@ -416,6 +454,18 @@ function _localeDateObjectToDateString(date) {
   date = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
   date.setUTCHours(0, 0, 0, 0);
   return date.toISOString().slice(0, 10);
+}
+
+/**
+ *
+ * @param date
+ * @returns {object}
+ * @private
+ */
+function _getlocaleDateObject(date) {
+  date = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+  date.setUTCHours(0, 0, 0, 0);
+  return date;
 }
 
 /**
@@ -435,70 +485,80 @@ module.exports = function (RED) {
     //var node = this;
 
     this.on('input', function (msg) {
-      /********************************************
-       * versenden:
-       *********************************************/
-      //var creds = RED.nodes.getNode(config.creds); - not used
-      let attrs = ['region', 'day'];
+      try {
+        /********************************************
+         * versenden:
+         *********************************************/
+        //var creds = RED.nodes.getNode(config.creds); - not used
+        let attrs = ['region', 'day', 'date', 'ts'];
 
-      var outMsg = {
-        payload: {},
-        topic: msg.topic,
-        data: {},
-      }
-
-      for (let attr of attrs) {
-        if (config[attr]) {
-          outMsg.data[attr] = config[attr];
+        var outMsg = {
+          payload: {},
+          topic: msg.topic,
+          data: {},
         }
-        if (msg[attr]) {
-          outMsg.data[attr] = msg[attr];
-        }
-      }
 
-      if (typeof msg.payload === 'object') {
         for (let attr of attrs) {
-          if (msg.payload[attr]) {
-            outMsg.data[attr] = msg.payload[attr];
+          if (config[attr]) {
+            outMsg.data[attr] = config[attr];
+          }
+          if (msg[attr]) {
+            outMsg.data[attr] = msg[attr];
           }
         }
-      }
-      //-------------------------------------------------------------------
 
-      if (typeof outMsg.data.region === 'undefined' || outMsg.data.region === '') {
-        this.error("configuraton error: Region is missing!");
-        this.status({
-          fill: "red",
-          shape: "dot",
-          text: "No Region given!"
-        });
-        return;
-      }
-      outMsg.data.region = outMsg.data.region.toUpperCase();
-      if (allRegions.indexOf(outMsg.data.region) === -1) {
-        this.error('Invalid region: ' + outMsg.data.region + '! Must be one of ' + allRegions.toString());
-        this.status({
-          fill: "red",
-          shape: "dot",
-          text: "Invalid Region given!"
-        });
-        return;
-      }
+        /*
+        if (typeof msg.payload === 'object') {
+          for (let attr of attrs) {
+            if (msg.payload[attr]) {
+              outMsg.data[attr] = msg.payload[attr];
+            }
+          }
+        }/* */
+        //-------------------------------------------------------------------
 
-      try {
-        this.debug('start getting german Holidays');
-        if (typeof outMsg.data.day !== 'undefined' || !isNaN(outMsg.data.day)) {
-          outMsg.payload = getDataForDay(outMsg.data.day);
-          return outMsg;
+        if (typeof outMsg.data.region === 'undefined' || outMsg.data.region === '') {
+          this.error("configuraton error: Region is missing!");
+          this.status({
+            fill: "red",
+            shape: "dot",
+            text: "No Region given!"
+          });
+          return;
         }
-        const now = new Date();
-        const year = now.getFullYear();
-        const holidays = _getHolidaysOfYear(year, outMsg.data.region);
+        outMsg.data.region = outMsg.data.region.toUpperCase();
+        if (allRegions.indexOf(outMsg.data.region) === -1) {
+          this.error('Invalid region: ' + outMsg.data.region + '! Must be one of ' + allRegions.toString());
+          this.status({
+            fill: "red",
+            shape: "dot",
+            text: "Invalid Region given!"
+          });
+          return;
+        }
+
+        if ((typeof outMsg.data.ts === 'undefined') || !(outMsg.data.ts instanceof Date)) {
+          outMsg.data.ts = new Date();
+        }
+        outMsg.ts = outMsg.data.ts;
+        outMsg.data.year = outMsg.data.ts.getFullYear();
+        const holidays = _getHolidaysOfYear(outMsg.data.year, outMsg.data.region);
+
+        if (typeof outMsg.data.day !== 'undefined' || !isNaN(outMsg.data.day)) {
+          outMsg.payload = getDataForDay(outMsg.data.ts, outMsg.data.day, holidays);
+          this.send(outMsg);
+          return;
+        }
+
+        if (typeof outMsg.data.date !== 'undefined' && (outMsg.data.date instanceof Date)) {
+          outMsg.payload = getDataForDate(outMsg.data.ts, outMsg.data.date, holidays);
+          this.send(outMsg);
+          return;
+        }
 
         //outMsg.trigger = msg.payload;
-        outMsg.ts = now;
         outMsg.payload = {
-          lastUpdate: now.toISOString(),
+          //lastUpdate: outMsg.data.ts.toISOString(),
           yesterday: {},
           today: {},
           tomorrow: {},
@@ -508,10 +568,10 @@ module.exports = function (RED) {
           next: {}
         };
 
-        outMsg.payload.yesterday = getDataForDay(-1);
-        outMsg.payload.today = getDataForDay(0);
-        outMsg.payload.tomorrow = getDataForDay(1);
-        outMsg.payload.dayAfterTomorrow = getDataForDay(2);
+        outMsg.payload.yesterday = getDataForDay(outMsg.data.ts, -1, holidays);
+        outMsg.payload.today = getDataForDate(outMsg.data.ts, holidays, 0); //getDataForDay(outMsg.data.ts, 0, holidays);
+        outMsg.payload.tomorrow = getDataForDay(outMsg.data.ts, 1, holidays);
+        outMsg.payload.dayAfterTomorrow = getDataForDay(outMsg.data.ts, 2, holidays);
 
         //Brückentag?
         outMsg.payload.today.isBetweenSundayAndHoliday = (outMsg.payload.yesterday.isSunday && outMsg.payload.tomorrow.isHoliday);
@@ -542,23 +602,21 @@ module.exports = function (RED) {
           outMsg.payload.next.weekendOrHoliday = outMsg.payload.next.holliday;
         } else {
           let dayOfWeek = 6; //saturday
-          let date = new Date();
+          let date = new Date(outMsg.data.ts);
           let diff = date.getDay() - dayOfWeek;
           if (diff > 0) {
             date.setDate(date.getDate() + 6);
           } else if (diff < 0) {
             date.setDate(date.getDate() + ((-1) * diff))
           }
-          outMsg.payload.next.weekendOrHoliday = _newHoliday('SATURDAY', date);
+          outMsg.payload.next.weekendOrHoliday = _newDay('SATURDAY', date);
         }
-        return outMsg;
-
+        this.send(outMsg);
       } catch (err) {
         errorHandler(this, err, 'Exception occured on get german holidays', 'internal error');
       }
       //this.error("Input parameter wrong or missing. You need to setup (or give in the input message) the 'url' and 'content type' or the 'message' and 'language'!!");
       //this.status({fill:"red",shape:"dot",text:"error - input parameter"});
-      return null;
     });
   }
 

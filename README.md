@@ -12,8 +12,6 @@
 
 This node are for getting german holidays or information if today/tomorow is a holiday in german. his can be used for smart home.
 
-![nodes](images/appearance1.png?raw=true)
-
 > This is still in development!
 
 ## Installation
@@ -22,11 +20,74 @@ This node are for getting german holidays or information if today/tomorow is a h
 
 ## Quick Start
 
-tbd
+Simple flow that sends an mp3 to the chromecast or google cast device:
+
+![example 1](images/example1.png?raw=true)
+
+    `[{"id":"2607227a.3c983e","type":"german-holidays","z":"c4313d2c.5d102","region":"SN","x":360,"y":100,"wires":[["dcaacec7.e1eb"]]},{"id":"dcaacec7.e1eb","type":"debug","z":"c4313d2c.5d102","name":"Holidays","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"true","x":560,"y":100,"wires":[]},{"id":"d2ed4078.52011","type":"inject","z":"c4313d2c.5d102","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"05 00 * * *","once":false,"onceDelay":0.1,"x":150,"y":100,"wires":[["2607227a.3c983e"]]}]`
 
 ## Implemented Nodes
 
 - german-holidays Node -get german holidays on any input
+
+## How to use
+
+### Configuration posibilities
+
+![configuration of the node](images/node-german-holidays-properties.png?raw=true)
+
+the region specifies the region for calculating the german holidays. If all is selected, all holidays are used (independend if they are really for all regions are available) and id "allgemeine" are used obnly holidays will be considered which are available in all regions of germany.
+
+### Options for the incomming message object
+
+The incomming messsage is mainly used for triogger the calculation. This will be done typically once per day. Nevertheless you have the following posibilitys to configure the working of the node by the following properties of the incomming messages:
+
+- **region**, `msg.region` the region which should be used for getting holidays. Could also be defined in the configuration of the node. This property must be a string of two letters with the german state shortcut (BY=Bayern, BE=Berlin, ...).
+- **ts**, `msg.ts` defines a timestamp for the source (today) for calculation of the data. if not defined today will be used.
+- **day**, `msg.day` if defined only the Holiday information will get the relative to the timestamp (today by default). So if `msg.ts` is not defined, `msg.day = 0` is today, `msg.day = -1` is yesterday; `msg.day = 1` is tomorow, ... Additionally the output will be a day object **only** representing this day.
+- **date**, `msg.date` if defined only the Holiday information for the defined date will given. If this is given, the output will be **only** a day object representing this day.
+
+### generic day object
+
+if the input property day or date was set, the payload is only a day object with the following properties. Otherwhise the payload is a more complex object for different days which are of type day-object (see below).
+
+- `id` _string_ an id of the object (is the english name in upper case)
+- `name` _string_ name of the day (in german).
+- `dayOfWeek` _string_ the day of the week, where 1 is monday.
+- `day` _number_ the day in month of the day
+- `month` _number_ the month of the day.
+- `year` _number_ the year of the day.
+- `date` _number_ the day as javascript date.
+- `dateString` _string_ the date of the day as string.
+- (optional) `dayOffset` _number_ the offset to today in days (not every time available)
+- `isSaturday` _boolean_ is true if the day is saturday.
+- `isSunday` _boolean_ is true if the day is sunday.
+- `isHoliday` _boolean_ is true if the day is an holiday.
+- `isWeekend` _boolean_ is true if the day is sunday or saturday.
+- `isSunOrHoliday` _boolean_ is true if the day is sunday or a holiday.
+- `isWeekendOrHoliday` _boolean_ is true if the day is sunday, saturday or a holiday.
+- (optional) `isBetweenSundayAndHoliday` _string_ is true if the day is a monday when tuseday is a holiday (not every time available).
+- (optional) `isBetweenHolidayAndSaturday` _string_ is true if the day is a fridey when thursday is a holiday (not every time available).
+- (optional) `isBetweenWeekendOrHoliday` _string_ is true if the day is not a saturday, sunday or a holiday, but the day before or after is saturday, sunday or a holiday (not every time available).
+
+### Output message object
+
+f the input has no day or date property the the payload is an object with the following properties
+
+- `msg.payload.yesterday` _day-object_ day-object for the day before today.
+- `msg.payload.today` _day-object_ day-object for today.
+- `msg.payload.tomorrow` _day-object_ day-object for the day after today.
+- `msg.payload.dayAfterTomorrow` _day-object_ day-object for the day after tomorrow.
+- `msg.payload.next` _object_ object representing information about the next holiday.
+- `msg.payload.next.holliday` _day-object_ object representing the next holiday.
+- `msg.payload.next.hollidayDiff` _number_ count of days until next holiday.
+- `msg.payload.next.weekendDay` _day-object_ object representing the next saturday or sunday (if it is saturday).
+- `msg.payload.next.weekendDayDiff` _number_ count of days until next saturday or sunday (if it is saturday).
+- `msg.payload.next.weekendOrHoliday` _day-object_ object representing the next holiday or saturday or sunday (next free day).
+- `msg.payload.next.weekendOrHolidayDiff` _number_ count of days until next holiday or saturday or sunday (next free day).
+- `msg.payload.hollidays` _day-object_ An array of objects for every Holiday in the year.
+- `msg.payload.hollidays` _array_ An array of objects for every Holiday in the year.
+- `msg.payload.hollidaysNum` _array_ An array of numbers for every Holiday in the year.
 
 ## Bugs and Feedback
 

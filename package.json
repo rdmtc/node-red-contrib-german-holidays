@@ -13,10 +13,13 @@
     "email": "hypnos3@online.de",
     "url": "https://github.com/hypnos3"
   },
-  "contributors": [
-    {
+  "contributors": [{
       "name": "Hypnos3",
       "url": "https://github.com/hypnos3"
+    },
+    {
+      "name": "sfakir",
+      "url": "https://github.com/sfakir"
     }
   ],
   "keywords": [

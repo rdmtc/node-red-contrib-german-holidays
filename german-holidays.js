@@ -1,6 +1,16 @@
 /********************************************
  * german-holidays:
  *********************************************/
+
+/*!
+ * This is based ont he feiertage.js
+ * @repository https://github.com/sfakir/feiertagejs
+ * @docs https://github.com/sfakir/feiertagejs/blob/master/docs.md
+ *
+ * Copyright 2015-2018 Simon Fakir
+ * Released under the MIT license
+ */
+
 const allRegions = [
   'BW',
   'BY',
@@ -124,6 +134,7 @@ function getDataForDate(date, holidays, offsetToday) {
   if (offsetToday) {
     result.dayOffset = offsetToday;
   }
+
   result.holiday = holidays.objects.find(holiday => holiday.equals(date));
   result.isSunday = (result.dayOfWeek === 0);
   result.isSaturday = (result.dayOfWeek === 6);
@@ -154,17 +165,6 @@ function getDataForDate(date, holidays, offsetToday) {
   }/* */
   return result;
 }
-
-// @flow
-
-/*!
- * feiertage.js
- * @repository https://github.com/sfakir/feiertagejs
- * @docs https://github.com/sfakir/feiertagejs/blob/master/docs.md
- *
- * Copyright 2015-2018 Simon Fakir
- * Released under the MIT license
- */
 
 // holidays api
 /**
@@ -556,7 +556,6 @@ module.exports = function (RED) {
           return;
         }
 
-        //outMsg.trigger = msg.payload;
         outMsg.payload = {
           //lastUpdate: outMsg.data.ts.toISOString(),
           yesterday: {},
@@ -597,9 +596,11 @@ module.exports = function (RED) {
         }
 
         //0 S 1 M 2 D 3 M 4 D 5 F 6 S 0 S
-        outMsg.payload.next.weekendOrHolidayDiff = (outMsg.payload.next.hollidayDiff) ? Math.min(outMsg.payload.next.hollidayDiff, 6 - outMsg.payload.today.day) : 6 - outMsg.payload.today.day;
-        if (outMsg.payload.next.holliday && (outMsg.payload.next.weekendOrHolidayDiff == outMsg.payload.next.hollidayDiff)) {
-          outMsg.payload.next.weekendOrHoliday = outMsg.payload.next.holliday;
+        outMsg.payload.next.weekendDayDiff = (6 - outMsg.payload.today.dayOfWeek);
+        if (outMsg.payload.today.dayOfWeek === 6) {
+          let date = new Date(outMsg.data.ts);
+          date.setDate(date.getDate() + 1);
+          outMsg.payload.next.weekendDay = _newDay('SUNDAY', date);
         } else {
           let dayOfWeek = 6; //saturday
           let date = new Date(outMsg.data.ts);
@@ -609,14 +610,19 @@ module.exports = function (RED) {
           } else if (diff < 0) {
             date.setDate(date.getDate() + ((-1) * diff))
           }
-          outMsg.payload.next.weekendOrHoliday = _newDay('SATURDAY', date);
+          outMsg.payload.next.weekendDay = _newDay('SATURDAY', date);
+        }
+
+        outMsg.payload.next.weekendOrHolidayDiff = (outMsg.payload.next.hollidayDiff) ? Math.min(outMsg.payload.next.hollidayDiff, outMsg.payload.next.weekendDayDiff) : outMsg.payload.next.weekendDayDiff;
+        if (outMsg.payload.next.holliday && (outMsg.payload.next.weekendOrHolidayDiff == outMsg.payload.next.hollidayDiff)) {
+          outMsg.payload.next.weekendOrHoliday = outMsg.payload.next.holliday;
+        } else {
+          outMsg.payload.next.weekendOrHoliday = outMsg.payload.next.weekendDay;
         }
         this.send(outMsg);
       } catch (err) {
         errorHandler(this, err, 'Exception occured on get german holidays', 'internal error');
       }
-      //this.error("Input parameter wrong or missing. You need to setup (or give in the input message) the 'url' and 'content type' or the 'message' and 'language'!!");
-      //this.status({fill:"red",shape:"dot",text:"error - input parameter"});
     });
   }
 

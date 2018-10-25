@@ -80,12 +80,19 @@
      </ol>
      <h3>payload output properties</h3>
      <h4>day-object</h4>
+     <p>if the input property day or date was set, the payload is only a day object with the following properties. Otherwhise the payload is a more complex object for different days which are of type day-object (see below).</p>
      <dl class="message-properties">
             <dt>id <span class="property-type">string</span></dt>
             <dd> an if of the object (is the english name in upper case)</dd>
 
-            <dt>day <span class="property-type">number</span></dt>
+            <dt>name <span class="property-type">number</span></dt>
+            <dd> name of the day (in german).</dd>
+
+            <dt>dayOfWeek <span class="property-type">number</span></dt>
             <dd> the day of the week, where 1 is monday.</dd>
+
+            <dt>day <span class="property-type">number</span></dt>
+            <dd> the day in month of the day</dd>
 
             <dt>month <span class="property-type">number</span></dt>
             <dd> the month of the day.</dd>
@@ -99,11 +106,8 @@
             <dt>dateString <span class="property-type">string</span></dt>
             <dd> the date of the day as string.</dd>
 
-            <dt>name <span class="property-type">number</span></dt>
-            <dd> name of the day (in german).</dd>
-
-            <dt>isSunday <span class="property-type">boolean</span></dt>
-            <dd> is true if the day is sunday.</dd>
+            <dt class="optional">dayOffset <span class="property-type">string</span></dt>
+            <dd> the offset to today in days (not every time available).</dd>
 
             <dt>isSaturday <span class="property-type">boolean</span></dt>
             <dd> is true if the day is saturday.</dd>
@@ -123,34 +127,60 @@
             <dt>isWeekendOrHoliday <span class="property-type">boolean</span></dt>
             <dd> is true if the day is sunday, saturday or a holiday.</dd>
 
+            <dt class="optional">isBetweenSundayAndHoliday <span class="property-type">string</span></dt>
+            <dd> is true if the day is a monday when tuseday is a holiday (not every time available).</dd>
+
+            <dt class="optional">isBetweenHolidayAndSaturday <span class="property-type">string</span></dt>
+            <dd> is true if the day is a fridey when thursday is a holiday (not every time available).</dd>
+
+            <dt class="optional">isBetweenWeekendOrHoliday <span class="property-type">string</span></dt>
+            <dd> is true if the day is not a saturday, sunday or a holiday, but the day before or after is saturday, sunday or a holiday (not every time available).</dd>
         </dl>
-        <h4>payload properties</h4>
-     <dl class="message-properties">
+        <h4>payload properties (default)</h4>
+            <p>If the input has no day or date property the the payload is an object with the following properties:</p>
+            <dl class="message-properties">
              <dt>yesterday <span class="property-type">day-object</span></dt>
              <dd> day-object for the day before today.</dd>
- 
+
              <dt>today <span class="property-type">day-object</span></dt>
              <dd> day-object for today.</dd>
- 
+
              <dt>tomorrow <span class="property-type">day-object</span></dt>
              <dd> day-object for the day after today.</dd>
+
+             <dt>dayAfterTomorrow <span class="property-type">day-object</span></dt>
+             <dd> day-object for the day after tomorrow.</dd>
+
+             <dt>next <span class="property-type">object</span></dt>
+             <dd> object representing information about the next holiday.</dd>
+
+             <dt>next.holliday <span class="property-type">day-object</span></dt>
+             <dd> object representing the next holiday.</dd>
+
+             <dt>next.hollidayDiff <span class="property-type">number</span></dt>
+             <dd> count of days until next holiday.</dd>
+
+             <dt>next.weekendDay <span class="property-type">day-object</span></dt>
+             <dd> object representing the next saturday or sunday (if it is saturday).</dd>
+
+             <dt>next.weekendDayDiff <span class="property-type">number</span></dt>
+             <dd> count of days until next saturday or sunday (if it is saturday).</dd>
+
+             <dt>next.weekendOrHoliday <span class="property-type">day-object</span></dt>
+             <dd> object representing the next holiday or saturday or sunday (next free day).</dd>
+
+             <dt>next.weekendOrHolidayDiff <span class="property-type">number</span></dt>
+             <dd> count of days until next holiday or saturday or sunday (next free day).</dd>
+
+             <dt>hollidays <span class="property-type">day-object</span></dt>
+             <dd> An array of objects for every Holiday in the year.</dd>
+
+             <dt>hollidays <span class="property-type">array</span></dt>
+             <dd> An array of objects for every Holiday in the year.</dd>
+
+             <dt>hollidaysNum <span class="property-type">array</span></dt>
+             <dd> An array of numbers for every Holiday in the year.</dd>
          </dl>
-         <!-- 
-                {"yesterday":
-                {"id":"TUESDAY","day":2,"month":9,"year":2018,"date":"2018-10-22T22:00:00.000Z","dateString":"2018-10-23",
-                "isSunday":false,
-                "isSaturday":false,
-                "dayOffset":-1,
-                "isHoliday":false,
-                "name":"Dienstag",
-                "isWeekend":false,
-                "isSunOrHoliday":false,
-                "isWeekendOrHoliday":false},
-                "today":           {"id":"WEDNESDAY","day":3,"month":9,"year":2018,"date":"2018-10-26T22:00:00.000Z","dateString":"2018-10-24","isSunday":false,"isSaturday":false,"isHoliday":false,"name":"Mittwoch","isWeekend":false,"isSunOrHoliday":false,"isWeekendOrHoliday":false,"isBetweenSundayAndHoliday":false,"isBetweenHolidayAndSaturday":false,"isBetweenWeekendOrHoliday":false},
-                "tomorrow":        {"id":"THURSDAY", "day":4,"month":9,"year":2018,"date":"2018-10-24T22:00:00.000Z","dateString":"2018-10-25","isSunday":false,"isSaturday":false,"dayOffset":1,"isHoliday":false,"name":"Donnerstag","isWeekend":false,"isSunOrHoliday":false,"isWeekendOrHoliday":false,"isBetweenSundayAndHoliday":false,"isBetweenHolidayAndSaturday":false,"isBetweenWeekendOrHoliday":false},
-                "dayAfterTomorrow":{"id":"FRIDAY",   "day":5,"month":9,"year":2018,"date":"2018-10-25T22:00:00.000Z","dateString":"2018-10-26","isSunday":false,"isSaturday":false,"dayOffset":2,"isHoliday":false,"name":"Freitag","isWeekend":false,"isSunOrHoliday":false,"isWeekendOrHoliday":false},
-                "hollidays":[{"id":"NEUJAHRSTAG","name":"Neujahrstag","day":0,"month":11,"year":2017,"date":"2017-12-31T23:00:00.000Z","dateString":"2018-01-01"},{"id":"KARFREITAG","name":"Karfreitag","day":4,"month":2,"year":2018,"date":"2018-03-29T22:00:00.000Z","dateString":"2018-03-30"},{"id":"OSTERMONTAG","name":"Ostermontag","day":0,"month":3,"year":2018,"date":"2018-04-01T22:00:00.000Z","dateString":"2018-04-02"},{"id":"TAG_DER_ARBEIT","name":"Tag der Arbeit","day":1,"month":3,"year":2018,"date":"2018-04-30T22:00:00.000Z","dateString":"2018-05-01"},{"id":"CHRISTIHIMMELFAHRT","name":"Christi Himmelfahrt","day":3,"month":4,"year":2018,"date":"2018-05-09T22:00:00.000Z","dateString":"2018-05-10"},{"id":"PFINGSTMONTAG","name":"Pfingstmontag","day":0,"month":4,"year":2018,"date":"2018-05-20T22:00:00.000Z","dateString":"2018-05-21"},{"id":"DEUTSCHEEINHEIT","name":"Tag der Deutschen Einheit","day":2,"month":9,"year":2018,"date":"2018-10-02T22:00:00.000Z","dateString":"2018-10-03"},{"id":"REFORMATIONSTAG","name":"Reformationstag","day":2,"month":9,"year":2018,"date":"2018-10-30T23:00:00.000Z","dateString":"2018-10-31"},{"id":"BUBETAG","name":"Buß- und Bettag","day":2,"month":10,"year":2018,"date":"2018-11-20T23:00:00.000Z","dateString":"2018-11-21"},{"id":"ERSTERWEIHNACHTSFEIERTAG","name":"1. Weihnachtstag","day":1,"month":11,"year":2018,"date":"2018-12-24T23:00:00.000Z","dateString":"2018-12-25"},{"id":"ZWEITERWEIHNACHTSFEIERTAG","name":"2. Weihnachtstag","day":2,"month":11,"year":2018,"date":"2018-12-25T23:00:00.000Z","dateString":"2018-12-26"}],"hollidaysNum":[1514761200000,1522360800000,1522620000000,1525125600000,1525903200000,1526853600000,1538517600000,1540940400000,1542754800000,1545692400000,1545778800000],"next":{"holliday":{"id":"REFORMATIONSTAG","name":"Reformationstag","day":2,"month":9,"year":2018,"date":"2018-10-30T23:00:00.000Z","dateString":"2018-10-31"},"hollidayDiff":8,"weekendOrHolidayDiff":3,"weekendOrHoliday":{"id":"SATURDAY","name":"Samstag","day":5,"month":9,"year":2018,"date":"2018-10-26T22:00:00.000Z","dateString":"2018-10-27"}}}
-         -->
      <h3>Details</h3>
      <p>tbd</p>
      <h3>References</h3>

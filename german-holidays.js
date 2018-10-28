@@ -126,6 +126,14 @@ function getDataForDay(date, offsetToday, holidays) {
   return getDataForDate(date, holidays, 0);
 }
 
+// holidays api
+/**
+ * get the data for a date.
+ * @param date date to get data for
+ * @param holidays list of holidays
+ * @param offsetToday (optional) 
+ * @returns object of all information for the day
+ */
 function getDataForDate(date, holidays, offsetToday) {
   let d = date.getDay(); //gets the day of week
   //const internalDate = toUtcTimestamp(date);
@@ -140,9 +148,9 @@ function getDataForDate(date, holidays, offsetToday) {
   result.isSaturday = (result.dayOfWeek === 6);
   result.isHoliday = ((typeof result.holiday !== 'undefined') && (result.holiday != null)); // holidays.integers.indexOf(internalDate) !== -1
   result.name = germanTranslations[result.id];
-  result.isWeekend = result.isSaturday || result.isSaturday;
-  result.isSunOrHoliday = result.isSaturday || result.isHoliday;
-  result.isWeekendOrHoliday = result.isSaturday || result.isSaturday || result.isHoliday;
+  result.isWeekend = result.isSunday || result.isSaturday;
+  result.isSunOrHoliday = result.isSunday || result.isHoliday;
+  result.isWeekendOrHoliday = result.isSaturday || result.isSunday || result.isHoliday;
 
   /*
   //Brückentag?
@@ -165,6 +173,15 @@ function getDataForDate(date, holidays, offsetToday) {
   }/* */
   return result;
 }
+
+function getWeekNumber(d) {
+  // Copy date so don't modify original
+  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  let dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  let yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1)/7)
+};
 
 // holidays api
 /**
@@ -537,9 +554,19 @@ module.exports = function (RED) {
           return;
         }
 
+        if (typeof outMsg.data.date !== 'undefined' && (outMsg.data.date instanceof Date)) {
+          outMsg.ts = outMsg.data.date;
+          outMsg.data.year = outMsg.data.date.getFullYear();
+          const holidays = _getHolidaysOfYear(outMsg.data.year, outMsg.data.region);          
+          outMsg.payload = getDataForDate(outMsg.data.date, holidays);
+          this.send(outMsg);
+          return;
+        }
+
         if ((typeof outMsg.data.ts === 'undefined') || !(outMsg.data.ts instanceof Date)) {
           outMsg.data.ts = new Date();
         }
+
         outMsg.ts = outMsg.data.ts;
         outMsg.data.year = outMsg.data.ts.getFullYear();
         const holidays = _getHolidaysOfYear(outMsg.data.year, outMsg.data.region);
@@ -550,37 +577,39 @@ module.exports = function (RED) {
           return;
         }
 
-        if (typeof outMsg.data.date !== 'undefined' && (outMsg.data.date instanceof Date)) {
-          outMsg.payload = getDataForDate(outMsg.data.ts, outMsg.data.date, holidays);
-          this.send(outMsg);
-          return;
-        }
-
         outMsg.payload = {
           //lastUpdate: outMsg.data.ts.toISOString(),
           yesterday: {},
           today: {},
           tomorrow: {},
           dayAfterTomorrow: {},
+          afterTheDayAfterTomorrow: {},
           hollidays: holidays.objects,
           hollidaysNum: holidays.integers,
-          next: {}
+          next: {},
+          weekNumber : getWeekNumber(outMsg.data.ts)
         };
 
         outMsg.payload.yesterday = getDataForDay(outMsg.data.ts, -1, holidays);
         outMsg.payload.today = getDataForDate(outMsg.data.ts, holidays, 0); //getDataForDay(outMsg.data.ts, 0, holidays);
         outMsg.payload.tomorrow = getDataForDay(outMsg.data.ts, 1, holidays);
         outMsg.payload.dayAfterTomorrow = getDataForDay(outMsg.data.ts, 2, holidays);
+        outMsg.payload.afterTheDayAfterTomorrow = getDataForDay(outMsg.data.ts, 3, holidays);
+
+        outMsg.payload.weekNumberEven = !Boolean(outMsg.payload.weekNumber % 2);
 
         //Brückentag?
         outMsg.payload.today.isBetweenSundayAndHoliday = (outMsg.payload.yesterday.isSunday && outMsg.payload.tomorrow.isHoliday);
         outMsg.payload.tomorrow.isBetweenSundayAndHoliday = (outMsg.payload.today.isSunday && outMsg.payload.dayAfterTomorrow.isHoliday);
+        outMsg.payload.dayAfterTomorrow.isBetweenSundayAndHoliday = (outMsg.payload.tomorrow.isSunday && outMsg.payload.afterTheDayAfterTomorrow.isHoliday);
 
         outMsg.payload.today.isBetweenHolidayAndSaturday = (outMsg.payload.yesterday.isHoliday && outMsg.payload.tomorrow.isSaturday);
         outMsg.payload.tomorrow.isBetweenHolidayAndSaturday = (outMsg.payload.today.isHoliday && outMsg.payload.dayAfterTomorrow.isSaturday);
+        outMsg.payload.dayAfterTomorrow.isBetweenHolidayAndSaturday = (outMsg.payload.tomorrow.isHoliday && outMsg.payload.afterTheDayAfterTomorrow.isSaturday);
 
         outMsg.payload.today.isBetweenWeekendOrHoliday = (outMsg.payload.yesterday.isWeekendOrHoliday && outMsg.payload.tomorrow.isWeekendOrHoliday && !outMsg.payload.today.isWeekendOrHoliday);
         outMsg.payload.tomorrow.isBetweenWeekendOrHoliday = (outMsg.payload.today.isWeekendOrHoliday && outMsg.payload.dayAfterTomorrow.isWeekendOrHoliday && !outMsg.payload.tomorrow.isWeekendOrHoliday);
+        outMsg.payload.dayAfterTomorrow.isBetweenWeekendOrHoliday = (outMsg.payload.tomorrow.isWeekendOrHoliday && outMsg.payload.afterTheDayAfterTomorrow.isWeekendOrHoliday && !outMsg.payload.dayAfterTomorrow.isWeekendOrHoliday);
 
         for (let i = 0; i < outMsg.payload.hollidays.length; i++) {
           let hd = outMsg.payload.hollidays[i];

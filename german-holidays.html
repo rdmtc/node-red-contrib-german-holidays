@@ -128,13 +128,13 @@
             <dd> is true if the day is sunday, saturday or a holiday.</dd>
 
             <dt class="optional">isBetweenSundayAndHoliday <span class="property-type">string</span></dt>
-            <dd> is true if the day is a monday when tuseday is a holiday (not every time available).</dd>
+            <dd> is true if the day is a monday when tuseday is a holiday (only available on standard output for today, tomorrow and dayAfterTomorrow).</dd>
 
             <dt class="optional">isBetweenHolidayAndSaturday <span class="property-type">string</span></dt>
-            <dd> is true if the day is a fridey when thursday is a holiday (not every time available).</dd>
+            <dd> is true if the day is a fridey when thursday is a holiday  (only available on standard output for today, tomorrow and dayAfterTomorrow).</dd>
 
             <dt class="optional">isBetweenWeekendOrHoliday <span class="property-type">string</span></dt>
-            <dd> is true if the day is not a saturday, sunday or a holiday, but the day before or after is saturday, sunday or a holiday (not every time available).</dd>
+            <dd> is true if the day is not a saturday, sunday or a holiday, but the day before or after is saturday, sunday or a holiday  (only available on standard output for today, tomorrow and dayAfterTomorrow).</dd>
         </dl>
         <h4>payload properties (default)</h4>
             <p>If the input has no day or date property the the payload is an object with the following properties:</p>
@@ -146,10 +146,13 @@
              <dd> day-object for today.</dd>
 
              <dt>tomorrow <span class="property-type">day-object</span></dt>
-             <dd> day-object for the day after today.</dd>
+             <dd> day-object for the day 1 day in the future from today.</dd>
 
              <dt>dayAfterTomorrow <span class="property-type">day-object</span></dt>
-             <dd> day-object for the day after tomorrow.</dd>
+             <dd> day-object for the day 2 days in the future from today.</dd>
+
+             <dt>afterTheDayAfterTomorrow <span class="property-type">day-object</span></dt>
+             <dd> day-object for the day 3 days in the future from today.</dd>
 
              <dt>next <span class="property-type">object</span></dt>
              <dd> object representing information about the next holiday.</dd>
@@ -180,6 +183,12 @@
 
              <dt>hollidaysNum <span class="property-type">array</span></dt>
              <dd> An array of numbers for every Holiday in the year.</dd>
+
+             <dt>weekNumber <span class="property-type">number</span></dt>
+             <dd> weekNumber for today.</dd>
+
+             <dt>weekNumberEven <span class="property-type">boolean</span></dt>
+             <dd> true if the weekNumber is even.</dd>
          </dl>
      <h3>Details</h3>
      <p>tbd</p>
@@ -208,7 +217,7 @@
         inputs: 1, // set the number of inputs - only 0 or 1
         outputs: 1, // set the number of outputs - 0 to n
         icon: "default.png", // saved in  icons/myicon.png - myicon.png
-        color: "#FFFF00",
+        color: "#33cc33",
         label: function () {
             return this.name || "Holidays";
         },

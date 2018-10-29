@@ -24,7 +24,7 @@ Simple flow that sends an mp3 to the chromecast or google cast device:
 
 ![example 1](images/example1.png?raw=true)
 
-    `[{"id":"2607227a.3c983e","type":"german-holidays","z":"c4313d2c.5d102","region":"SN","x":360,"y":100,"wires":[["dcaacec7.e1eb"]]},{"id":"dcaacec7.e1eb","type":"debug","z":"c4313d2c.5d102","name":"Holidays","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"true","x":560,"y":100,"wires":[]},{"id":"d2ed4078.52011","type":"inject","z":"c4313d2c.5d102","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"05 00 * * *","once":false,"onceDelay":0.1,"x":150,"y":100,"wires":[["2607227a.3c983e"]]}]`
+    [{"id":"2607227a.3c983e","type":"german-holidays","z":"c4313d2c.5d102","region":"SN","x":360,"y":100,"wires":[["dcaacec7.e1eb"]]},{"id":"dcaacec7.e1eb","type":"debug","z":"c4313d2c.5d102","name":"Holidays","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"true","x":560,"y":100,"wires":[]},{"id":"d2ed4078.52011","type":"inject","z":"c4313d2c.5d102","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"05 00 * * *","once":false,"onceDelay":0.1,"x":150,"y":100,"wires":[["2607227a.3c983e"]]}]
 
 ## Implemented Nodes
 
@@ -88,6 +88,18 @@ f the input has no day or date property the the payload is an object with the fo
 - `msg.payload.hollidays` _day-object_ An array of objects for every Holiday in the year.
 - `msg.payload.hollidays` _array_ An array of objects for every Holiday in the year.
 - `msg.payload.hollidaysNum` _array_ An array of numbers for every Holiday in the year.
+
+## Usage
+
+Typically the node will be triggered at once every day and the result will be persistent in a global context. Then with a switch node the flows cann be conteolled by the usage of the properties of the object output.
+Examples for using this node:
+
+- shutter can be opened/closed on different timestamps based if today or tomorow is a holiday
+- dimmer can set to different brightness based if it is a Holiday
+
+![usage example](images/example2.png?raw=true)
+
+    [{"id":"2607227a.3c983e","type":"german-holidays","z":"c4313d2c.5d102","name":"","region":"SN","x":420,"y":140,"wires":[["dcaacec7.e1eb","15259bce.575154"]]},{"id":"dcaacec7.e1eb","type":"debug","z":"c4313d2c.5d102","name":"Holidays","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"true","x":620,"y":100,"wires":[]},{"id":"d2ed4078.52011","type":"inject","z":"c4313d2c.5d102","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"05 00 * * *","once":false,"onceDelay":0.1,"x":150,"y":100,"wires":[["2607227a.3c983e"]]},{"id":"e4912846.3a1ca8","type":"inject","z":"c4313d2c.5d102","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":true,"onceDelay":"1","x":150,"y":180,"wires":[["2607227a.3c983e"]]},{"id":"1ab3e37c.4d15fd","type":"comment","z":"c4313d2c.5d102","name":"every day at midnight","info":"","x":180,"y":60,"wires":[]},{"id":"869da82f.484e48","type":"comment","z":"c4313d2c.5d102","name":"once on Node-Red start","info":"","x":180,"y":140,"wires":[]},{"id":"15259bce.575154","type":"change","z":"c4313d2c.5d102","name":"","rules":[{"t":"set","p":"day-info","pt":"global","to":"payload","tot":"msg"}],"action":"","property":"","from":"","to":"","reg":false,"x":650,"y":180,"wires":[[]]},{"id":"d2fe809f.3c90d","type":"switch","z":"c4313d2c.5d102","name":"","property":"day-info.today.isWeekendOrHoliday","propertyType":"global","rules":[{"t":"true"},{"t":"else"}],"checkall":"true","repair":false,"outputs":2,"x":410,"y":300,"wires":[["c73a89b5.6630f8"],["e245c8da.585928"]]},{"id":"26326493.2e010c","type":"inject","z":"c4313d2c.5d102","name":"","topic":"","payload":"true","payloadType":"bool","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":150,"y":300,"wires":[["d2fe809f.3c90d"]]},{"id":"c73a89b5.6630f8","type":"debug","z":"c4313d2c.5d102","name":"is Weekend or Holiday","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"payload","x":660,"y":300,"wires":[]},{"id":"e245c8da.585928","type":"debug","z":"c4313d2c.5d102","name":"is not a Weekend and not a Holiday","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"payload","x":700,"y":360,"wires":[]},{"id":"e427d079.51212","type":"comment","z":"c4313d2c.5d102","name":"Example for usage in switch node","info":"","x":210,"y":260,"wires":[]}]
 
 ## Bugs and Feedback
 

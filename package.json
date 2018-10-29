@@ -26,7 +26,8 @@
     "node-red",
     "german-holidays",
     "holidays",
-    "german"
+    "german",
+    "shutter-control"
   ],
   "homepage": "https://github.com/Hypnos3/node-red-contrib-german-holidays",
   "license": "MIT",

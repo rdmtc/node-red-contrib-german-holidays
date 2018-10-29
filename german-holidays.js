@@ -179,8 +179,8 @@ function getWeekNumber(d) {
   d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
   let dayNum = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  let yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-  return Math.ceil((((d - yearStart) / 86400000) + 1)/7)
+  let yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
 };
 
 // holidays api
@@ -532,6 +532,12 @@ module.exports = function (RED) {
             }
           }
         }/* */
+        if ((typeof outMsg.data.ts === 'undefined') && ((typeof msg.payload === 'string') || (msg.payload instanceof Date))) {
+          let dto = new Date(msg.payload);
+          if (dto !== "Invalid Date" && !isNaN(dto)) {
+            outMsg.data.ts = dto;
+          }
+        }
         //-------------------------------------------------------------------
 
         if (typeof outMsg.data.region === 'undefined' || outMsg.data.region === '') {
@@ -554,13 +560,24 @@ module.exports = function (RED) {
           return;
         }
 
-        if (typeof outMsg.data.date !== 'undefined' && (outMsg.data.date instanceof Date)) {
-          outMsg.ts = outMsg.data.date;
-          outMsg.data.year = outMsg.data.date.getFullYear();
-          const holidays = _getHolidaysOfYear(outMsg.data.year, outMsg.data.region);          
-          outMsg.payload = getDataForDate(outMsg.data.date, holidays);
-          this.send(outMsg);
-          return;
+        if ((typeof outMsg.data.date !== 'undefined') && ((outMsg.data.date instanceof Date) || (typeof outMsg.data.date === 'string'))) {
+
+          let dto = new Date(outMsg.data.date);
+          if (dto !== "Invalid Date" && !isNaN(dto)) {
+            outMsg.ts = dto;
+            outMsg.data.year = dto.getFullYear();
+            const holidays = _getHolidaysOfYear(outMsg.data.year, outMsg.data.region);
+            outMsg.payload = getDataForDate(dto, holidays);
+            this.send(outMsg);
+            return;
+          }
+        }
+
+        if (typeof outMsg.data.ts === 'string') {
+          let dto = new Date(outMsg.data.ts);
+          if (dto !== "Invalid Date" && !isNaN(dto)) {
+            outMsg.data.ts = dto;
+          }
         }
 
         if ((typeof outMsg.data.ts === 'undefined') || !(outMsg.data.ts instanceof Date)) {
@@ -587,7 +604,7 @@ module.exports = function (RED) {
           hollidays: holidays.objects,
           hollidaysNum: holidays.integers,
           next: {},
-          weekNumber : getWeekNumber(outMsg.data.ts)
+          weekNumber: getWeekNumber(outMsg.data.ts)
         };
 
         outMsg.payload.yesterday = getDataForDay(outMsg.data.ts, -1, holidays);

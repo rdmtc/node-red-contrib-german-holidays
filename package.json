@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-german-holidays",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "NodeRED nodes to get german holidays",
   "main": "german-holidays.js",
   "scripts": {

@@ -66,18 +66,19 @@ if the input property day or date was set, the payload is only a day object with
 - `isWeekend` _boolean_ is true if the day is sunday or saturday.
 - `isSunOrHoliday` _boolean_ is true if the day is sunday or a holiday.
 - `isWeekendOrHoliday` _boolean_ is true if the day is sunday, saturday or a holiday.
-- (optional) `isBetweenSundayAndHoliday` _string_ is true if the day is a monday when tuseday is a holiday (not every time available).
-- (optional) `isBetweenHolidayAndSaturday` _string_ is true if the day is a fridey when thursday is a holiday (not every time available).
-- (optional) `isBetweenWeekendOrHoliday` _string_ is true if the day is not a saturday, sunday or a holiday, but the day before or after is saturday, sunday or a holiday (not every time available).
+- (optional) `isBetweenSundayAndHoliday` _string_ is true if the day is a monday when tuseday is a holiday (only available on standard output for today, tomorrow and dayAfterTomorrow).
+- (optional) `isBetweenHolidayAndSaturday` _string_ is true if the day is a fridey when thursday is a holiday (only available on standard output for today, tomorrow and dayAfterTomorrow).
+- (optional) `isBetweenWeekendOrHoliday` _string_ is true if the day is not a saturday, sunday or a holiday, but the day before or after is saturday, sunday or a holiday (only available on standard output for today, tomorrow and dayAfterTomorrow).
 
 ### Output message object
 
-f the input has no day or date property the the payload is an object with the following properties
+if the input has no day or date property (default use case) the the payload is an object with the following properties
 
 - `msg.payload.yesterday` _day-object_ day-object for the day before today.
 - `msg.payload.today` _day-object_ day-object for today.
 - `msg.payload.tomorrow` _day-object_ day-object for the day after today.
 - `msg.payload.dayAfterTomorrow` _day-object_ day-object for the day after tomorrow.
+- `msg.payload.afterTheDayAfterTomorrow` _day-object_ day-object for the day after tomorrow.
 - `msg.payload.next` _object_ object representing information about the next holiday.
 - `msg.payload.next.holliday` _day-object_ object representing the next holiday.
 - `msg.payload.next.hollidayDiff` _number_ count of days until next holiday.
@@ -88,6 +89,8 @@ f the input has no day or date property the the payload is an object with the fo
 - `msg.payload.hollidays` _day-object_ An array of objects for every Holiday in the year.
 - `msg.payload.hollidays` _array_ An array of objects for every Holiday in the year.
 - `msg.payload.hollidaysNum` _array_ An array of numbers for every Holiday in the year.
+- `msg.payload.weekNumber` _number_ weekNumber for today.
+- `msg.payload.weekNumberEven` _boolean_ Is `true` if the weekNumber is even.
 
 ## Usage
 

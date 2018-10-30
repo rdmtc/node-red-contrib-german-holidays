@@ -109,7 +109,7 @@ Examples for using this node:
 For bugs, questions and discussions please use the
 [GitHub Issues](https://github.com/Hypnos3/node-red-contrib-german-holidays/issues).
 
-### :moneybag: Donations [![Donate](https://img.shields.io/badge/donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=32NJPXPMR9YV8)
+### :moneybag: Donations [![Donate](https://img.shields.io/badge/donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=32NJPXPMR9YV8) [![Greenkeeper badge](https://badges.greenkeeper.io/Hypnos3/node-red-contrib-german-holidays.svg)](https://greenkeeper.io/)
 
 Even for those that don't have the technical knowhow to help developing on there are ways to support development. So if you want to donate some money please feel free to send money via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=32NJPXPMR9YV8).
 

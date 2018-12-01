@@ -120,3 +120,9 @@ This was developed by using the https://github.com/sfakir/feiertagejs.
 ## Other
 
  [![Greenkeeper badge](https://badges.greenkeeper.io/Hypnos3/node-red-contrib-german-holidays.svg)](https://greenkeeper.io/)
+
+this node is published also here:
+Npm pakage:
+https://www.npmjs.com/package/node-red-contrib-german-holidays
+Node-Red:
+https://flows.nodered.org/node/node-red-contrib-german-holidays

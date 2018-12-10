@@ -152,29 +152,57 @@ function getDataForDate(date, holidays, offsetToday) {
   result.isSunOrHoliday = result.isSunday || result.isHoliday;
   result.isWeekendOrHoliday = result.isSaturday || result.isSunday || result.isHoliday;
 
-  /*
-  //Brückentag?
-  if (d === 5 && (typeof result.holiday !== 'undefined')) {
-    //Freitag
-    result.isBetweenHolidayAndSaturday = outMsg.payload.today.isHoliday
-
-    holidays.objects.find(holiday => holiday.equals(date))
-
-    ((typeof result.holiday !== 'undefined') && (result.holiday != null))
-  } else {
-    result.isBetweenHolidayAndSaturday = false;
-  }
-
-  if (d === 1 && (typeof result.holiday !== 'undefined')) {
-    //Montag
-    result.isBetweenSundayAndHoliday = outMsg.payload.today.isHoliday
-  } else {
-    result.isBetweenSundayAndHoliday = false;
-  }/* */
   return result;
 }
 
+/**
+ * get the data for a date in UTC.
+ * @param date date to get data for
+ * @param holidays list of holidays
+ * @param offsetToday (optional) 
+ * @returns object of all information for the day
+ */
+function getDataForDateUTC(date, holidays, offsetToday) {
+  let d = date.getDay(); //gets the day of week
+  //const internalDate = toUtcTimestamp(date);
+
+  let result = _newDayUTC(dayNames[d], date)
+  if (offsetToday) {
+    result.dayOffset = offsetToday;
+  }
+
+  result.holiday = holidays.objects.find(holiday => holiday.equals(date));
+  result.isSunday = (result.dayOfWeek === 0);
+  result.isSaturday = (result.dayOfWeek === 6);
+  result.isHoliday = ((typeof result.holiday !== 'undefined') && (result.holiday != null)); // holidays.integers.indexOf(internalDate) !== -1
+  result.name = germanTranslations[result.id];
+  result.isWeekend = result.isSunday || result.isSaturday;
+  result.isSunOrHoliday = result.isSunday || result.isHoliday;
+  result.isWeekendOrHoliday = result.isSaturday || result.isSunday || result.isHoliday;
+
+  return result;
+}
+
+/**
+ * determinates the current week number.
+ * @param d date for determinate week number
+ * @returns number current week number
+ */
 function getWeekNumber(d) {
+  // Copy date so don't modify original
+  d = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  let dayNum = d.getDay() || 7;
+  d.setDate(d.getDate() + 4 - dayNum);
+  let yearStart = new Date(d.getFullYear(), 0, 1);
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
+};
+
+/**
+ * determinates the current week number of UTC timestamp.
+ * @param d date for determinate week number
+ * @returns number current week number
+ */
+function getWeekNumberUTC(d) {
   // Copy date so don't modify original
   d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
   let dayNum = d.getUTCDay() || 7;
@@ -452,6 +480,26 @@ function _newDay(id, date) {
   return {
     id,
     name: germanTranslations[id],
+    dayOfWeek: date.getDay(),
+    day: date.getDate(),
+    month: date.getMonth(),
+    year: date.getFullYear(),
+    date, //: new Date(year, month, day, hours, minutes, seconds, milliseconds),
+    dateString: _localeDateObjectToDateString(date),
+  };
+}
+
+/**
+ *
+ * @param d
+ * @param date
+ * @returns day
+ * @private
+ */
+function _newDayUTC(id, date) {
+  return {
+    id,
+    name: germanTranslations[id],
     dayOfWeek: date.getUTCDay(),
     day: date.getUTCDate(),
     month: date.getUTCMonth(),
@@ -564,7 +612,7 @@ module.exports = function (RED) {
 
           let dto = new Date(outMsg.data.date);
           if (dto !== "Invalid Date" && !isNaN(dto)) {
-            outMsg.ts = dto;
+            //outMsg.data.ts = dto;
             outMsg.data.year = dto.getFullYear();
             const holidays = _getHolidaysOfYear(outMsg.data.year, outMsg.data.region);
             outMsg.payload = getDataForDate(dto, holidays);
@@ -584,7 +632,6 @@ module.exports = function (RED) {
           outMsg.data.ts = new Date();
         }
 
-        outMsg.ts = outMsg.data.ts;
         outMsg.data.year = outMsg.data.ts.getFullYear();
         const holidays = _getHolidaysOfYear(outMsg.data.year, outMsg.data.region);
 
@@ -632,7 +679,7 @@ module.exports = function (RED) {
           let hd = outMsg.payload.hollidays[i];
           let d = hd.date;
 
-          var timeDiff = d.getTime() - outMsg.ts.getTime();
+          var timeDiff = d.getTime() - outMsg.data.ts.getTime();
           if (timeDiff > 0) {
             var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
             outMsg.payload.next.holliday = hd;

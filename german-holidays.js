@@ -131,7 +131,7 @@ function getDataForDay(date, offsetToday, holidays) {
  * get the data for a date.
  * @param date date to get data for
  * @param holidays list of holidays
- * @param offsetToday (optional) 
+ * @param offsetToday (optional)
  * @returns object of all information for the day
  */
 function getDataForDate(date, holidays, offsetToday) {
@@ -159,7 +159,7 @@ function getDataForDate(date, holidays, offsetToday) {
  * get the data for a date in UTC.
  * @param date date to get data for
  * @param holidays list of holidays
- * @param offsetToday (optional) 
+ * @param offsetToday (optional)
  * @returns object of all information for the day
  */
 function getDataForDateUTC(date, holidays, offsetToday) {
@@ -674,6 +674,10 @@ module.exports = function (RED) {
         outMsg.payload.today.isBetweenWeekendOrHoliday = (outMsg.payload.yesterday.isWeekendOrHoliday && outMsg.payload.tomorrow.isWeekendOrHoliday && !outMsg.payload.today.isWeekendOrHoliday);
         outMsg.payload.tomorrow.isBetweenWeekendOrHoliday = (outMsg.payload.today.isWeekendOrHoliday && outMsg.payload.dayAfterTomorrow.isWeekendOrHoliday && !outMsg.payload.tomorrow.isWeekendOrHoliday);
         outMsg.payload.dayAfterTomorrow.isBetweenWeekendOrHoliday = (outMsg.payload.tomorrow.isWeekendOrHoliday && outMsg.payload.afterTheDayAfterTomorrow.isWeekendOrHoliday && !outMsg.payload.dayAfterTomorrow.isWeekendOrHoliday);
+
+        outMsg.payload.today.isCurrentOrBetweenWeekendOrHoliday = (outMsg.payload.today.isWeekendOrHoliday || outMsg.payload.today.isBetweenWeekendOrHoliday);
+        outMsg.payload.tomorrow.isCurrentOrBetweenWeekendOrHoliday = (outMsg.payload.tomorrow.isWeekendOrHoliday || outMsg.payload.tomorrow.isBetweenWeekendOrHoliday);
+        outMsg.payload.dayAfterTomorrow.isCurrentOrBetweenWeekendOrHoliday = (outMsg.payload.dayAfterTomorrow.isWeekendOrHoliday || outMsg.payload.today.isBetweenWeekendOrHoliday);
 
         for (let i = 0; i < outMsg.payload.hollidays.length; i++) {
           let hd = outMsg.payload.hollidays[i];

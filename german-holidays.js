@@ -564,10 +564,11 @@ module.exports = function (RED) {
         }
 
         for (let attr of attrs) {
-          if ((typeof config.attr !== 'undefined') && (config.attr !== '')) {
+          //value === undefined || value === null --> value == null
+          if ((config[attr] != null) && (config[attr] !== '')) {
             outMsg.data[attr] = config[attr];
           }
-          if ((typeof msg.attr !== 'undefined') && (msg.attr != null) && (msg.attr != '')) {
+          if ((msg[attr] != null) && (msg[attr] != '')) {
             outMsg.data[attr] = msg[attr];
           }
         }

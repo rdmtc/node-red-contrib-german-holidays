@@ -564,14 +564,13 @@ module.exports = function (RED) {
         }
 
         for (let attr of attrs) {
-          if (config[attr]) {
+          if ((typeof config.attr !== 'undefined') && (config.attr !== '')) {
             outMsg.data[attr] = config[attr];
           }
-          if (msg[attr]) {
+          if ((typeof msg.attr !== 'undefined') && (msg.attr != null) && (msg.attr != '')) {
             outMsg.data[attr] = msg[attr];
           }
         }
-
         /*
         if (typeof msg.payload === 'object') {
           for (let attr of attrs) {

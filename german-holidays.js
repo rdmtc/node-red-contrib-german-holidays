@@ -568,7 +568,7 @@ module.exports = function (RED) {
           if ((config[attr] != null) && (config[attr] !== '')) {
             outMsg.data[attr] = config[attr];
           }
-          if ((msg[attr] != null) && (msg[attr] != '')) {
+          if ((msg[attr] != null) && (msg[attr] !== '')) {
             outMsg.data[attr] = msg[attr];
           }
         }

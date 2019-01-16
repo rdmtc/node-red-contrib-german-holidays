@@ -15,6 +15,7 @@
   "scripts": {
     "test": "camo-purge; xo",
     "lintfix": "xo --fix",
+    "lint": "eslint \"./**/*.js\"",
     "predev": "npm i -g",
     "dev": "node-red -v"
   },
@@ -84,10 +85,7 @@
       "html/report-bad-indent": "warn",
       "import/resolver": {
         "node": {
-          "extensions": [
-            ".js",
-            ".jsx"
-          ]
+          "extensions": [ ".js", ".jsx" ]
         }
       }
     },

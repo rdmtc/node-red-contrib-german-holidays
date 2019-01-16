@@ -96,6 +96,7 @@ const errorHandler = function (node, err, messageText, stateText) {
     if (!err) {
         return true;
     }
+
     if (err.message) {
     // const msg = err.message.toLowerCase();
         messageText += ':' + err.message;
@@ -115,8 +116,10 @@ const errorHandler = function (node, err, messageText, stateText) {
         console.error(messageText);
         console.error(JSON.stringify(err, Object.getOwnPropertyNames(err)));
     }
+
     return false;
 };
+
 /*******************************************************************************************************/
 function getDataForDay(date, offsetToday, holidays) {
     if (offsetToday !== 0) {
@@ -124,6 +127,7 @@ function getDataForDay(date, offsetToday, holidays) {
         d.setDate(d.getDate() + offsetToday);
         return getDataForDate(d, holidays, offsetToday);
     }
+
     return getDataForDate(date, holidays, 0);
 }
 
@@ -284,10 +288,12 @@ function _getHolidaysOfYear(year, region) {
             _newHoliday('HEILIGEDREIKOENIGE', _makeDate(year, 1, 6))
         );
     }
+
     if (region === 'BB' || region === 'ALL') {
         feiertageObjects.push(_newHoliday('OSTERSONNTAG', easter_date));
         feiertageObjects.push(_newHoliday('PFINGSTSONNTAG', pfingstsonntag));
     }
+
     // Fronleichnam
     if (
         region === 'BW' ||
@@ -410,7 +416,9 @@ function getBussBettag(jahr) {
     const ersterAdventOffset = 32;
     let wochenTagOffset = weihnachten.getDay() % 7;
 
-    if (wochenTagOffset === 0) wochenTagOffset = 7;
+    if (wochenTagOffset === 0) {
+        wochenTagOffset = 7;
+    }
 
     const tageVorWeihnachten = wochenTagOffset + ersterAdventOffset;
 
@@ -573,6 +581,7 @@ module.exports = function (RED) {
                         outMsg.data[attr] = msg[attr];
                     }
                 }
+
                 /*
 if (typeof msg.payload === 'object') {
 for (let attr of attrs) {
@@ -598,6 +607,7 @@ outMsg.data[attr] = msg.payload[attr];
                     });
                     return;
                 }
+
                 outMsg.data.region = outMsg.data.region.toUpperCase();
                 if (allRegions.indexOf(outMsg.data.region) === -1) {
                     this.error('Invalid region: ' + outMsg.data.region + '! Must be one of ' + allRegions.toString());
@@ -610,7 +620,6 @@ outMsg.data[attr] = msg.payload[attr];
                 }
 
                 if ((typeof outMsg.data.date !== 'undefined') && ((outMsg.data.date instanceof Date) || (typeof outMsg.data.date === 'string'))) {
-
                     const dto = new Date(outMsg.data.date);
                     if (dto !== 'Invalid Date' && !isNaN(dto)) {
                         // outMsg.data.ts = dto;
@@ -707,6 +716,7 @@ outMsg.data[attr] = msg.payload[attr];
                     } else if (diff < 0) {
                         date.setDate(date.getDate() + ((-1) * diff));
                     }
+
                     outMsg.payload.next.weekendDay = _newDay('SATURDAY', date);
                 }
 
@@ -716,6 +726,7 @@ outMsg.data[attr] = msg.payload[attr];
                 } else {
                     outMsg.payload.next.weekendOrHoliday = outMsg.payload.next.weekendDay;
                 }
+
                 this.send(outMsg);
             } catch (err) {
                 errorHandler(this, err, 'Exception occured on get german holidays', 'internal error');

@@ -13,9 +13,9 @@
     "node": ">=8.0.0"
   },
   "scripts": {
-    "test": "camo-purge; eslint \"./**/*.js\"",
-    "lintfix": "xo --fix",
-    "lint": "eslint \"./**/*.js\"",
+    "test": "camo-purge; eslint \"./**/*.js\" \"./**/*.html\"",
+    "lintfix": "eslint --fix \"./**/*.js\" \"./**/*.html\"",
+    "lint": "eslint \"./**/*.js\" \"./**/*.html\"",
     "predev": "npm i -g",
     "dev": "node-red -v"
   },
@@ -48,32 +48,21 @@
       "german-holidays": "german-holidays.js"
     }
   },
-  "dependencies": {},
+    "dependencies": {
+        "util": ">=0.8.0"
+    },
   "devDependencies": {
     "camo-purge": "^1.0.2",
-    "eslint-plugin-html": "^4.0.3",
-    "xo": "^0.20.3"
-  },
-  "xo": {
-    "space": 4,
-    "plugin": "html",
-    "global": [
-      "$",
-      "RED"
-    ],
-    "extensions": [
-      "js",
-      "html"
-    ],
-    "rules": {
-      "capitalized-comments": "off"
-    }
+        "eslint-plugin-html": "^5.0.0",
+        "eslint": "^5.12.0"
   },
   "eslintConfig": {
     "env": {
       "es6": true,
       "node": true,
-      "browser": true
+      "browser": true,
+      "commonjs": true,
+      "jquery": true
     },
     "plugins": [
       "html"
@@ -81,13 +70,19 @@
     "extends": "eslint:recommended",
     "settings": {
       "html/html-extensions": [".html", ".htm", ".we"],
-      "html/indent": "+2",
-      "html/report-bad-indent": "warn",
+      "html/indent": "+4",
+      "html/report-bad-indent": "error",
       "import/resolver": {
         "node": {
-          "extensions": [ ".js", ".jsx" ]
+          "extensions": [
+            ".js",
+            ".jsx"
+          ]
         }
       }
+    },
+    "globals": {
+      "RED": true
     },
     "parserOptions": {
       "ecmaVersion": 2018,
@@ -120,6 +115,7 @@
       "no-unused-vars": [
         "warn",
         {
+          "args": "after-used",
           "argsIgnorePattern": "^_"
         }
       ],
@@ -163,9 +159,12 @@
         }
       ],
       "no-trailing-spaces": "error",
-      "spaced-comment":["warn", "always", {
+      "spaced-comment": [
+        "warn",
+        "always",
+        {
             "line": {
-              "markers": ["/"],
+              "markers": ["/", "*"],
               "exceptions": ["-", "+", "*", "#"]
           },
           "block": {
@@ -173,7 +172,8 @@
               "exceptions": ["-", "+", "*", "#"],
               "balanced": true
           }
-      }],
+        }
+      ],
       "eol-last": ["error", "never"]
     }
   }

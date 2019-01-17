@@ -48,13 +48,13 @@
       "german-holidays": "german-holidays.js"
     }
   },
-    "dependencies": {
-        "util": ">=0.8.0"
-    },
+  "dependencies": {
+    "util": ">=0.8.0"
+  },
   "devDependencies": {
     "camo-purge": "^1.0.2",
-        "eslint-plugin-html": "^5.0.0",
-        "eslint": "^5.12.0"
+    "eslint-plugin-html": "^5.0.0",
+    "eslint": "^5.12.0"
   },
   "eslintConfig": {
     "env": {
@@ -69,7 +69,11 @@
     ],
     "extends": "eslint:recommended",
     "settings": {
-      "html/html-extensions": [".html", ".htm", ".we"],
+      "html/html-extensions": [
+        ".html",
+        ".htm",
+        ".we"
+      ],
       "html/indent": "+4",
       "html/report-bad-indent": "error",
       "import/resolver": {
@@ -131,7 +135,10 @@
       ],
       "no-var": "error",
       "prefer-const": "error",
-      "linebreak-style": ["error", "windows"],
+      "linebreak-style": [
+        "error",
+        "windows"
+      ],
       "brace-style": [
         2,
         "1tbs",
@@ -147,7 +154,10 @@
           "allowTemplateLiterals": true
         }
       ],
-      "semi": ["error", "always"],
+      "semi": [
+        "error",
+        "always"
+      ],
       "comma-dangle": [
         "error",
         {
@@ -163,18 +173,36 @@
         "warn",
         "always",
         {
-            "line": {
-              "markers": ["/", "*"],
-              "exceptions": ["-", "+", "*", "#"]
+          "line": {
+            "markers": [
+              "/",
+              "*"
+            ],
+            "exceptions": [
+              "-",
+              "+",
+              "*",
+              "#"
+            ]
           },
           "block": {
-              "markers": ["!"],
-              "exceptions": ["-", "+", "*", "#"],
-              "balanced": true
+            "markers": [
+              "!"
+            ],
+            "exceptions": [
+              "-",
+              "+",
+              "*",
+              "#"
+            ],
+            "balanced": true
           }
         }
       ],
-      "eol-last": ["error", "never"]
+      "eol-last": [
+        "error",
+        "never"
+      ]
     }
   }
 }

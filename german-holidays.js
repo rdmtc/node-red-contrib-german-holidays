@@ -3,7 +3,7 @@
  *********************************************/
 
 /*!
- * This is based ont he feiertage.js
+ * This is based on the feiertage.js
  * @repository https://github.com/sfakir/feiertagejs
  * @docs https://github.com/sfakir/feiertagejs/blob/master/docs.md
  *
@@ -131,7 +131,7 @@ function getDataForDay(date, offsetToday, holidays) {
     return getDataForDate(date, holidays, 0);
 }
 
-// holidays api
+// holidays API
 /**
  * get the data for a date.
  * @param date date to get data for
@@ -216,7 +216,7 @@ function getWeekNumberUTC(d) {
  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
 }/* */
 
-// holidays api
+// holidays API
 /**
  * Checks if the given holidayName is a valid {@link HolidayType}.
  * @param holidayName {@link HolidayType} to check
@@ -224,8 +224,8 @@ function getWeekNumberUTC(d) {
  * @private
  */ /*
 function checkHolidayType(holidayName) {
- if (holidayName === null || holidayName === undefined) {
-     throw new TypeError('holidayName must not be null or undefined');
+ if (holidayName === null || holidayName === 'undefined') {
+     throw new TypeError('holidayName must not be null or 'undefined'');
  }
  if (allHolidays.indexOf(holidayName) === -1) {
      throw new Error(
@@ -240,7 +240,7 @@ function isSpecificHoliday(
     holidayName
 ) {
     checkHolidayType(holidayName);
-    return holidays.objects.find(holiday => holiday.equals(date)) !== undefined;
+    return holidays.objects.find(holiday => holiday.equals(date)) !== 'undefined';
 }/* */
 
 /**
@@ -407,12 +407,12 @@ function getEasterDate(year) {
 
 /**
  * Computes the "Buss- und Bettag"'s date.
- * @param jahr {number}
+ * @param year {number}
  * @returns {Date} the year's "Buss- und Bettag" date
  * @private
  */
-function getBussBettag(jahr) {
-    const weihnachten = new Date(jahr, 11, 25, 12, 0, 0);
+function getBussBettag(year) {
+    const weihnachten = new Date(year, 11, 25, 12, 0, 0);
     const ersterAdventOffset = 32;
     let wochenTagOffset = weihnachten.getDay() % 7;
 
@@ -573,7 +573,7 @@ module.exports = function (RED) {
                 };
 
                 for (const attr of attrs) {
-                    // value === undefined || value === null --> value == null
+                    // value === 'undefined' || value === null --> value == null
                     if ((config[attr] != null) && (config[attr] !== '')) { // eslint-disable-line
                         outMsg.data[attr] = config[attr];
                     }
@@ -582,14 +582,6 @@ module.exports = function (RED) {
                     }
                 }
 
-                /*
-if (typeof msg.payload === 'object') {
-for (let attr of attrs) {
-if (msg.payload[attr]) {
-outMsg.data[attr] = msg.payload[attr];
-}
-}
-}/* */
                 if ((typeof outMsg.data.ts === 'undefined') && ((typeof msg.payload === 'string') || (msg.payload instanceof Date))) {
                     const dto = new Date(msg.payload);
                     if (dto !== 'Invalid Date' && !isNaN(dto)) {
@@ -597,9 +589,8 @@ outMsg.data[attr] = msg.payload[attr];
                     }
                 }
                 //-------------------------------------------------------------------
-
                 if (typeof outMsg.data.region === 'undefined' || outMsg.data.region === '') {
-                    this.error('configuraton error: Region is missing!');
+                    this.error('configuration error: Region is missing!');
                     this.status({
                         fill: 'red',
                         shape: 'dot',
@@ -622,7 +613,6 @@ outMsg.data[attr] = msg.payload[attr];
                 if ((typeof outMsg.data.date !== 'undefined') && ((outMsg.data.date instanceof Date) || (typeof outMsg.data.date === 'string'))) {
                     const dto = new Date(outMsg.data.date);
                     if (dto !== 'Invalid Date' && !isNaN(dto)) {
-                        // outMsg.data.ts = dto;
                         outMsg.data.year = dto.getFullYear();
                         const holidays = _getHolidaysOfYear(outMsg.data.year, outMsg.data.region);
                         outMsg.payload = getDataForDate(dto, holidays);
@@ -708,7 +698,7 @@ outMsg.data[attr] = msg.payload[attr];
                     date.setDate(date.getDate() + 1);
                     outMsg.payload.next.weekendDay = _newDay('SUNDAY', date);
                 } else {
-                    const dayOfWeek = 6; // saturday
+                    const dayOfWeek = 6; // Saturday
                     const date = new Date(outMsg.data.ts);
                     const diff = date.getDay() - dayOfWeek;
                     if (diff > 0) {
@@ -729,7 +719,7 @@ outMsg.data[attr] = msg.payload[attr];
 
                 this.send(outMsg);
             } catch (err) {
-                errorHandler(this, err, 'Exception occured on get german holidays', 'internal error');
+                errorHandler(this, err, 'Exception occurred on get german holidays', 'internal error');
             }
         });
     }

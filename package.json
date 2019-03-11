@@ -17,7 +17,8 @@
     "lintfix": "eslint --fix \"./**/*.js\" \"./**/*.html\"",
     "lint": "eslint \"./**/*.js\" \"./**/*.html\"",
     "predev": "npm i -g",
-    "dev": "node-red -v"
+    "dev": "node-red -v",
+    "prepublishOnly": "eslint \"./**/*.js\" \"./**/*.html\""
   },
   "repository": {
     "type": "git",
@@ -53,8 +54,16 @@
   },
   "devDependencies": {
     "camo-purge": "^1.0.2",
-    "eslint-plugin-html": "^5.0.0",
-    "eslint": "^5.12.0"
+    "eslint": "^5.15.1",
+    "eslint-plugin-html": "^5.0.3"
+  },
+  "disabledSettings": {
+    "devDependencies-disabled": {
+      "eslint-plugin-jsdoc": "^4.1.0"
+    },
+    "plugins-disabled": [
+      "jsdoc"
+    ]
   },
   "eslintConfig": {
     "env": {
@@ -115,9 +124,9 @@
       "eqeqeq": "error",
       "no-else-return": "error",
       "prefer-arrow-callback": "error",
-      "no-console": "off",
+      "no-console": "warn",
       "no-unused-vars": [
-        "warn",
+        "error",
         {
           "args": "after-used",
           "argsIgnorePattern": "^_"
@@ -129,7 +138,7 @@
       "no-multiple-empty-lines": [
         "error",
         {
-          "max": 1,
+          "max": 2,
           "maxEOF": 1
         }
       ],

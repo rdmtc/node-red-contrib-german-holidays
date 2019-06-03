@@ -6,6 +6,7 @@
  * This is based on the feiertage.js
  * @repository https://github.com/sfakir/feiertagejs
  * @docs https://github.com/sfakir/feiertagejs/blob/master/docs.md
+ * @docs https://www.rechner.club/feiertage
  *
  * Copyright 2015-2018 Simon Fakir
  * Released under the MIT license

@@ -9,6 +9,7 @@
  * @docs https://www.rechner.club/feiertage
  * @docs http://manfred.wilzeck.de/Datum_berechnen_allgemein.html
  * @docs https://www.welt-der-zahlen.info/berechnung.html
+ * @docs http://www.ooowiki.de/CalcFunktionenDatum(2f)Feiertage.html
  *
  * Copyright 2015-2018 Simon Fakir
  * Released under the MIT license

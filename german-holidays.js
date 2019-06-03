@@ -7,6 +7,8 @@
  * @repository https://github.com/sfakir/feiertagejs
  * @docs https://github.com/sfakir/feiertagejs/blob/master/docs.md
  * @docs https://www.rechner.club/feiertage
+ * @docs http://manfred.wilzeck.de/Datum_berechnen_allgemein.html
+ * @docs https://www.welt-der-zahlen.info/berechnung.html
  *
  * Copyright 2015-2018 Simon Fakir
  * Released under the MIT license
@@ -55,30 +57,210 @@ const allHolidays = [
 ]; */
 
 const germanTranslations = {
-    NEUJAHRSTAG: 'Neujahrstag',
-    HEILIGEDREIKOENIGE: 'Heilige Drei Könige',
-    KARFREITAG: 'Karfreitag',
-    OSTERSONNTAG: 'Ostersonntag',
-    OSTERMONTAG: 'Ostermontag',
-    TAG_DER_ARBEIT: 'Tag der Arbeit',
-    CHRISTIHIMMELFAHRT: 'Christi Himmelfahrt',
-    PFINGSTSONNTAG: 'Pfingstsonntag',
-    PFINGSTMONTAG: 'Pfingstmontag',
-    FRONLEICHNAM: 'Fronleichnam',
-    MARIAHIMMELFAHRT: 'Mariä Himmelfahrt',
-    DEUTSCHEEINHEIT: 'Tag der Deutschen Einheit',
-    REFORMATIONSTAG: 'Reformationstag',
-    ALLERHEILIGEN: 'Allerheiligen',
-    BUBETAG: 'Buß- und Bettag',
-    ERSTERWEIHNACHTSFEIERTAG: '1. Weihnachtstag',
-    ZWEITERWEIHNACHTSFEIERTAG: '2. Weihnachtstag',
-    MONDAY: 'Montag',
-    TUESDAY: 'Dienstag',
-    WEDNESDAY: 'Mittwoch',
-    THURSDAY: 'Donnerstag',
-    FRIDAY: 'Freitag',
-    SATURDAY: 'Samstag',
-    SUNDAY: 'Sonntag'
+    NEUJAHRSTAG: {
+        nameDE : 'Neujahrstag', // 1.1.
+        isHoliday: 'ALL'
+    },
+    HEILIGEDREIKOENIGE: {
+        nameDE : 'Heilige Drei Könige', // 6.1.
+        isHoliday: 'ALL'
+    },
+    VALENTINSTAG: {
+        nameDE : 'Valentinstag', // 14. 2.
+        isHoliday: 'NONE'
+    },
+    SCHMUDONN: {
+        nameDE : 'Schmutziger Donnerstag', // 52 Tage vor dem Ostersonntag
+        isHoliday: 'NONE'
+    },
+    ROSENMONTAG: {
+        nameDE : 'Rosenmontag', // 48 Tage vor dem Ostersonntag
+        isHoliday: 'NONE'
+    },
+    FASTNACHTSDIENSTAG: {
+        nameDE : 'Fastnachtsdienstag', // 47 Tage vor dem Ostersonntag
+        isHoliday: 'NONE'
+    },
+    ASCHERMITTWOCH: {
+        nameDE : 'Aschermittwoch', // 46 Tage vor dem Ostersonntag (der erste Tag der Fastenzeit)
+        isHoliday: 'NONE'
+    },
+    PALMSONNTAG: {
+        nameDE : 'Palmsonntag', // 7 Tage vor dem Ostersonntag
+        isHoliday: 'NONE'
+    },
+    GRUENDONNERSTAG: {
+        nameDE : 'Gründonnerstag', // 4 Tage vor dem Ostersonntag
+        isHoliday: 'NONE'
+    },
+    KARFREITAG: {
+        nameDE : 'Karfreitag',
+        isHoliday: 'YES'
+    },
+    OSTERSONNTAG: {
+        nameDE :  'Ostersonntag',
+        isHoliday: 'YES'
+    },
+    OSTERMONTAG: {
+        nameDE :  'Ostermontag',
+        isHoliday: 'YES'
+    },
+    WALPURGISNACHT: {
+        nameDE : 'Walpurgisnacht', // 30. April
+        isHoliday: 'NONE'
+    },
+    TAG_DER_ARBEIT: {
+        nameDE :  'Tag der Arbeit', // 1. Mai
+        nameAlt: 'Maifeiertag',
+        isHoliday: 'YES'
+    },
+    EISHEILIGEN1: {
+        nameDE : 'Eisheiliger Mamertus', // 11. Mai
+        isHoliday: 'NONE'
+    },
+    EISHEILIGEN2: {
+        nameDE : 'Eisheiliger Pankratius', // 12. Mai
+        isHoliday: 'NONE'
+    },
+    EISHEILIGEN3: {
+        nameDE : 'Eisheiliger Servatius', // 13. Mai
+        isHoliday: 'NONE'
+    },
+    EISHEILIGEN4: {
+        nameDE : 'Eisheiliger Bonifatius', // 14. Mai
+        isHoliday: 'NONE'
+    },
+    EISHEILIGEN5: {
+        nameDE : 'Eisheilige Kalte Sophie', // 15. Mai
+        isHoliday: 'NONE'
+    },
+    MUTTERTAG: {
+        nameDE : 'Muttertag', // 2. Sonntag im Mai
+        isHoliday: 'NONE'
+    },
+    CHRISTIHIMMELFAHRT: {
+        nameDE :  'Christi Himmelfahrt',
+        nameAlt: 'Vatertag',
+        isHoliday: 'YES'
+    },
+    PFINGSTSONNTAG: {
+        nameDE :  'Pfingstsonntag',
+        isHoliday: 'YES'
+    },
+    PFINGSTMONTAG: {
+        nameDE :  'Pfingstmontag',
+        isHoliday: 'YES'
+    },
+    FRONLEICHNAM: {
+        nameDE :  'Fronleichnam',
+        isHoliday: 'YES'
+    },
+    SIEBENSCHLAEFER: {
+        nameDE : 'Siebenschläfer', // 27. Juni
+        isHoliday: 'NONE'
+    },
+    MARIAHIMMELFAHRT: {
+        nameDE :  'Mariä Himmelfahrt',
+        isHoliday: 'YES'
+    },
+    ERNTEDANK: {
+        nameDE : 'Erntedank', // erster Sonntag im Oktober
+        isHoliday: 'NONE'
+    },
+    DEUTSCHEEINHEIT: {
+        nameDE :  'Tag der Deutschen Einheit',
+        isHoliday: 'YES'
+    },
+    REFORMATIONSTAG: {
+        nameDE :  'Reformationstag', // 31. Oktober
+        nameAlt: 'Halloween',
+        isHoliday: 'YES'
+    },
+    ALLERHEILIGEN: {
+        nameDE :  'Allerheiligen',
+        isHoliday: 'YES'
+    },
+    ALLERSEELEN: {
+        nameDE : 'Allerseelen', // 2. November
+        isHoliday: 'NONE'
+    },
+    MARTINSTAG: {
+        nameDE : 'Martinstag', // 11. November
+        isHoliday: 'NONE'
+    },
+    VOLKSTRAUERTAG: {
+        nameDE : 'Volkstrauertages', // Sonntag (3 Tage) vor dem Buß- und Bettag
+        isHoliday: 'NONE'
+    },
+    BUBETAG: {
+        nameDE :  'Buß- und Bettag',
+        isHoliday: 'YES'
+    },
+    TOTENSONNTAG: {
+        nameDE : 'Totensonntag', // Sonntag (4 Tage) nach dem Buß- und Bettag; eine Woche vor dem ersten Advent
+        nameAlt: 'Ewigkeitssonntag',
+        isHoliday: 'NONE'
+    },
+    ADVENT1: {
+        nameDE : 'erste Advent', // vierte Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 1. Advent liegen 11 Tage
+        isHoliday: 'NONE'
+    },
+    ADVENT2: {
+        nameDE : 'zweite Advent', // dritte Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 2. Advent liegen 18 Tage
+        isHoliday: 'NONE'
+    },
+    NIKOLAUS: {
+        nameDE : 'Nikolaus', // 6.12.
+        isHoliday: 'NONE'
+    },
+    ADVENT3: {
+        nameDE : 'dritte Advent', // zweite Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 3. Advent liegen 25 Tage
+        isHoliday: 'NONE'
+    },
+    ADVENT4: {
+        nameDE : 'vierte Advent', // Sonntag direkt vor Weihnachten; Zwischen Buss und Bettag und dem 4. Advent liegen 32 Tage
+        isHoliday: 'NONE'
+    },
+    ERSTERWEIHNACHTSFEIERTAG: {
+        nameDE :  '1. Weihnachtstag',
+        isHoliday: 'YES'
+    },
+    ZWEITERWEIHNACHTSFEIERTAG: {
+        nameDE : '2. Weihnachtstag',
+        isHoliday: 'YES'
+    },
+    SILVESTER: {
+        nameDE : 'Silvester', // 31.12.
+        isHoliday: 'NONE'
+    },
+    MONDAY: {
+        nameDE : 'Montag',
+        isHoliday: 'NONE'
+    },
+    TUESDAY: {
+        nameDE : 'Dienstag',
+        isHoliday: 'NONE'
+    },
+    WEDNESDAY: {
+        nameDE : 'Mittwoch',
+        isHoliday: 'NONE'
+    },
+    THURSDAY: {
+        nameDE : 'Donnerstag',
+        isHoliday: 'NONE'
+    },
+    FRIDAY: {
+        nameDE : 'Freitag',
+        isHoliday: 'NONE'
+    },
+    SATURDAY: {
+        nameDE : 'Samstag',
+        isHoliday: 'NONE'
+    },
+    SUNDAY: {
+        nameDE : 'Sonntag',
+        isHoliday: 'NONE'
+    }
 };
 
 const dayNames = [
@@ -162,7 +344,7 @@ function getDataForDate(date, holidays, offsetToday) {
     result.isSunday = (result.dayOfWeek === 0);
     result.isSaturday = (result.dayOfWeek === 6);
     result.isHoliday = ((typeof result.holiday !== 'undefined') && (result.holiday !== null)); // holidays.integers.indexOf(internalDate) !== -1
-    result.name = germanTranslations[result.id];
+    result.name = (result.id && germanTranslations[result.id]) ? germanTranslations[result.id].nameDE : date.getUTCFullYear() + pad2(date.getUTCMonth()) + pad2(date.getUTCDate());
     result.isWeekend = result.isSunday || result.isSaturday;
     result.isSunOrHoliday = result.isSunday || result.isHoliday;
     result.isWeekendOrHoliday = result.isSaturday || result.isSunday || result.isHoliday;
@@ -440,7 +622,7 @@ function _makeDate(year, naturalMonth, day) {
 function _newDay(id, date) {
     return {
         id,
-        name: (germanTranslations[id]) ? germanTranslations[id] : date.getUTCFullYear() + pad2(date.getUTCMonth()) + pad2(date.getUTCDate()),
+        name: (germanTranslations[id]) ? germanTranslations[id].nameDE : date.getUTCFullYear() + pad2(date.getUTCMonth()) + pad2(date.getUTCDate()),
         dayOfWeek: date.getUTCDay(),
         day: date.getUTCDate(),
         month: date.getUTCMonth(),

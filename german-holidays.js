@@ -114,8 +114,8 @@ const errorHandler = function (node, err, messageText, stateText) {
             text: stateText
         });
     } else if (console) {
-        console.error(messageText);
-        console.error(JSON.stringify(err, Object.getOwnPropertyNames(err)));
+        console.error(messageText); // eslint-disable-line
+        console.error(JSON.stringify(err, Object.getOwnPropertyNames(err))); // eslint-disable-line
     }
 
     return false;

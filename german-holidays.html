@@ -1,11 +1,4 @@
 <script type="text/x-red" data-template-name="german-holidays">
-    <!--
-        <div class="form-row">
-            <label for="node-input-creds">Credentials</label>
-            <input type="text" id="node-input-creds">
-        </div>
-    -->
-
     <div class="form-row">
         <label for="node-region"><i class="fa fa-globe"></i> state</label>
         <select type="text" id="node-input-region" style="width:70%;">
@@ -30,15 +23,26 @@
         </select>
     </div>
 
-    <!-- By convention, most nodes have a 'name' property. The following div -->
-    <!-- provides the necessary field. Should always be the last option      -->
-    <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-
     <div class="form-tips"><b>Tip:</b> You can also define the region as part of the incomming message. This would be used priorized than the settings here. But then are the shortcuts (BY=Bayern, BE=Berlin) are used.<br />
         <code>msg.region</code> or <code>msg.payload.region</code>
+    </div>
+
+    <hr>
+    <div>
+        <label for="node-input-addHoliday-container-row"><i class="fa fa-list"></i> <span>define additional Holidays</span></label>
+        <div class="form-row node-input-addHoliday-container-row">
+            <ol id="node-input-addHoliday-container"></ol>
+        </div>
+    </div>
+
+    <hr>
+    <div class="form-row block-noindent time-topic" data-i18n="[title]node-red:common.label.topic">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> <span data-i18n="node-red:common.label.topic"></span></label>
+        <input type="text" id="node-input-topic" data-i18n="[placeholder]node-red:common.label.topic">
+    </div>
+    <div class="form-row" data-i18n="[title]node-red:common.label.name">
+        <label for="node-input-name"><i class="icon-tag"></i> <span data-i18n="node-red:common.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]time-span.placeholder.name">
     </div>
 </script>
 
@@ -209,9 +213,19 @@
                 value: '',
                 required: false
             },
+            topic: {
+                value: ''
+            },
             region: {
                 value: '',
                 required: true
+            },
+            addHolidays: {
+                value: [{
+                    name: '',
+                    month: '',
+                    day: ''
+                }]
             }
         },
         inputs: 1, // set the number of inputs - only 0 or 1
@@ -224,5 +238,110 @@
         labelStyle() {
             return this.name ? 'node_label_italic' : '';
         },
-        paletteLabel: 'Holidays'
+        paletteLabel: 'Holidays',
+        oneditprepare() {
+            const node = this;
+
+            // #region addHoliday-container
+            function resizeRule(addHoliday) {
+                const newWidth = addHoliday.width() - 10;
+                // const operatorField = addHoliday.find('.node-input-addHoliday-operator');
+                const $name = addHoliday.find('.node-input-addHoliday-name');
+                const $month = addHoliday.find('.node-input-addHoliday-month');
+                const $day = addHoliday.find('.node-input-addHoliday-day');
+                // row1
+                $month.width(50);
+                $day.width(50);
+                $name.width(newWidth - 100 - 40);
+            }
+
+            function resizeContainer() {
+                const editorRow = $('.node-input-addHoliday-container-row ol');
+                const height = editorRow.outerHeight(true);
+
+                const rows = $('#node-input-addHoliday-container').editableList('items');
+                if (rows.size() > 0) {
+                    $('#node-input-addHoliday-container').editableList('height', height + 40);
+                } else {
+                    $('#node-input-addHoliday-container').editableList('height', 20);
+                }
+            }
+
+            $('#node-input-addHoliday-container').css('min-height', '20px').css('min-width', '200px').editableList({
+                addItem(containerRow, containerIndex, data) {
+                    containerRow.css({ overflow: 'hidden', whiteSpace: 'nowrap' });
+                    const row = $('<div/>').appendTo(containerRow);
+                    // row1
+                    // name
+                    $('<input/>', {
+                        class: 'node-input-addHoliday-name',
+                        id: 'node-input-addHoliday-name' + containerIndex,
+                        type: 'text',
+                        value: (data.name || ''),
+                        title: 'name',
+                        placeholder: 'name'
+                    }).appendTo(row);
+                    // month
+                    $('<input/>', {
+                        class: 'node-input-addHoliday-month',
+                        id: 'node-input-addHoliday-month' + containerIndex,
+                        type: 'number',
+                        min: 1,
+                        max: 12,
+                        step: 1,
+                        value: (data.month || 1),
+                        title: 'month 1-12',
+                        placeholder: 'month'
+                    }).appendTo(row);
+                    // day
+                    $('<input/>', {
+                        class: 'node-input-addHoliday-month',
+                        id: 'node-input-addHoliday-month' + containerIndex,
+                        type: 'number',
+                        min: 1,
+                        max: 31,
+                        step: 1,
+                        value: (data.month || 1),
+                        title: 'day 1-31',
+                        placeholder: 'day'
+                    }).appendTo(row);
+
+                    resizeRule(containerRow);
+                    resizeContainer();
+                },
+                sortItems(addHolidays) {
+                    addHolidays = $('#node-input-addHoliday-container').editableList('items');
+                    addHolidays.each(function (i) {
+                        $(this).find('.node-input-addHoliday-index').html(i + 1);
+                    });
+                },
+                resizeItem: resizeRule,
+                sortable: true,
+                removable: true,
+                removeItem: resizeContainer
+            });
+            if (node.addHolidays) {
+                for (let i = 0; i < node.addHolidays.length; i++) {
+                    const addHoliday = node.addHolidays[i];
+                    $('#node-input-addHoliday-container').editableList('addItem', addHoliday);
+                }
+            }
+            // #endregion addHoliday-container
+        },
+        oneditsave() {
+            const node = this;
+            // #region rule-container
+            node.addHolidays = [];
+            const addHolidays = $('#node-input-addHoliday-container').editableList('items');
+            addHolidays.each(function (_i) {
+                const rule = $(this);
+                const data = {
+                    name: rule.find('.node-input-addHoliday-name').val(),
+                    month: parseInt(rule.find('.node-input-addHoliday-month').val()),
+                    day: parseInt(rule.find('.node-input-addHoliday-day').val())
+                };
+                node.addHolidays.push(data);
+            });
+            // #endregion result-container
+        }
     });</script>

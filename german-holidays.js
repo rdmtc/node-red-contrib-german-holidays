@@ -319,7 +319,23 @@ const errorHandler = function (node, err, messageText, stateText) {
 function pad2(n) { // always returns a string
     return (n < 0 || n > 9 ? '' : '0') + n;
 }
+
+/**
+ * Format a date do a string similar to ISO format, but with no secondy or milliseconds to be shorter
+ * @param {Date} d Date to format
+ *  @returns {string} date representation
+ */
+function _dateToString(d) {
+    return d.getUTCFullYear() + '-' + pad2(d.getUTCMonth() + 1) + '-' + pad2(d.getUTCDate()) + 'T' + pad2(d.getUTCHours()) + ':' + pad2(d.getUTCMinutes()) + 'Z';
+}
 /*******************************************************************************************************/
+/**
+ * get Holiday Data for a specific Day
+ * @param {Date} date Date to check
+ * @param {*} [offsetToday] offset from today
+ * @param {*} daysObjects Holidays object Data
+ * @returns object of all information for the day
+ */
 function getDataForDay(date, offsetToday, daysObjects) {
     if (offsetToday !== 0) {
         const d = new Date(date);
@@ -407,7 +423,22 @@ function _checkDefault(node) {
 }
 
 /**
- *
+ * push an element to the days array, but test if already a day definition exists
+ * @param {*} arr array
+ * @param {*} el element to push
+ */
+function _pushUnique(arr, el) {
+    const pos = arr.findIndex( (x) => {
+        return (el.day === x.day) && (el.month === x.month);
+    });
+    if (pos > -1) {
+        return;
+    }
+    arr.push(el);
+}
+
+/**
+ * creates all data of special and holidays of a year
  * @param {*} node  -  the node object for debuging
  * @param {Number} year  -  the year for calculation of the special days
  * @param {String} region  -  region to calculate holidays
@@ -436,7 +467,6 @@ function _getSpecialDaysOfYear(node, year, region, force) {
     const specialdaysObjects = [
         _newDay('NEUJAHRSTAG', _makeDate(year, 1, 1)),
         _newDay('HEILIGEDREIKOENIGE', _makeDate(year, 1, 6)),
-        _newDay('VALENTINSTAG', _makeDate(year, 2, 14)),
         _newDay('SCHMUDONN', _makeDateFromRef(easter_date, -52)),
         _newDay('ROSENMONTAG', _makeDateFromRef(easter_date, -48)),
         _newDay('FASTNACHTSDIENSTAG', _makeDateFromRef(easter_date, -47)),
@@ -450,15 +480,7 @@ function _getSpecialDaysOfYear(node, year, region, force) {
         _newDay('PFINGSTSONNTAG', _makeDateFromRef(easter_date, 49)),
         _newDay('PFINGSTMONTAG', _makeDateFromRef(easter_date, 50)),
         _newDay('FRONLEICHNAM', _makeDateFromRef(easter_date, 60)),
-        _newDay('WALPURGISNACHT', _makeDate(year, 4, 30)),
-        _newDay('ERNTEDANK', _makeDate(year, 10, 8 - oktFirst_Offset)),  // erster Sonntag im Oktober
         _newDay('TAG_DER_ARBEIT', _makeDate(year, 5, 1)),
-        _newDay('EISHEILIGEN1', _makeDate(year, 5, 11)),
-        _newDay('EISHEILIGEN2', _makeDate(year, 5, 12)),
-        _newDay('EISHEILIGEN3', _makeDate(year, 5, 13)),
-        _newDay('EISHEILIGEN4', _makeDate(year, 5, 14)),
-        _newDay('EISHEILIGEN5', _makeDate(year, 5, 15)),
-        _newDay('MUTTERTAG', _makeDate(year, 5, 14 - jx)),
         _newDay('KINDERTAG', _makeDate(year, 6, 1)),
         _newDay('SIEBENSCHLAEFER', _makeDate(year, 6, 27)),
         _newDay('MARIAHIMMELFAHRT', _makeDate(year, 8, 15)),
@@ -474,35 +496,56 @@ function _getSpecialDaysOfYear(node, year, region, force) {
         _newDay('ADVENT2', _makeDateFromRef(weihnachten, -14 - weihnachten_Offset)),
         _newDay('ADVENT3', _makeDateFromRef(weihnachten, -7 - weihnachten_Offset)),
         _newDay('ADVENT4', _makeDateFromRef(weihnachten, -weihnachten_Offset)),
-        _newDay('HEILIGABEND', _makeDate(year, 12, 24)),
         _newDay('ERSTERWEIHNACHTSFEIERTAG', weihnachten),
         _newDay('ZWEITERWEIHNACHTSFEIERTAG', _makeDate(year, 12, 26)),
         _newDay('SILVESTER', silvester)
     ];
+    _pushUnique(specialdaysObjects, _newDay('VALENTINSTAG', _makeDate(year, 2, 14)));
+    _pushUnique(specialdaysObjects, _newDay('ERNTEDANK', _makeDate(year, 10, 8 - oktFirst_Offset)));
+    _pushUnique(specialdaysObjects, _newDay('MUTTERTAG', _makeDate(year, 5, 14 - jx)));
+    _pushUnique(specialdaysObjects, _newDay('WALPURGISNACHT', _makeDate(year, 4, 30)));
+    _pushUnique(specialdaysObjects, _newDay('EISHEILIGEN1', _makeDate(year, 5, 11)));
+    _pushUnique(specialdaysObjects, _newDay('EISHEILIGEN2', _makeDate(year, 5, 12)));
+    _pushUnique(specialdaysObjects, _newDay('EISHEILIGEN3', _makeDate(year, 5, 13)));
+    _pushUnique(specialdaysObjects, _newDay('EISHEILIGEN4', _makeDate(year, 5, 14)));
+    _pushUnique(specialdaysObjects, _newDay('EISHEILIGEN5', _makeDate(year, 5, 15)));
+    _pushUnique(specialdaysObjects, _newDay('HEILIGABEND', _makeDate(year, 12, 24)));
 
-    node.addHolidays.forEach(d => {
-        const month = parseInt(d.month);
-        const day = parseInt(d.day);
-        if (!isNaN(month) && !isNaN(day) && month >= 1 && month <=12 && day >=1 && day <= 31) {
-            const id = pad2(month) + '-' + pad2(day);
-            let regions = ['ALWAYS'];
-            if (d.name.includes('NOHOLIDAY')) {
-                d.name.replace('NOHOLIDAY','');
-                regions = [];
+    if (node.addSpecialdays && node.addSpecialdays.length > 0) {
+        node.addSpecialdays.forEach(d => {
+            const month = parseInt(d.month);
+            const day = parseInt(d.day);
+            if (!isNaN(month) && !isNaN(day) && month >= 1 && month <=12 && day >=1 && day <= 31) {
+                const id = pad2(month) + '-' + pad2(day);
+                specialdaysObjects.push(_newDay(id, _makeDate(year, month, day), d.name, []));
             }
-            specialdaysObjects.push(_newDay(id, _makeDate(year, month, day), d.name, regions));
-        }
-    });
+        });
+    }
 
     specialdaysObjects.sort(
         (a, b) => a.date.getTime() - b.date.getTime()
     );
     const holidayObjects = [];
+
+    if (node.addHolidays && node.addHolidays.length > 0) {
+        node.addHolidays.forEach(d => {
+            const month = parseInt(d.month);
+            const day = parseInt(d.day);
+            if (!isNaN(month) && !isNaN(day) && month >= 1 && month <=12 && day >=1 && day <= 31) {
+                const id = pad2(month) + '-' + pad2(day);
+                _pushUnique(holidayObjects, _newDay(id, _makeDate(year, month, day), d.name, ['ALWAYS']));
+            }
+        });
+    }
+
     specialdaysObjects.forEach( d => {
         if (d.regions.includes(region) || d.regions.includes('ALWAYS')) {
-            holidayObjects.push(d);
+            _pushUnique(holidayObjects, d);
         }
     });
+    holidayObjects.sort(
+        (a, b) => a.date.getTime() - b.date.getTime()
+    );
 
     return {
         holidays: holidayObjects,
@@ -515,7 +558,7 @@ function _getSpecialDaysOfYear(node, year, region, force) {
 }
 
 /**
- *
+ * generates an integer representation array of the days array
  * @param objects
  * @returns {Array}
  * @private
@@ -575,9 +618,11 @@ function _makeDateFromRef(refDate, days) {
 }
 
 /**
- *
- * @param d
- * @param date
+ * generates a day object
+ * @param {String} id  -  id of the object
+ * @param {Date} date  -  date of the day
+ * @param {String} [name]  -  name of the day
+ * @param {Array} [regions]  -  valid regions of the day
  * @returns day
  * @private
  */
@@ -608,7 +653,7 @@ function _newDay(id, date, name, regions) {
 
 /**
  *
- * @param date
+ * @param {Date} date
  * @returns {string}
  * @private
  */
@@ -632,7 +677,7 @@ function _getlocaleDateObject(date) {
 
 /**
  * Returns the UTC timestamp of the given date with hours, minutes, seconds, and milliseconds set to zero.
- * @param date
+ * @param {Date} date
  * @returns {number} UTC timestamp
  */
 function toUtcTimestamp(date) {
@@ -649,7 +694,7 @@ module.exports = function (RED) {
         };
 
         this.addHolidays = config.addHolidays;
-
+        this.addSpecialdays = config.addSpecialdays;
         // const node = this;
 
         this.on('input', function (msg) {
@@ -714,7 +759,7 @@ module.exports = function (RED) {
                         this.status({
                             fill: 'grey',
                             shape: 'ring',
-                            text: outMsg.data.ts.toISOString()
+                            text: _dateToString(outMsg.data.ts)
                         });
                         return;
                     }
@@ -741,7 +786,7 @@ module.exports = function (RED) {
                     this.status({
                         fill: 'grey',
                         shape: 'ring',
-                        text: outMsg.data.ts.toISOString()
+                        text: _dateToString(outMsg.data.ts)
                     });
                     return;
                 }
@@ -838,7 +883,7 @@ module.exports = function (RED) {
                 this.status({
                     fill: 'grey',
                     shape: 'dot',
-                    text: outMsg.data.ts.toISOString()
+                    text: _dateToString(outMsg.data.ts)
                 });
                 this.send(outMsg);
             } catch (err) {

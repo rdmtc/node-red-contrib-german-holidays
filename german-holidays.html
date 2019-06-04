@@ -35,6 +35,13 @@
         </div>
     </div>
 
+    <div>
+        <label for="node-input-addSpecialday-container-row"><i class="fa fa-list"></i> <span>define additional special days</span></label>
+        <div class="form-row node-input-addSpecialday-container-row">
+            <ol id="node-input-addSpecialday-container"></ol>
+        </div>
+    </div>
+
     <hr>
     <div class="form-row block-noindent time-topic" data-i18n="[title]node-red:common.label.topic">
         <label for="node-input-topic"><i class="fa fa-tasks"></i> <span data-i18n="node-red:common.label.topic"></span></label>
@@ -221,11 +228,10 @@
                 required: true
             },
             addHolidays: {
-                value: [{
-                    name: '',
-                    month: '',
-                    day: ''
-                }]
+                value: []
+            },
+            addSpecialdays: {
+                value: []
             }
         },
         inputs: 1, // set the number of inputs - only 0 or 1
@@ -243,7 +249,7 @@
             const node = this;
 
             // #region addHoliday-container
-            function resizeRule(addHoliday) {
+            function resizeRuleHD(addHoliday) {
                 const newWidth = addHoliday.width() - 10;
                 // const operatorField = addHoliday.find('.node-input-addHoliday-operator');
                 const $name = addHoliday.find('.node-input-addHoliday-name');
@@ -255,7 +261,7 @@
                 $name.width(newWidth - 100 - 40);
             }
 
-            function resizeContainer() {
+            function resizeContainerHD() {
                 const editorRow = $('.node-input-addHoliday-container-row ol');
                 const height = editorRow.outerHeight(true);
 
@@ -306,8 +312,8 @@
                         placeholder: 'day'
                     }).appendTo(row);
 
-                    resizeRule(containerRow);
-                    resizeContainer();
+                    resizeRuleHD(containerRow);
+                    resizeContainerHD();
                 },
                 sortItems(addHolidays) {
                     addHolidays = $('#node-input-addHoliday-container').editableList('items');
@@ -315,10 +321,10 @@
                         $(this).find('.node-input-addHoliday-index').html(i + 1);
                     });
                 },
-                resizeItem: resizeRule,
+                resizeItem: resizeRuleHD,
                 sortable: true,
                 removable: true,
-                removeItem: resizeContainer
+                removeItem: resizeContainerHD
             });
             if (node.addHolidays) {
                 for (let i = 0; i < node.addHolidays.length; i++) {
@@ -327,10 +333,95 @@
                 }
             }
             // #endregion addHoliday-container
+            // #region addSpecialday-container
+            function resizeRuleSD(addSpecialday) {
+                const newWidth = addSpecialday.width() - 10;
+                // const operatorField = addSpecialday.find('.node-input-addSpecialday-operator');
+                const $name = addSpecialday.find('.node-input-addSpecialday-name');
+                const $month = addSpecialday.find('.node-input-addSpecialday-month');
+                const $day = addSpecialday.find('.node-input-addSpecialday-day');
+                // row1
+                $month.width(50);
+                $day.width(50);
+                $name.width(newWidth - 100 - 40);
+            }
+
+            function resizeContainerSD() {
+                const editorRow = $('.node-input-addSpecialday-container-row ol');
+                const height = editorRow.outerHeight(true);
+
+                const rows = $('#node-input-addSpecialday-container').editableList('items');
+                if (rows.size() > 0) {
+                    $('#node-input-addSpecialday-container').editableList('height', height + 40);
+                } else {
+                    $('#node-input-addSpecialday-container').editableList('height', 20);
+                }
+            }
+
+            $('#node-input-addSpecialday-container').css('min-height', '20px').css('min-width', '200px').editableList({
+                addItem(containerRow, containerIndex, data) {
+                    containerRow.css({ overflow: 'hidden', whiteSpace: 'nowrap' });
+                    const row = $('<div/>').appendTo(containerRow);
+                    // row1
+                    // name
+                    $('<input/>', {
+                        class: 'node-input-addSpecialday-name',
+                        id: 'node-input-addSpecialday-name' + containerIndex,
+                        type: 'text',
+                        value: (data.name || ''),
+                        title: 'name',
+                        placeholder: 'name'
+                    }).appendTo(row);
+                    // month
+                    $('<input/>', {
+                        class: 'node-input-addSpecialday-month',
+                        id: 'node-input-addSpecialday-month' + containerIndex,
+                        type: 'number',
+                        min: 1,
+                        max: 12,
+                        step: 1,
+                        value: (data.month || 1),
+                        title: 'month 1-12',
+                        placeholder: 'month'
+                    }).appendTo(row);
+                    // day
+                    $('<input/>', {
+                        class: 'node-input-addSpecialday-month',
+                        id: 'node-input-addSpecialday-month' + containerIndex,
+                        type: 'number',
+                        min: 1,
+                        max: 31,
+                        step: 1,
+                        value: (data.month || 1),
+                        title: 'day 1-31',
+                        placeholder: 'day'
+                    }).appendTo(row);
+
+                    resizeRuleSD(containerRow);
+                    resizeContainerSD();
+                },
+                sortItems(addSpecialdays) {
+                    addSpecialdays = $('#node-input-addSpecialday-container').editableList('items');
+                    addSpecialdays.each(function (i) {
+                        $(this).find('.node-input-addSpecialday-index').html(i + 1);
+                    });
+                },
+                resizeItem: resizeRuleSD,
+                sortable: true,
+                removable: true,
+                removeItem: resizeContainerSD
+            });
+            if (node.addSpecialdays) {
+                for (let i = 0; i < node.addSpecialdays.length; i++) {
+                    const addSpecialday = node.addSpecialdays[i];
+                    $('#node-input-addSpecialday-container').editableList('addItem', addSpecialday);
+                }
+            }
+            // #endregion addSpecialday-container
         },
         oneditsave() {
             const node = this;
-            // #region rule-container
+            // #region addHoliday-container
             node.addHolidays = [];
             const addHolidays = $('#node-input-addHoliday-container').editableList('items');
             addHolidays.each(function (_i) {
@@ -342,6 +433,19 @@
                 };
                 node.addHolidays.push(data);
             });
-            // #endregion result-container
+            // #endregion addHoliday-container
+            // #region addSpecialday-container
+            node.addSpecialdays = [];
+            const addSpecialdays = $('#node-input-addSpecialday-container').editableList('items');
+            addSpecialdays.each(function (_i) {
+                const rule = $(this);
+                const data = {
+                    name: rule.find('.node-input-addSpecialday-name').val(),
+                    month: parseInt(rule.find('.node-input-addSpecialday-month').val()),
+                    day: parseInt(rule.find('.node-input-addSpecialday-day').val())
+                };
+                node.addSpecialdays.push(data);
+            });
+            // #endregion addSpecialday-container
         }
     });</script>

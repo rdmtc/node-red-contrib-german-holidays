@@ -58,8 +58,6 @@ const allHolidays = [
 
 const easterX = -1;
 const adventX = -2;
-const jX = -3;
-const oktFirstX = -4;
 
 const holidayDef = {
     NEUJAHRSTAG: {
@@ -192,9 +190,6 @@ const holidayDef = {
     },
     MUTTERTAG: {
         nameDE : 'Muttertag', // 2. Sonntag im Mai
-        month: 5,
-        day: 14,
-        ref: jX,
         isHoliday: []
     },
     KINDERTAG: {
@@ -248,9 +243,6 @@ const holidayDef = {
     },
     ERNTEDANK: {
         nameDE : 'Erntedank', // erster Sonntag im Oktober
-        month: 10,
-        day: 8,
-        ref: oktFirstX,
         isHoliday: []
     },
     DEUTSCHEEINHEIT: {
@@ -550,7 +542,7 @@ function _getSpecialDaysOfYear(node, year, region, force) {
     }
     const advent4th = _makeDate(year, christmas_date, -advent4th_Offset);
     const silvester = _makeDate(year, 12, 31);
-    const jx = silvester.getUTCDay();
+    const silvester_Offset = silvester.getUTCDay();
 
     let oktFirst_Offset = _makeDate(year, 10, 1).getUTCDay();
     if (oktFirst_Offset === 0) { oktFirst_Offset = 7; }
@@ -595,7 +587,7 @@ function _getSpecialDaysOfYear(node, year, region, force) {
     _pushUnique(specialdaysObjects, _newDay('SILVESTER', silvester));
     _pushUnique(specialdaysObjects, _newDay('VALENTINSTAG', _makeDate(year, 2, 14)));
     _pushUnique(specialdaysObjects, _newDay('ERNTEDANK', _makeDate(year, 10, 8 - oktFirst_Offset)));
-    _pushUnique(specialdaysObjects, _newDay('MUTTERTAG', _makeDate(year, 5, 14 - jx)));
+    _pushUnique(specialdaysObjects, _newDay('MUTTERTAG', _makeDate(year, 5, 14 - silvester_Offset)));
     _pushUnique(specialdaysObjects, _newDay('WALPURGISNACHT', _makeDate(year, 4, 30)));
     _pushUnique(specialdaysObjects, _newDay('EISHEILIGEN1', _makeDate(year, 5, 11)));
     _pushUnique(specialdaysObjects, _newDay('EISHEILIGEN2', _makeDate(year, 5, 12)));

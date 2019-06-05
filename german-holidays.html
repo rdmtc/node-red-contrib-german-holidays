@@ -285,10 +285,8 @@
                 }
                 $month.append($('<option></option>').val(-1).text(node._('german-holidays.label.relEaster')));
                 $month.append($('<option></option>').val(-2).text(node._('german-holidays.label.rel4ThAdvent')));
-                let value = -3;
                 for (let index = 0; index <= 11; index++) {
-                    $month.append($('<option></option>').val(value).text(node._('german-holidays.relSunday.' + String(index))));
-                    value--;
+                    $month.append($('<option></option>').val(index + 13).text(node._('german-holidays.relday.' + String(index))));
                 }
 
                 // day
@@ -311,8 +309,12 @@
                         $day.min = 1;
                         $day.max = 31;
                         $day.step = 1;
+                    } else if (month >= 13 && month <= 24) {
+                        $day.min = 0;
+                        $day.max = 31;
+                        $day.step = 1;
                     } else if (month < 1) {
-                        $day.min = -3001;
+                        $day.min = -300;
                         $day.max = 300;
                         $day.step = 1;
                     }

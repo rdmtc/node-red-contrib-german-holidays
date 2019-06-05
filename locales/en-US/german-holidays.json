@@ -55,19 +55,19 @@
             "Nov",
             "Dec"
         ],
-        "relSunday": [
-            "r01  -  rel to 1. Sunday in Jan",
-            "r02  -  rel to 1. Sunday in Feb",
-            "r03  -  rel to 1. Sunday in Mar",
-            "r04  -  rel to 1. Sunday in Apr",
-            "r05  -  rel to 1. Sunday in May",
-            "r06  -  rel to 1. Sunday in Jun",
-            "r07  -  rel to 1. Sunday in Jul",
-            "r08  -  rel to 1. Sunday in Aug",
-            "r09  -  rel to 1. Sunday in Sep",
-            "r10  -  rel to 1. Sunday in Oct",
-            "r11  -  rel to 1. Sunday in Nov",
-            "r12  -  rel to 1. Sunday in Dec"
+        "relday": [
+            "rJan  -  relative day in Jan",
+            "rFeb  -  relative day in Feb",
+            "rMar  -  relative day in Mar",
+            "rApr  -  relative day in Apr",
+            "rMay  -  relative day in May",
+            "rJun  -  relative day in Jun",
+            "rJul  -  relative day in Jul",
+            "rAug  -  relative day in Aug",
+            "rSep  -  relative day in Sep",
+            "rOct  -  relative day in Oct",
+            "rNov  -  relative day in Nov",
+            "rDec  -  relative day in Dec"
         ],
         "tips": {
             "region":"<b>Tip:</b> You can also define the state as part of the incomming message. This would be used priorized than the settings here. But then are the shortcuts (BY=Bayern, BE=Berlin) are used.<br /><code>msg.region</code> or <code>msg.payload.region</code>",

@@ -190,6 +190,8 @@ const holidayDef = {
     },
     MUTTERTAG: {
         nameDE : 'Muttertag', // 2. Sonntag im Mai
+        month: 12 + 5,
+        day: 7,
         isHoliday: []
     },
     KINDERTAG: {
@@ -243,6 +245,8 @@ const holidayDef = {
     },
     ERNTEDANK: {
         nameDE : 'Erntedank', // erster Sonntag im Oktober
+        month: 12 + 10,
+        day: 1,
         isHoliday: []
     },
     DEUTSCHEEINHEIT: {
@@ -680,8 +684,7 @@ function _makeDate(year, naturalMonthOrRef, day) {
     if (naturalMonthOrRef > 12) {
         let sd = new Date(Date.UTC(year, naturalMonthOrRef - 13, 1)).getUTCDay();
         if (sd === 0) { sd = 7; }
-        sd--;
-        return new Date(Date.UTC(year, naturalMonthOrRef - 1, day - sd));
+        return new Date(Date.UTC(year, naturalMonthOrRef - 13, ((day + 7) - sd)));
     }
 
     return new Date(Date.UTC(year, naturalMonthOrRef - 1, day));

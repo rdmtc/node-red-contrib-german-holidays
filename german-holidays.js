@@ -676,6 +676,14 @@ function _makeDate(year, naturalMonthOrRef, day) {
         date.setDate(date.getDate() + day);
         return date;
     }
+
+    if (naturalMonthOrRef > 12) {
+        let sd = new Date(Date.UTC(year, naturalMonthOrRef - 13, 1)).getUTCDay();
+        if (sd === 0) { sd = 7; }
+        sd--;
+        return new Date(Date.UTC(year, naturalMonthOrRef - 1, day - sd));
+    }
+
     return new Date(Date.UTC(year, naturalMonthOrRef - 1, day));
 }
 

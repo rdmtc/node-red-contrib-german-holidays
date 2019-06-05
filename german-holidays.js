@@ -55,230 +55,319 @@ const allHolidays = [
     'ZWEITERWEIHNACHTSFEIERTAG'
 ]; */
 
-const germanTranslations = {
+
+const easterX = -1;
+const adventX = -2;
+const jX = -3;
+const oktFirstX = -4;
+
+const holidayDef = {
     NEUJAHRSTAG: {
         nameDE : 'Neujahrstag', // 1.1.
+        month: 1,
+        day: 1,
         isHoliday: allRegions
     },
     HEILIGEDREIKOENIGE: {
         nameDE : 'Heilige Drei Könige', // 6.1.
+        nameAlt: 'Epiphanias',
+        month: 1,
+        day: 6,
         isHoliday: ['BW', 'BY', 'ST', 'ALL']
     },
     VALENTINSTAG: {
         nameDE : 'Valentinstag', // 14. 2.
+        month: 2,
+        day: 14,
         isHoliday: []
     },
     SCHMUDONN: {
         nameDE : 'Schmutziger Donnerstag', // 52 Tage vor dem Ostersonntag
+        ref: easterX,
+        day: -52,
         isHoliday: []
     },
     ROSENMONTAG: {
         nameDE : 'Rosenmontag', // 48 Tage vor dem Ostersonntag
+        ref: easterX,
+        day: -48,
         isHoliday: []
     },
     FASTNACHTSDIENSTAG: {
         nameDE : 'Fastnachtsdienstag', // 47 Tage vor dem Ostersonntag
+        ref: easterX,
+        day: -47,
         isHoliday: []
     },
     ASCHERMITTWOCH: {
         nameDE : 'Aschermittwoch', // 46 Tage vor dem Ostersonntag (der erste Tag der Fastenzeit)
+        ref: easterX,
+        day: -46,
         isHoliday: []
     },
     PALMSONNTAG: {
         nameDE : 'Palmsonntag', // 7 Tage vor dem Ostersonntag
+        ref: easterX,
+        day: -7,
         isHoliday: []
     },
     GRUENDONNERSTAG: {
         nameDE : 'Gründonnerstag', // 4 Tage vor dem Ostersonntag
+        ref: easterX,
+        day: -4,
         isHoliday: []
     },
     KARFREITAG: {
         nameDE : 'Karfreitag',
+        ref: easterX,
+        day: -2,
         isHoliday: allRegions
     },
     OSTERSONNTAG: {
         nameDE :  'Ostersonntag',
+        ref: easterX,
+        day: 0,
         isHoliday: ['BB', 'ALL']
     },
     OSTERMONTAG: {
         nameDE :  'Ostermontag',
+        ref: easterX,
+        day: 1,
         isHoliday: allRegions
+    },
+    JOHANISTAG: {
+        nameDE: 'Johannistag', // 30. April
+        month: 4,
+        day: 24,
+        isHoliday: []
+    },
+    MICHAELISTAG: {
+        nameDE: 'Michaelistag', // 30. April
+        month: 4,
+        day: 29,
+        isHoliday: []
     },
     WALPURGISNACHT: {
         nameDE : 'Walpurgisnacht', // 30. April
+        month: 4,
+        day: 30,
         isHoliday: []
     },
     TAG_DER_ARBEIT: {
         nameDE :  'Tag der Arbeit', // 1. Mai
         nameAlt: 'Maifeiertag',
+        month: 1,
+        day: 5,
         isHoliday: allRegions
     },
     EISHEILIGEN1: {
         nameDE : 'Eisheiliger Mamertus', // 11. Mai
+        month: 5,
+        day: 11,
         isHoliday: []
     },
     EISHEILIGEN2: {
         nameDE : 'Eisheiliger Pankratius', // 12. Mai
+        month: 5,
+        day: 12,
         isHoliday: []
     },
     EISHEILIGEN3: {
         nameDE : 'Eisheiliger Servatius', // 13. Mai
+        month: 5,
+        day: 13,
         isHoliday: []
     },
     EISHEILIGEN4: {
         nameDE : 'Eisheiliger Bonifatius', // 14. Mai
+        month: 5,
+        day: 14,
         isHoliday: []
     },
     EISHEILIGEN5: {
         nameDE : 'Eisheilige Kalte Sophie', // 15. Mai
+        month: 5,
+        day: 15,
         isHoliday: []
     },
     MUTTERTAG: {
         nameDE : 'Muttertag', // 2. Sonntag im Mai
+        month: 5,
+        day: 14,
+        ref: jX,
         isHoliday: []
     },
     KINDERTAG: {
         nameDE: 'Kindertag', // 1.6.
+        month: 6,
+        day: 1,
         isHoliday: []
     },
     CHRISTIHIMMELFAHRT: {
         nameDE :  'Christi Himmelfahrt',
         nameAlt: 'Vatertag',
+        ref: easterX,
+        day: 39,
         isHoliday: allRegions
     },
     PFINGSTSONNTAG: {
         nameDE :  'Pfingstsonntag',
+        ref: easterX,
+        day: 49,
         isHoliday: ['BB', 'ALL']
     },
     PFINGSTMONTAG: {
         nameDE :  'Pfingstmontag',
+        ref: easterX,
+        day: 50,
         isHoliday: allRegions
+    },
+    TRINITATISSONNTAG: {
+        nameDE: 'Trinitatissonntag',
+        ref: easterX,
+        day: 56,
+        isHoliday: []
     },
     FRONLEICHNAM: {
         nameDE :  'Fronleichnam',
+        ref: easterX,
+        day: 60,
         isHoliday: ['BW', 'HE', 'NW', 'RP', 'SL', 'ALL']
     },
     SIEBENSCHLAEFER: {
         nameDE : 'Siebenschläfer', // 27. Juni
+        month: 6,
+        day: 27,
         isHoliday: []
     },
     MARIAHIMMELFAHRT: {
         nameDE :  'Mariä Himmelfahrt',
+        month: 8,
+        day: 15,
         isHoliday: ['SL', 'BY', 'ALL']
     },
     ERNTEDANK: {
         nameDE : 'Erntedank', // erster Sonntag im Oktober
+        month: 10,
+        day: 8,
+        ref: oktFirstX,
         isHoliday: []
     },
     DEUTSCHEEINHEIT: {
         nameDE :  'Tag der Deutschen Einheit',
+        month: 10,
+        day: 3,
         isHoliday: allRegions
     },
     REFORMATIONSTAG: {
         nameDE :  'Reformationstag', // 31. Oktober
         nameAlt: 'Halloween',
+        month: 10,
+        day: 31,
         isHoliday: ['BB', 'MV', 'SN', 'ST', 'TH', 'ALL']
     },
     ALLERHEILIGEN: {
         nameDE :  'Allerheiligen',
+        month: 11,
+        day: 1,
         isHoliday: ['BW', 'BY', 'NW', 'RP', 'SL', 'ALL']
     },
     ALLERSEELEN: {
         nameDE : 'Allerseelen', // 2. November
+        month: 11,
+        day: 2,
         isHoliday: []
     },
     MARTINSTAG: {
         nameDE : 'Martinstag', // 11. November
+        month: 11,
+        day: 11,
         isHoliday: []
     },
     VOLKSTRAUERTAG: {
         nameDE : 'Volkstrauertages', // Sonntag (3 Tage) vor dem Buß- und Bettag
+        ref: adventX,
+        day: -35,
         isHoliday: []
     },
     BUBETAG: {
         nameDE :  'Buß- und Bettag',
+        ref: adventX,
+        day: -32,
         isHoliday: ['SN', 'ALL']
     },
     TOTENSONNTAG: {
         nameDE : 'Totensonntag', // Sonntag (4 Tage) nach dem Buß- und Bettag; eine Woche vor dem ersten Advent
         nameAlt: 'Ewigkeitssonntag',
+        ref: adventX,
+        day: -28,
         isHoliday: []
     },
     ADVENT1: {
         nameDE : 'erste Advent', // vierte Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 1. Advent liegen 11 Tage
+        ref: adventX,
+        day: -21,
         isHoliday: []
     },
     ADVENT2: {
         nameDE : 'zweite Advent', // dritte Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 2. Advent liegen 18 Tage
+        ref: adventX,
+        day: -14,
         isHoliday: []
     },
     NIKOLAUS: {
         nameDE : 'Nikolaus', // 6.12.
+        month: 12,
+        day: 6,
         isHoliday: []
     },
     ADVENT3: {
         nameDE : 'dritte Advent', // zweite Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 3. Advent liegen 25 Tage
+        ref: adventX,
+        day: -7,
         isHoliday: []
     },
     ADVENT4: {
         nameDE : 'vierte Advent', // Sonntag direkt vor Weihnachten; Zwischen Buss und Bettag und dem 4. Advent liegen 32 Tage
+        ref: adventX,
+        day: 0,
         isHoliday: []
     },
     HEILIGABEND: {
         nameDE: 'Heiligabend',
+        month: 12,
+        day: 24,
         isHoliday: []
     },
     ERSTERWEIHNACHTSFEIERTAG: {
         nameDE :  '1. Weihnachtstag',
+        month: 12,
+        day: 25,
         isHoliday: allRegions
     },
     ZWEITERWEIHNACHTSFEIERTAG: {
         nameDE : '2. Weihnachtstag',
+        month: 12,
+        day: 26,
         isHoliday: allRegions
     },
     SILVESTER: {
         nameDE : 'Silvester', // 31.12.
-        isHoliday: []
-    },
-    MONDAY: {
-        nameDE : 'Montag',
-        isHoliday: []
-    },
-    TUESDAY: {
-        nameDE : 'Dienstag',
-        isHoliday: []
-    },
-    WEDNESDAY: {
-        nameDE : 'Mittwoch',
-        isHoliday: []
-    },
-    THURSDAY: {
-        nameDE : 'Donnerstag',
-        isHoliday: []
-    },
-    FRIDAY: {
-        nameDE : 'Freitag',
-        isHoliday: []
-    },
-    SATURDAY: {
-        nameDE : 'Samstag',
-        isHoliday: []
-    },
-    SUNDAY: {
-        nameDE : 'Sonntag',
+        month: 12,
+        day: 31,
         isHoliday: []
     }
 };
 
 const dayNames = [
-    'SUNDAY',
-    'MONDAY',
-    'TUESDAY',
-    'WEDNESDAY',
-    'THURSDAY',
-    'FRIDAY',
-    'SATURDAY',
-    'SUNDAY'
+    { id: 'SUNDAY', nameDE: 'Sonntag' },
+    { id: 'MONDAY', nameDE: 'Montag'},
+    { id: 'TUESDAY', nameDE: 'Dienstag'},
+    { id: 'WEDNESDAY', nameDE: 'Mittwoch'},
+    { id: 'THURSDAY', nameDE: 'Donnerstag'},
+    { id: 'FRIDAY', nameDE: 'Freitag' },
+    { id: 'SATURDAY', nameDE: 'Samstag' },
+    { id: 'SUNDAY', nameDE : 'Sonntag' }
 ];
 
 /*******************************************************************************************************/
@@ -317,7 +406,7 @@ const errorHandler = function (node, err, messageText, stateText) {
  * @returns {string} number with minimum two digits
  */
 function pad2(n) { // always returns a string
-    return (n < 0 || n > 9 ? '' : '0') + n;
+    return (n < 0 || (n > 9 ? '' : '0')) + n;
 }
 
 /**
@@ -357,7 +446,8 @@ function getDataForDay(date, offsetToday, daysObjects) {
 function getDataForDate(date, daysObjects, offsetToday) {
     const d = date.getDay(); // gets the day of week
     // const internalDate = toUtcTimestamp(date);
-    const result = _newDay(dayNames[d], date);
+    const result = _newDay(dayNames[d].id, date, dayNames[d].nameDE);
+
     result.weekday = {
         id: result.id,
         name: result.name
@@ -446,60 +536,63 @@ function _pushUnique(arr, el) {
  * @private
  */
 function _getSpecialDaysOfYear(node, year, region, force) {
-    if (node.default.year === year && node.default.region === region && !force) {
+    if (node.default.dayObjs && node.default.year === year && node.default.region === region && !force) {
         return node.default.dayObjs;
     }
 
     region = region || 'ALL';
     const easter_date = getEasterDate(year);
     node.debug('easter date ' + easter_date.toISOString());
-    const weihnachten = _makeDate(year, 12, 25);
-    let weihnachten_Offset = weihnachten.getDay() % 7;
-    if (weihnachten_Offset === 0) {
-        weihnachten_Offset = 7;
+    const christmas_date = _makeDate(year, 12, 25);
+    let advent4th_Offset = christmas_date.getDay() % 7;
+    if (advent4th_Offset === 0) {
+        advent4th_Offset = 7;
     }
+    const advent4th = _makeDate(year, christmas_date, -advent4th_Offset);
     const silvester = _makeDate(year, 12, 31);
     const jx = silvester.getUTCDay();
 
     let oktFirst_Offset = _makeDate(year, 10, 1).getUTCDay();
     if (oktFirst_Offset === 0) { oktFirst_Offset = 7; }
 
-    const specialdaysObjects = [
-        _newDay('NEUJAHRSTAG', _makeDate(year, 1, 1)),
-        _newDay('HEILIGEDREIKOENIGE', _makeDate(year, 1, 6)),
-        _newDay('SCHMUDONN', _makeDateFromRef(easter_date, -52)),
-        _newDay('ROSENMONTAG', _makeDateFromRef(easter_date, -48)),
-        _newDay('FASTNACHTSDIENSTAG', _makeDateFromRef(easter_date, -47)),
-        _newDay('ASCHERMITTWOCH', _makeDateFromRef(easter_date, -46)),
-        _newDay('PALMSONNTAG', _makeDateFromRef(easter_date, -7)),
-        _newDay('GRUENDONNERSTAG', _makeDateFromRef(easter_date, -4)),
-        _newDay('KARFREITAG', _makeDateFromRef(easter_date, -2)),
-        _newDay('OSTERSONNTAG', easter_date),
-        _newDay('OSTERMONTAG', _makeDateFromRef(easter_date, 1)),
-        _newDay('CHRISTIHIMMELFAHRT', _makeDateFromRef(easter_date, 39)),
-        _newDay('PFINGSTSONNTAG', _makeDateFromRef(easter_date, 49)),
-        _newDay('PFINGSTMONTAG', _makeDateFromRef(easter_date, 50)),
-        _newDay('FRONLEICHNAM', _makeDateFromRef(easter_date, 60)),
-        _newDay('TAG_DER_ARBEIT', _makeDate(year, 5, 1)),
-        _newDay('KINDERTAG', _makeDate(year, 6, 1)),
-        _newDay('SIEBENSCHLAEFER', _makeDate(year, 6, 27)),
-        _newDay('MARIAHIMMELFAHRT', _makeDate(year, 8, 15)),
-        _newDay('DEUTSCHEEINHEIT', _makeDate(year, 10, 3)),
-        _newDay('REFORMATIONSTAG', _makeDate(year, 10, 31)),
-        _newDay('ALLERSEELEN', _makeDate(year, 11, 2)),
-        _newDay('MARTINSTAG', _makeDate(year, 11, 11)),
-        _newDay('VOLKSTRAUERTAG', _makeDateFromRef(weihnachten, -35 - weihnachten_Offset)),
-        _newDay('BUBETAG', _makeDateFromRef(weihnachten, -32 - weihnachten_Offset)),
-        _newDay('TOTENSONNTAG', _makeDateFromRef(weihnachten, -28 - weihnachten_Offset)),
-        _newDay('ADVENT1', _makeDateFromRef(weihnachten, -21 - weihnachten_Offset)),
-        _newDay('NIKOLAUS', _makeDate(year, 12, 6)),
-        _newDay('ADVENT2', _makeDateFromRef(weihnachten, -14 - weihnachten_Offset)),
-        _newDay('ADVENT3', _makeDateFromRef(weihnachten, -7 - weihnachten_Offset)),
-        _newDay('ADVENT4', _makeDateFromRef(weihnachten, -weihnachten_Offset)),
-        _newDay('ERSTERWEIHNACHTSFEIERTAG', weihnachten),
-        _newDay('ZWEITERWEIHNACHTSFEIERTAG', _makeDate(year, 12, 26)),
-        _newDay('SILVESTER', silvester)
-    ];
+    const specialdaysObjects = [];
+    _addExtraDays(node.addSpecialday, specialdaysObjects, year, [], easter_date, christmas_date, advent4th);
+
+    _pushUnique(specialdaysObjects, _newDay('NEUJAHRSTAG', _makeDate(year, 1, 1)));
+    _pushUnique(specialdaysObjects, _newDay('HEILIGEDREIKOENIGE', _makeDate(year, 1, 6)));
+    _pushUnique(specialdaysObjects, _newDay('SCHMUDONN', _makeDate(year, easter_date, -52)));
+    _pushUnique(specialdaysObjects, _newDay('ROSENMONTAG', _makeDate(year, easter_date, -48)));
+    _pushUnique(specialdaysObjects, _newDay('FASTNACHTSDIENSTAG', _makeDate(year, easter_date, -47)));
+    _pushUnique(specialdaysObjects, _newDay('ASCHERMITTWOCH', _makeDate(year, easter_date, -46)));
+    _pushUnique(specialdaysObjects, _newDay('PALMSONNTAG', _makeDate(year, easter_date, -7)));
+    _pushUnique(specialdaysObjects, _newDay('GRUENDONNERSTAG', _makeDate(year, easter_date, -4)));
+    _pushUnique(specialdaysObjects, _newDay('KARFREITAG', _makeDate(year, easter_date, -2)));
+    _pushUnique(specialdaysObjects, _newDay('OSTERSONNTAG', easter_date));
+    _pushUnique(specialdaysObjects, _newDay('OSTERMONTAG', _makeDate(year, easter_date, 1)));
+    _pushUnique(specialdaysObjects, _newDay('CHRISTIHIMMELFAHRT', _makeDate(year, easter_date, 39)));
+    _pushUnique(specialdaysObjects, _newDay('PFINGSTSONNTAG', _makeDate(year, easter_date, 49)));
+    _pushUnique(specialdaysObjects, _newDay('PFINGSTMONTAG', _makeDate(year, easter_date, 50)));
+    _pushUnique(specialdaysObjects, _newDay('FRONLEICHNAM', _makeDate(year, easter_date, 60)));
+    _pushUnique(specialdaysObjects, _newDay('TAG_DER_ARBEIT', _makeDate(year, 5, 1)));
+    _pushUnique(specialdaysObjects, _newDay('KINDERTAG', _makeDate(year, 6, 1)));
+    _pushUnique(specialdaysObjects, _newDay('SIEBENSCHLAEFER', _makeDate(year, 6, 27)));
+    _pushUnique(specialdaysObjects, _newDay('MARIAHIMMELFAHRT', _makeDate(year, 8, 15)));
+    _pushUnique(specialdaysObjects, _newDay('DEUTSCHEEINHEIT', _makeDate(year, 10, 3)));
+    _pushUnique(specialdaysObjects, _newDay('REFORMATIONSTAG', _makeDate(year, 10, 31)));
+    _pushUnique(specialdaysObjects, _newDay('ALLERHEILIGEN', _makeDate(year, 11, 1)));
+    _pushUnique(specialdaysObjects, _newDay('ALLERSEELEN', _makeDate(year, 11, 2)));
+    _pushUnique(specialdaysObjects, _newDay('MARTINSTAG', _makeDate(year, 11, 11)));
+    _pushUnique(specialdaysObjects, _newDay('VOLKSTRAUERTAG', _makeDate(year, advent4th, -35)));
+    _pushUnique(specialdaysObjects, _newDay('BUBETAG', _makeDate(year, advent4th, -32)));
+    _pushUnique(specialdaysObjects, _newDay('TOTENSONNTAG', _makeDate(year, advent4th, -28)));
+    _pushUnique(specialdaysObjects, _newDay('ADVENT1', _makeDate(year, advent4th, -21)));
+    _pushUnique(specialdaysObjects, _newDay('NIKOLAUS', _makeDate(year, 12, 6)));
+    _pushUnique(specialdaysObjects, _newDay('ADVENT2', _makeDate(year, advent4th, -14)));
+    _pushUnique(specialdaysObjects, _newDay('ADVENT3', _makeDate(year, advent4th, -7)));
+    _pushUnique(specialdaysObjects, _newDay('ADVENT4', advent4th));
+    _pushUnique(specialdaysObjects, _newDay('ERSTERWEIHNACHTSFEIERTAG', christmas_date));
+    _pushUnique(specialdaysObjects, _newDay('ZWEITERWEIHNACHTSFEIERTAG', _makeDate(year, 12, 26)));
+    _pushUnique(specialdaysObjects, _newDay('SILVESTER', silvester));
     _pushUnique(specialdaysObjects, _newDay('VALENTINSTAG', _makeDate(year, 2, 14)));
     _pushUnique(specialdaysObjects, _newDay('ERNTEDANK', _makeDate(year, 10, 8 - oktFirst_Offset)));
     _pushUnique(specialdaysObjects, _newDay('MUTTERTAG', _makeDate(year, 5, 14 - jx)));
@@ -511,35 +604,15 @@ function _getSpecialDaysOfYear(node, year, region, force) {
     _pushUnique(specialdaysObjects, _newDay('EISHEILIGEN5', _makeDate(year, 5, 15)));
     _pushUnique(specialdaysObjects, _newDay('HEILIGABEND', _makeDate(year, 12, 24)));
 
-    if (node.addSpecialdays && node.addSpecialdays.length > 0) {
-        node.addSpecialdays.forEach(d => {
-            const month = parseInt(d.month);
-            const day = parseInt(d.day);
-            if (!isNaN(month) && !isNaN(day) && month >= 1 && month <=12 && day >=1 && day <= 31) {
-                const id = pad2(month) + '-' + pad2(day);
-                specialdaysObjects.push(_newDay(id, _makeDate(year, month, day), d.name, []));
-            }
-        });
-    }
-
     specialdaysObjects.sort(
         (a, b) => a.date.getTime() - b.date.getTime()
     );
-    const holidayObjects = [];
 
-    if (node.addHolidays && node.addHolidays.length > 0) {
-        node.addHolidays.forEach(d => {
-            const month = parseInt(d.month);
-            const day = parseInt(d.day);
-            if (!isNaN(month) && !isNaN(day) && month >= 1 && month <=12 && day >=1 && day <= 31) {
-                const id = pad2(month) + '-' + pad2(day);
-                _pushUnique(holidayObjects, _newDay(id, _makeDate(year, month, day), d.name, ['ALWAYS']));
-            }
-        });
-    }
+    const holidayObjects = [];
+    _addExtraDays(node.addHolidays, holidayObjects, year, ['ALWAYS'], easter_date, christmas_date, advent4th);
 
     specialdaysObjects.forEach( d => {
-        if (d.regions.includes(region) || d.regions.includes('ALWAYS')) {
+        if (d.regions.includes(region)) {
             _pushUnique(holidayObjects, d);
         }
     });
@@ -595,26 +668,23 @@ function getEasterDate(year) {
 
 /**
  * Creates a new {@link Date}.
- * @param year  -  utc year of the day
- * @param naturalMonth  - natural utc month (1-12)
- * @param day  - day
+ * @param {Number|Date} yearOrRef  -  utc year of the day
+ * @param {Number|Date} naturalMonthOrRef  - natural utc month (1-12) or a date object if the new Date should be calculated in realative to the given Date
+ * @param {Number} day  - day of month (1 - 31) or if a reference Date is given the number of days as offset from the reference date
  * @returns {Date}  -  new Date
  * @private
  */
-function _makeDate(year, naturalMonth, day) {
-    return new Date(Date.UTC(year, naturalMonth - 1, day));
-}
+function _makeDate(year, naturalMonthOrRef, day) {
+    if (typeof year === 'object') {
+        year = year.getUTCFullYear();
+    }
 
-/**
- * Created a new {@link Date}.
- * @param {Date} easter  -  easter date
- * @param {Number} days  -  number of days as offset from easter
- * @returns {Date}  -  new Date
- */
-function _makeDateFromRef(refDate, days) {
-    const date = new Date(refDate.getTime());
-    date.setDate(date.getDate() + days);
-    return date;
+    if (typeof naturalMonthOrRef === 'object') {
+        const date = new Date(naturalMonthOrRef.getTime());
+        date.setDate(date.getDate() + day);
+        return date;
+    }
+    return new Date(Date.UTC(year, naturalMonthOrRef - 1, day));
 }
 
 /**
@@ -627,12 +697,12 @@ function _makeDateFromRef(refDate, days) {
  * @private
  */
 function _newDay(id, date, name, regions) {
-    name = name || (germanTranslations[id]) ? germanTranslations[id].nameDE : id;
-    regions = regions || (germanTranslations[id]) ? germanTranslations[id].isHoliday : [];
+    name = name || (holidayDef[id] ? holidayDef[id].nameDE : id);
+    regions = regions || (holidayDef[id] ? holidayDef[id].isHoliday : []);
     return {
         id,
-        name: name,
-        regions: regions,
+        name,
+        regions,
         dayOfWeek: date.getUTCDay(),
         day: date.getUTCDate(),
         month: date.getUTCMonth(),
@@ -652,6 +722,34 @@ function _newDay(id, date, name, regions) {
 }
 
 /**
+ * add extra day definition to an day array
+ * @param {Array} extraDays  -  extra day definition array
+ * @param {Array} outArr  -  day array
+ * @param {Number} year  -  year for makeDate
+ * @param {String} region  -  region for make Date
+ * @param {Date} easter_date  -  easter data for relative day setting
+ * @param {Date} christmas_date  -  christmas data for relative day setting
+ * @param {Date} advent4th  -  advent data for relative day setting
+ */
+function _addExtraDays(extraDays, outArr, year, region, easter_date, christmas_date, advent4th) {
+    if (extraDays && extraDays.length > 0) {
+        extraDays.forEach(d => {
+            let month = parseInt(d.month);
+            const day = parseInt(d.day);
+            if (!isNaN(month) && !isNaN(day) && month <= 12 && month !== 0 && month >= -3 && day >= 1 && day <= 31) {
+                if (month === easterX) {
+                    month = easter_date;
+                } else if (month === adventX) {
+                    month = advent4th;
+                }
+                const id = pad2(month) + '-' + pad2(day);
+                _pushUnique(outArr, _newDay(id, _makeDate(year, month, day), d.name, region));
+            }
+        });
+    }
+}
+
+/**
  *
  * @param {Date} date
  * @returns {string}
@@ -662,18 +760,6 @@ function _localeDateObjectToDateString(date) {
     date.setUTCHours(0, 0, 0, 0);
     return date.toISOString().slice(0, 10);
 }
-
-/**
- *
- * @param date
- * @returns {object}
- * @private
- */ /*
-function _getlocaleDateObject(date) {
- date = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
- date.setUTCHours(0, 0, 0, 0);
- return date;
-} */
 
 /**
  * Returns the UTC timestamp of the given date with hours, minutes, seconds, and milliseconds set to zero.
@@ -859,7 +945,7 @@ module.exports = function (RED) {
                 if (outMsg.payload.today.dayOfWeek === 6) {
                     const date = new Date(outMsg.data.ts);
                     date.setDate(date.getDate() + 1);
-                    outMsg.payload.next.weekendDay = _newDay('SUNDAY', date);
+                    outMsg.payload.next.weekendDay = _newDay(dayNames[0].id, date, dayNames[0].nameDE);
                 } else {
                     const dayOfWeek = 6; // Saturday
                     const date = new Date(outMsg.data.ts);
@@ -870,7 +956,7 @@ module.exports = function (RED) {
                         date.setDate(date.getDate() + ((-1) * diff));
                     }
 
-                    outMsg.payload.next.weekendDay = _newDay('SATURDAY', date);
+                    outMsg.payload.next.weekendDay = _newDay(dayNames[6].id, date, dayNames[6].nameDE);
                 }
 
                 outMsg.payload.next.weekendOrHolidayDiff = (outMsg.payload.next.hollidayDiff) ? Math.min(outMsg.payload.next.hollidayDiff, outMsg.payload.next.weekendDayDiff) : outMsg.payload.next.weekendDayDiff;

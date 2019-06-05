@@ -1,6 +1,6 @@
 <script type="text/x-red" data-template-name="german-holidays">
-    <div class="form-row">
-        <label for="node-region"><i class="fa fa-globe"></i> state</label>
+    <div class="form-row" data-i18n="[title]german-holidays.placeholder.region">
+        <label for="node-region"><i class="fa fa-globe"></i> <span data-i18n="german-holidays.label.region"></span></label>
         <select type="text" id="node-input-region" style="width:70%;">
             <option value="ALL" >alle</option>
             <option value="BUND" >allgemeine</option>
@@ -23,24 +23,25 @@
         </select>
     </div>
 
-    <div class="form-tips"><b>Tip:</b> You can also define the region as part of the incomming message. This would be used priorized than the settings here. But then are the shortcuts (BY=Bayern, BE=Berlin) are used.<br />
-        <code>msg.region</code> or <code>msg.payload.region</code>
-    </div>
+    <div class="form-tips" data-i18n="[html]german-holidays.tips.region"></div>
 
     <hr>
     <div>
-        <label for="node-input-addHoliday-container-row"><i class="fa fa-list"></i> <span>define additional Holidays</span></label>
+        <label for="node-input-addHoliday-container-row"><i class="fa fa-list"></i> <span data-i18n="german-holidays.label.addHoliday"></span></label>
         <div class="form-row node-input-addHoliday-container-row">
             <ol id="node-input-addHoliday-container"></ol>
         </div>
     </div>
+    <div class="form-tips" data-i18n="[html]german-holidays.tips.addHoliday"></div>
 
+    <hr>
     <div>
-        <label for="node-input-addSpecialday-container-row"><i class="fa fa-list"></i> <span>define additional special days</span></label>
+        <label for="node-input-addSpecialday-container-row"><i class="fa fa-list"></i> <span data-i18n="german-holidays.label.addSpecialday"></span></label>
         <div class="form-row node-input-addSpecialday-container-row">
             <ol id="node-input-addSpecialday-container"></ol>
         </div>
     </div>
+    <div class="form-tips" data-i18n="[html]german-holidays.tips.addSpecialday"></div>
 
     <hr>
     <div class="form-row block-noindent time-topic" data-i18n="[title]node-red:common.label.topic">
@@ -247,25 +248,88 @@
         paletteLabel: 'Holidays',
         oneditprepare() {
             const node = this;
-
-            // #region addHoliday-container
-            function resizeRuleHD(addHoliday) {
-                const newWidth = addHoliday.width() - 10;
-                // const operatorField = addHoliday.find('.node-input-addHoliday-operator');
-                const $name = addHoliday.find('.node-input-addHoliday-name');
-                const $month = addHoliday.find('.node-input-addHoliday-month');
-                const $day = addHoliday.find('.node-input-addHoliday-day');
+            // #region container
+            function edtLstResizeItem(row) {
+                const newWidth = row.width() - 10;
+                const $name = row.find('.node-input-item-name');
+                const $month = row.find('.node-input-item-month');
+                const $day = row.find('.node-input-item-day');
                 // row1
                 $month.width(50);
                 $day.width(50);
                 $name.width(newWidth - 100 - 40);
             }
 
+            function edtLstAddItem(containerRow, containerIndex, data) {
+                containerRow.css({ overflow: 'hidden', whiteSpace: 'nowrap' });
+                const row = $('<div/>').appendTo(containerRow);
+                // row1
+                // name
+                $('<input/>', {
+                    class: 'node-input-item-name',
+                    id: 'node-input-item-name' + containerIndex,
+                    type: 'text',
+                    value: (data.name || ''),
+                    title: node._('german-holidays.placeholder.name'),
+                    placeholder: node._('german-holidays.placeholder.name')
+                }).appendTo(row);
+                // month
+                const $month = $('<select/>', {
+                    class: 'node-input-item-month',
+                    id: 'node-input-item-month' + containerIndex,
+                    title: node._('german-holidays.placeholder.month')
+                });
+                $month.appendTo(row);
+                for (let index = 1; index <= 12; index++) {
+                    $month.append($('<option></option>').val(index).text(node._('german-holidays.month.' + String(index + 11))));
+                }
+                $month.append($('<option></option>').val(-1).text(node._('german-holidays.label.relEaster')));
+                $month.append($('<option></option>').val(-2).text(node._('german-holidays.label.rel4ThAdvent')));
+                let value = -3;
+                for (let index = 0; index <= 11; index++) {
+                    $month.append($('<option></option>').val(value).text(node._('german-holidays.relSunday.' + String(index))));
+                    value--;
+                }
+
+                // day
+                const $day = $('<input/>', {
+                    class: 'node-input-item-day',
+                    id: 'node-input-item-day' + containerIndex,
+                    type: 'number',
+                    min: 1,
+                    max: 31,
+                    step: 1,
+                    value: (data.month || 1),
+                    title: node._('german-holidays.placeholder.day'),
+                    placeholder: node._('german-holidays.placeholder.day')
+                });
+                $day.appendTo(row);
+
+                $month.change(() => {
+                    const month = $month.val();
+                    if (month >= 1 && month <= 12) {
+                        $day.min = 1;
+                        $day.max = 31;
+                        $day.step = 1;
+                    } else if (month < 1) {
+                        $day.min = -3001;
+                        $day.max = 300;
+                        $day.step = 1;
+                    }
+                });
+                $month.val(data.month || 1);
+                $month.change();
+                edtLstResizeItem(containerRow);
+            }
+            // #region addHoliday-container
             function resizeContainerHD() {
                 const editorRow = $('.node-input-addHoliday-container-row ol');
                 const height = editorRow.outerHeight(true);
 
                 const rows = $('#node-input-addHoliday-container').editableList('items');
+
+                console.log(`1 rows=${rows.size()}, height=${height},`);
+
                 if (rows.size() > 0) {
                     $('#node-input-addHoliday-container').editableList('height', height + 40);
                 } else {
@@ -275,44 +339,7 @@
 
             $('#node-input-addHoliday-container').css('min-height', '20px').css('min-width', '200px').editableList({
                 addItem(containerRow, containerIndex, data) {
-                    containerRow.css({ overflow: 'hidden', whiteSpace: 'nowrap' });
-                    const row = $('<div/>').appendTo(containerRow);
-                    // row1
-                    // name
-                    $('<input/>', {
-                        class: 'node-input-addHoliday-name',
-                        id: 'node-input-addHoliday-name' + containerIndex,
-                        type: 'text',
-                        value: (data.name || ''),
-                        title: 'name',
-                        placeholder: 'name'
-                    }).appendTo(row);
-                    // month
-                    $('<input/>', {
-                        class: 'node-input-addHoliday-month',
-                        id: 'node-input-addHoliday-month' + containerIndex,
-                        type: 'number',
-                        min: 1,
-                        max: 12,
-                        step: 1,
-                        value: (data.month || 1),
-                        title: 'month 1-12',
-                        placeholder: 'month'
-                    }).appendTo(row);
-                    // day
-                    $('<input/>', {
-                        class: 'node-input-addHoliday-month',
-                        id: 'node-input-addHoliday-month' + containerIndex,
-                        type: 'number',
-                        min: 1,
-                        max: 31,
-                        step: 1,
-                        value: (data.month || 1),
-                        title: 'day 1-31',
-                        placeholder: 'day'
-                    }).appendTo(row);
-
-                    resizeRuleHD(containerRow);
+                    edtLstAddItem(containerRow, containerIndex, data);
                     resizeContainerHD();
                 },
                 sortItems(addHolidays) {
@@ -321,7 +348,7 @@
                         $(this).find('.node-input-addHoliday-index').html(i + 1);
                     });
                 },
-                resizeItem: resizeRuleHD,
+                resizeItem: edtLstResizeItem,
                 sortable: true,
                 removable: true,
                 removeItem: resizeContainerHD
@@ -334,23 +361,14 @@
             }
             // #endregion addHoliday-container
             // #region addSpecialday-container
-            function resizeRuleSD(addSpecialday) {
-                const newWidth = addSpecialday.width() - 10;
-                // const operatorField = addSpecialday.find('.node-input-addSpecialday-operator');
-                const $name = addSpecialday.find('.node-input-addSpecialday-name');
-                const $month = addSpecialday.find('.node-input-addSpecialday-month');
-                const $day = addSpecialday.find('.node-input-addSpecialday-day');
-                // row1
-                $month.width(50);
-                $day.width(50);
-                $name.width(newWidth - 100 - 40);
-            }
-
             function resizeContainerSD() {
                 const editorRow = $('.node-input-addSpecialday-container-row ol');
                 const height = editorRow.outerHeight(true);
 
                 const rows = $('#node-input-addSpecialday-container').editableList('items');
+
+                console.log(`1 rows=${rows.size()}, height=${height},`);
+
                 if (rows.size() > 0) {
                     $('#node-input-addSpecialday-container').editableList('height', height + 40);
                 } else {
@@ -360,44 +378,7 @@
 
             $('#node-input-addSpecialday-container').css('min-height', '20px').css('min-width', '200px').editableList({
                 addItem(containerRow, containerIndex, data) {
-                    containerRow.css({ overflow: 'hidden', whiteSpace: 'nowrap' });
-                    const row = $('<div/>').appendTo(containerRow);
-                    // row1
-                    // name
-                    $('<input/>', {
-                        class: 'node-input-addSpecialday-name',
-                        id: 'node-input-addSpecialday-name' + containerIndex,
-                        type: 'text',
-                        value: (data.name || ''),
-                        title: 'name',
-                        placeholder: 'name'
-                    }).appendTo(row);
-                    // month
-                    $('<input/>', {
-                        class: 'node-input-addSpecialday-month',
-                        id: 'node-input-addSpecialday-month' + containerIndex,
-                        type: 'number',
-                        min: 1,
-                        max: 12,
-                        step: 1,
-                        value: (data.month || 1),
-                        title: 'month 1-12',
-                        placeholder: 'month'
-                    }).appendTo(row);
-                    // day
-                    $('<input/>', {
-                        class: 'node-input-addSpecialday-month',
-                        id: 'node-input-addSpecialday-month' + containerIndex,
-                        type: 'number',
-                        min: 1,
-                        max: 31,
-                        step: 1,
-                        value: (data.month || 1),
-                        title: 'day 1-31',
-                        placeholder: 'day'
-                    }).appendTo(row);
-
-                    resizeRuleSD(containerRow);
+                    edtLstAddItem(containerRow, containerIndex, data);
                     resizeContainerSD();
                 },
                 sortItems(addSpecialdays) {
@@ -406,7 +387,7 @@
                         $(this).find('.node-input-addSpecialday-index').html(i + 1);
                     });
                 },
-                resizeItem: resizeRuleSD,
+                resizeItem: edtLstResizeItem,
                 sortable: true,
                 removable: true,
                 removeItem: resizeContainerSD
@@ -421,17 +402,19 @@
         },
         oneditsave() {
             const node = this;
+            function getData(rule) {
+                return {
+                    name: rule.find('.node-input-item-name').val(),
+                    month: parseInt(rule.find('.node-input-item-month').val()),
+                    day: parseInt(rule.find('.node-input-item-day').val())
+                };
+            }
             // #region addHoliday-container
             node.addHolidays = [];
             const addHolidays = $('#node-input-addHoliday-container').editableList('items');
             addHolidays.each(function (_i) {
                 const rule = $(this);
-                const data = {
-                    name: rule.find('.node-input-addHoliday-name').val(),
-                    month: parseInt(rule.find('.node-input-addHoliday-month').val()),
-                    day: parseInt(rule.find('.node-input-addHoliday-day').val())
-                };
-                node.addHolidays.push(data);
+                node.addHolidays.push(getData(rule));
             });
             // #endregion addHoliday-container
             // #region addSpecialday-container
@@ -439,12 +422,7 @@
             const addSpecialdays = $('#node-input-addSpecialday-container').editableList('items');
             addSpecialdays.each(function (_i) {
                 const rule = $(this);
-                const data = {
-                    name: rule.find('.node-input-addSpecialday-name').val(),
-                    month: parseInt(rule.find('.node-input-addSpecialday-month').val()),
-                    day: parseInt(rule.find('.node-input-addSpecialday-day').val())
-                };
-                node.addSpecialdays.push(data);
+                node.addSpecialdays.push(getData(rule));
             });
             // #endregion addSpecialday-container
         }

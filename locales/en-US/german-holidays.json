@@ -1,0 +1,78 @@
+{
+    "german-holidays": {
+        "label": {
+            "region": "state",
+            "addHoliday": "define additional Holidays",
+            "addSpecialday": "define additional special days",
+            "relEaster": "🥚  relative to easter sunday",
+            "rel4ThAdvent": "🎄  relative to 4th. advent"
+        },
+        "placeholder": {
+            "region": "select state for holidays",
+            "name": "name of the day",
+            "month": "month 1-12",
+            "day": "day - absolute: 1-31, relative -300 - 300"
+        },
+        "days": [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sun",
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat"
+        ],
+        "month": [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ],
+        "relSunday": [
+            "r01  -  rel to 1. Sunday in Jan",
+            "r02  -  rel to 1. Sunday in Feb",
+            "r03  -  rel to 1. Sunday in Mar",
+            "r04  -  rel to 1. Sunday in Apr",
+            "r05  -  rel to 1. Sunday in May",
+            "r06  -  rel to 1. Sunday in Jun",
+            "r07  -  rel to 1. Sunday in Jul",
+            "r08  -  rel to 1. Sunday in Aug",
+            "r09  -  rel to 1. Sunday in Sep",
+            "r10  -  rel to 1. Sunday in Oct",
+            "r11  -  rel to 1. Sunday in Nov",
+            "r12  -  rel to 1. Sunday in Dec"
+        ],
+        "tips": {
+            "region":"<b>Tip:</b> You can also define the state as part of the incomming message. This would be used priorized than the settings here. But then are the shortcuts (BY=Bayern, BE=Berlin) are used.<br /><code>msg.region</code> or <code>msg.payload.region</code>",
+            "addHoliday": "Use this definition to add own additional holidays. Here defined days overrides pre defined dates.",
+            "addSpecialday": "Use this definition to add own additional special days of the year which are not holidays. Here defined days overrides pre defined dates."
+        }
+    }
+}

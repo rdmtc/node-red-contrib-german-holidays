@@ -1,0 +1,64 @@
+{
+    "german-holidays": {
+        "label": {
+            "region": "Bundesland",
+            "addHoliday": "zusätzliche Freie oder Feiertage",
+            "addSpecialday": "zusätzliche Gedenk-, Aktions- und Jahrestage die keine Feiertage sind",
+            "relEaster": "🥚  relativ zum Oster Sonntag",
+            "rel4ThAdvent": "🎄  relativ zum 4. Advent"
+        },
+        "placeholder": {
+            "region": "wähle region der Feiertage",
+            "name": "Name des tages",
+            "month": "Monat 1-12",
+            "day": "Tag - absolut: 1-31, relativ -300 - 300"
+        },
+        "days": [
+            "Sonntag",
+            "Montag",
+            "Dienstag",
+            "Mittwoch",
+            "Donnerstag",
+            "Freitag",
+            "Sonnabend",
+            "So",
+            "Mo",
+            "Die",
+            "Mi",
+            "Do",
+            "Fr",
+            "Sa"
+        ],
+        "month": [
+            "Januar",
+            "Februar",
+            "März",
+            "April",
+            "Mai",
+            "Juni",
+            "Juli",
+            "August",
+            "September",
+            "Oktober",
+            "November",
+            "Dezember",
+            "Jan",
+            "Feb",
+            "März",
+            "Apr",
+            "Mai",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sept",
+            "Okt",
+            "Nov",
+            "Dez"
+        ],
+        "tips": {
+            "region": "<b>Tip:</b> Es ist auch möglich die Region als Teil der eingangsnachricht zu definieren. Dies wird dann bevorzugt zu dieser Definition verwendet. Dafür muss die Eigenschaft <code>msg.region</code> oder <code>msg.payload.region</code> mit dem Kürzel des Bundeslandes (BY=Bayern, BE=Berlin), bzw mit \"ALL\" für alle belegt werden.",
+            "addHoliday": "Benutzen Sie diese Definition um zusätzliche Freie Tage oder Feiertage zu hinterlegen. Hier angegebene Tage überschreiben vordefinierte Feiertage mit dem selben Datum.",
+            "addSpecialday": "Benutzen Sie diese Definition um zusätzliche besondere Tage wie Gedenk-, Aktions- und Jahrestage zu hinterlegen, die keine Freie oder Feiertage sind.  Hier angegebene Tage überschreiben vordefinierte Sonder-Tage mit dem selben Datum"
+        }
+    }
+}

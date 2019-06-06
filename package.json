@@ -6,7 +6,10 @@
     "node-red",
     "german-holidays",
     "holidays",
-    "german"
+    "german",
+    "specialdays",
+    "weekend",
+    "schedule"
   ],
   "main": "none",
   "engines": {
@@ -14,6 +17,7 @@
   },
   "scripts": {
     "test": "camo-purge; eslint \"./**/*.js\" \"./**/*.html\"",
+    "camo-purg": "camo-purge; eslint \"./**/*.js\" \"./**/*.html\"",
     "lintfix": "eslint --fix \"./**/*.js\" \"./**/*.html\"",
     "lint": "eslint \"./**/*.js\" \"./**/*.html\"",
     "predev": "npm i -g",
@@ -54,12 +58,12 @@
   },
   "devDependencies": {
     "camo-purge": "^1.0.2",
-    "eslint": "^5.15.1",
+    "eslint": "^5.15.3",
     "eslint-plugin-html": "^5.0.3"
   },
   "disabledSettings": {
     "devDependencies-disabled": {
-      "eslint-plugin-jsdoc": "^4.1.0"
+      "eslint-plugin-jsdoc": "^4.4.3"
     },
     "plugins-disabled": [
       "jsdoc"

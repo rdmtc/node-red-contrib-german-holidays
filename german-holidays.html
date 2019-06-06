@@ -1,8 +1,7 @@
 <script type="text/x-red" data-template-name="german-holidays">
     <div class="form-row">
-            <label for="node-button-addPreDefined"><i class="fa fa-plus-circle"></i></label>
-            <button type="button" id="node-button-addPreDefined" class="ui-button ui-widget ui-corner-all"><i class="fa fa-plus"></i> <span data-i18n="german-holidays.label.addPreDefined"></span></button>
-        </div>
+        <button type="button" id="node-button-addPreDefined" class="ui-button ui-widget ui-corner-all"><i class="fa fa-plus"></i> <span data-i18n="german-holidays.label.addPreDefined"></span></button>
+    </div>
     <hr>
 
     <div>
@@ -693,7 +692,7 @@
 
             function checkSpecialdays() {
                 console.log('checkSpecialdays');
-                const $addSpecialdayBtn = $('node-buton-addSpecialdayBtn');
+                const $addSpecialdayBtn = $('#node-buton-addSpecialdayBtn');
                 const length = $('#node-input-specialday-container').editableList('length');
                 if (length <=0 ) {
                     $addSpecialdayBtn.hide();
@@ -880,33 +879,33 @@
             // #region Button
             console.log('initialize button?');
 
-            const $addPreDefined = $('node-button-addPreDefined');
+            const $addPreDefined = $('#node-button-addPreDefined');
             $addPreDefined.click(() => {
                 console.log('$addPreDefined.click');
                 $dialog.dialog('open');
             });
 
-            const $addHoliday = $('node-button-addHolidays');
+            const $addHoliday = $('#node-button-addHolidays');
             $addHoliday.click(() => {
                 console.log('$addHoliday.click');
                 addHolidays($('#node-regionSel').val());
                 $dialog.dialog('close');
             });
 
-            const $clearHolidayBtn = $('node-buton-clearHolidayBtn');
+            const $clearHolidayBtn = $('#node-buton-clearHolidayBtn');
             $clearHolidayBtn.click(() => {
                 console.log('$clearHolidayBtn.click');
                 $('#node-input-holiday-container').editableList('empty');
             });
 
-            const $addSpecialdayBtn = $('node-buton-addSpecialdayBtn');
+            const $addSpecialdayBtn = $('#node-buton-addSpecialdayBtn');
             $addSpecialdayBtn.click(() => {
                 console.log('$addSpecialdayBtn.click');
                 addSpecialdays();
                 $dialog.dialog('close');
             });
 
-            const $clearSpecialdayBtn = $('node-buton-clearSpecialdayBtn');
+            const $clearSpecialdayBtn = $('#node-buton-clearSpecialdayBtn');
             $clearSpecialdayBtn.click(() => {
                 console.log('$clearSpecialdayBtn.click');
                 $('#node-input-specialday-container').editableList('empty');

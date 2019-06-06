@@ -2,14 +2,20 @@
     "german-holidays": {
         "label": {
             "region": "state",
-            "addHoliday": "define additional Holidays",
-            "addSpecialday": "define additional special days",
+            "holidayList": "define holidays",
+            "specialdayList": "define special days",
+            "addpreDefined": "add pre defined",
+            "addHolidayBtn": "add",
+            "addSpecialdayBtn": "add all non holidays",
+            "clearHolidayBtn": "clear list",
+            "clearSpecialdayBtn": "clear list",
             "relEaster": "🥚  relative to easter sunday",
             "rel4ThAdvent": "🎄  relative to 4th. advent"
         },
         "placeholder": {
             "region": "select state for holidays",
             "name": "name of the day",
+            "namePreDefined": "name of the pre defined day",
             "month": "month 1-12",
             "day": "day - absolute: 1-31, relative -300 - 300"
         },
@@ -70,9 +76,8 @@
             "rDec  -  relative day in Dec"
         ],
         "tips": {
-            "region":"<b>Tip:</b> You can also define the state as part of the incomming message. This would be used priorized than the settings here. But then are the shortcuts (BY=Bayern, BE=Berlin) are used.<br /><code>msg.region</code> or <code>msg.payload.region</code>",
-            "addHoliday": "Use this definition to add own additional holidays. Here defined days overrides pre defined dates.",
-            "addSpecialday": "Use this definition to add own additional special days of the year which are not holidays. Here defined days overrides pre defined dates."
+            "holiday": "Use this definition to define holidays. If for the same day multiple entries exists the first one will choosen. With the add button you can add a pre defined list for your region.",
+            "specialday": "Use this definition to define special days of the year which are not holidays. If for the same day multiple entries exists the first one will choosen. With the add button all entries of the pre defined days will be added to the list which are not in the holiday list. Typically you will forst add all holidays for your region and then add all non holidays as special days."
         }
     }
 }

@@ -2,8 +2,10 @@
     "german-holidays": {
         "label": {
             "region": "Bundesland",
-            "addHoliday": "zusätzliche Freie oder Feiertage",
-            "addSpecialday": "zusätzliche Gedenk-, Aktions- und Jahrestage die keine Feiertage sind",
+            "holidayList": "Freie oder Feiertage",
+            "specialdayList": "Gedenk-, Aktions- und Jahrestage die keine Feiertage sind",
+            "addHolidayBtn": "Feiertage für das gewählte Bundesland hinzufügen",
+            "addSpecialdayBtn": "alles was keine Feiertage sind hinzufügen",
             "relEaster": "🥚  relativ zum Oster Sonntag",
             "rel4ThAdvent": "🎄  relativ zum 4. Advent"
         },

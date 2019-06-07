@@ -56,7 +56,7 @@
         <input type="text" id="node-input-name" data-i18n="[placeholder]time-span.placeholder.name">
     </div>
 
-    <div id="dialog-edit-day" title="Add to List" class="red-ui-editor">
+    <div id="dialog-edit-day" title="E" class="red-ui-editor" data-i18n="[title]time-span.label.dialogtitle">
         <div class="form-row">
             <label for="name">ID</label>
             <input type="text" name="dialog-input-id" id="dialog-input-id" class="text ui-widget-content ui-corner-all">
@@ -931,7 +931,7 @@
             const $dialogMonth = $('#dialog-input-month');
             const $dialogOffset = $('#dialog-input-offset');
             const $dialogDaysRel = $('#dialog-input-daysRel');
-            const $dialogLabel = $('dialog-label-date-out');
+            const $dialogLabel = $('#dialog-label-date-out');
 
             function dialogLoadData(rule) {
                 console.log('dialogLoadData'); // eslint-disable-line
@@ -1078,6 +1078,7 @@
                 height: 460,
                 width: 530,
                 modal: true,
+                closeOnEscape: true,
                 buttons: {
                     Ok: dialogSaveData,
                     Cancel: function() {

@@ -347,7 +347,7 @@ function _addToArrayForRegion(arrayToAdd, region) {
  * @private
  */
 function _getSpecialDaysOfYear(node, year, region, force) {
-    if (node.default.dayObjs && node.default.year === year && (force === true) && !region) {
+    if (node.default.dayObjs && node.default.year === year && (force !== true) && !region) {
         return node.default.dayObjs;
     }
 
@@ -488,11 +488,13 @@ function _newDay(id, date, name, nameAlt) {
  * @param {Date} advent4th  -  advent data for relative day setting
  */
 function _addDaysToArray(daysDefinitionArray, outArr, year, easter_date, advent4th) {
+    console.log('_addDaysToArray');
     if (daysDefinitionArray && daysDefinitionArray.length > 0) {
         daysDefinitionArray.forEach(d => {
             let month = parseInt(d.month);
             const day = parseInt(d.day);
-            if (!isNaN(month) && !isNaN(day) && month <= 24 && month !== 0 && month >= -3 && day >= 1 && day <= 31) {
+            if (!isNaN(month) && !isNaN(day) && month <= 24 && month !== 0 && month >= -3) {
+                console.log(d);
                 if (month === easterX) {
                     month = easter_date;
                 } else if (month === adventX) {

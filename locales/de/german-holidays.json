@@ -3,9 +3,10 @@
         "label": {
             "region": "Bundesland",
             "holidayList": "Freie oder Feiertage",
-            "specialdayList": "Gedenk-, Aktions- und Jahrestage die keine Feiertage sind",
-            "addHolidayBtn": "Feiertage für das gewählte Bundesland hinzufügen",
-            "addSpecialdayBtn": "alles was keine Feiertage sind hinzufügen",
+            "specialdayList": "Gedenk-, Aktions-, Geburts- und Jahrestage die keine Feiertage sind",
+            "addSpecialdayBtn": "vordefinierte hinzufügen",
+            "clearHolidayBtn": "Liste leeren",
+            "clearSpecialdayBtn": "Liste leeren",
             "relEaster": "🥚  relativ zum Oster Sonntag",
             "rel4ThAdvent": "🎄  relativ zum 4. Advent"
         },
@@ -14,6 +15,27 @@
             "name": "Name des tages",
             "month": "Monat 1-12",
             "day": "Tag - absolut: 1-31, relativ -300 - 300"
+        },
+        "region": {
+            "none": "<wählen um vordefinierte Hinzugefügt werden sollen>",
+            "ALL": "alle",
+            "BUND": "allgemeine",
+            "BW": "Baden-Württemberg",
+            "BY": "Bayern",
+            "BE": "Berlin",
+            "BB": "Brandenburg",
+            "HB": "Bremen",
+            "HH": "Hamburg",
+            "HE": "Hessen",
+            "MV": "Mecklenburg-Vorpommern",
+            "NI": "Niedersachsen",
+            "NW": "Nordrhein-Westfalen",
+            "RP": "Rheinland-Pfalz",
+            "SL": "Saarland",
+            "SN": "Sachsen",
+            "ST": "Sachsen-Anhalt",
+            "SH": "Schleswig-Holstein",
+            "TH": "Thüringen"
         },
         "days": [
             "Sonntag",
@@ -57,10 +79,23 @@
             "Nov",
             "Dez"
         ],
+        "relday": [
+            "rJan  -  relativer Wochentag im Januar",
+            "rFeb  -  relativer Wochentag im Februar",
+            "rMar  -  relativer Wochentag im März",
+            "rApr  -  relativer Wochentag im April",
+            "rMay  -  relativer Wochentag im Mai",
+            "rJun  -  relativer Wochentag im Juni",
+            "rJul  -  relativer Wochentag im Juli",
+            "rAug  -  relativer Wochentag im August",
+            "rSep  -  relativer Wochentag im September",
+            "rOct  -  relativer Wochentag im Oktober",
+            "rNov  -  relativer Wochentag im November",
+            "rDec  -  relativer Wochentag im Dezember"
+        ],
         "tips": {
-            "region": "<b>Tip:</b> Es ist auch möglich die Region als Teil der eingangsnachricht zu definieren. Dies wird dann bevorzugt zu dieser Definition verwendet. Dafür muss die Eigenschaft <code>msg.region</code> oder <code>msg.payload.region</code> mit dem Kürzel des Bundeslandes (BY=Bayern, BE=Berlin), bzw mit \"ALL\" für alle belegt werden.",
-            "addHoliday": "Benutzen Sie diese Definition um zusätzliche Freie Tage oder Feiertage zu hinterlegen. Hier angegebene Tage überschreiben vordefinierte Feiertage mit dem selben Datum.",
-            "addSpecialday": "Benutzen Sie diese Definition um zusätzliche besondere Tage wie Gedenk-, Aktions- und Jahrestage zu hinterlegen, die keine Freie oder Feiertage sind.  Hier angegebene Tage überschreiben vordefinierte Sonder-Tage mit dem selben Datum"
+            "holiday": "Es werden nur Feiertage oder freie Tage betrachtet, welche in der liste aufgeführt sind. Sie können die Auswahl und den Hinzufügen Knopf benutzen um eine vorgefertigte Auswahl an Feiertagen für ein Bundesland hintzuzufügen. Fallen mehrere Einträge auf das selbe Datum wird später nur der erste berücksichtigt.",
+s            "specialday": "Benutzen Sie diese Definition um zusätzliche besondere Tage wie Gedenk-, Aktions-, Geburts- und Jahrestage zu hinterlegen, die keine Freie oder Feiertage sind. Mit dem hinzufügen Knopf werden alle intern bekannten Tage hinzugefügt, die nicht in der Liste der Feiertage oben aufgeführt sind. Fallen mehrere Einträge auf das selbe Datum wird später nur der erste EIntrag berücksichtigt."
         }
     }
 }

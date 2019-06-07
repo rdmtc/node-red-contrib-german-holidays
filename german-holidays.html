@@ -1,54 +1,47 @@
 <script type="text/x-red" data-template-name="german-holidays">
     <div>
         <label for="node-input-holiday-container-row"><i class="fa fa-list"></i> <span data-i18n="german-holidays.label.holidayList"></span></label>
-        <div class="form-row node-input-holiday-container-row">
+        <div class="node-input-holiday-container-row">
             <ol id="node-input-holiday-container"></ol>
         </div>
-        <button type="button" id="node-button-clearHolidays" class="ui-button ui-widget ui-corner-all"><i class="fa fa-minus-square"></i> <span data-i18n="german-holidays.label.clearHolidayBtn"></span></button>
-        <br>
-    </div>
-
-    <div class="form-row" data-i18n="[title]german-holidays.placeholder.region">
-        <label for="node-regionSel"><i class="fa fa-globe"></i> <span data-i18n="german-holidays.label.addpreDefined"></span></label>
-        <select type="text" id="node-regionSel">
-            <option value="ALL" >alle</option>
-            <option value="BUND" >allgemeine</option>
-            <option value="BW" >Baden-Württemberg</option>
-            <option value="BY" >Bayern</option>
-            <option value="BE" >Berlin</option>
-            <option value="BB" >Brandenburg</option>
-            <option value="HB" >Bremen</option>
-            <option value="HH" >Hamburg</option>
-            <option value="HE" >Hessen</option>
-            <option value="MV" >Mecklenburg-Vorpommern</option>
-            <option value="NI" >Niedersachsen</option>
-            <option value="NW" >Nordrhein-Westfalen</option>
-            <option value="RP" >Rheinland-Pfalz</option>
-            <option value="SL" >Saarland</option>
-            <option value="SN" >Sachsen</option>
-            <option value="ST" >Sachsen-Anhalt</option>
-            <option value="SH" >Schleswig-Holstein</option>
-            <option value="TH" >Thüringen</option>
+        <button type="button" id="node-button-clearHolidays" class="rdg-ui-btn"><i class="fa fa-minus-square"></i> <span data-i18n="german-holidays.label.clearHolidayBtn"></span></button> &nbsp;
+        <select type="text" id="node-regionSel" style="width:200px">
+            <option value="" data-i18n="german-holidays.region.none"></option>
+            <option value="ALL" data-i18n="german-holidays.region.ALL"></option>
+            <option value="BUND" data-i18n="german-holidays.region.BUND"></option>
+            <option value="BW" data-i18n="german-holidays.region.BW"></option>
+            <option value="BY" data-i18n="german-holidays.region.BY"></option>
+            <option value="BE" data-i18n="german-holidays.region.BE"></option>
+            <option value="BB" data-i18n="german-holidays.region.BB"></option>
+            <option value="HB" data-i18n="german-holidays.region.HB"></option>
+            <option value="HH" data-i18n="german-holidays.region.HH"></option>
+            <option value="HE" data-i18n="german-holidays.region.HE"></option>
+            <option value="MV" data-i18n="german-holidays.region.MV"></option>
+            <option value="NI" data-i18n="german-holidays.region.NI"></option>
+            <option value="NW" data-i18n="german-holidays.region.NW"></option>
+            <option value="RP" data-i18n="german-holidays.region.RP"></option>
+            <option value="SL" data-i18n="german-holidays.region.SL"></option>
+            <option value="SN" data-i18n="german-holidays.region.SN"></option>
+            <option value="ST" data-i18n="german-holidays.region.ST"></option>
+            <option value="SH" data-i18n="german-holidays.region.SH"></option>
+            <option value="TH" data-i18n="german-holidays.region.TH"></option>
         </select>
+        <button type="button" id="node-button-addHolidays" class="rdg-ui-btn"><i class="fa fa-plus-square"></i> </button>
+        <br>
         <input type="hidden" id="node-input-region">
-        <button type="button" id="node-button-addHolidays" class="ui-button ui-widget ui-corner-all"><i class="fa fa-plus-square"></i> </button>
     </div>
 
-    <div class="form-tips" data-i18n="[html]german-holidays.tips.holiday"></div>
+    <div class="form-row form-tips" data-i18n="[html]german-holidays.tips.holiday"></div>
 
     <hr>
     <div>
         <label for="node-input-specialday-container-row"><i class="fa fa-list"></i> <span data-i18n="german-holidays.label.specialdayList"></span></label>
-        <div class="form-row node-input-specialday-container-row">
+        <div class="node-input-specialday-container-row">
             <ol id="node-input-specialday-container"></ol>
         </div>
-        <button type="button" id="node-button-clearSpecialDays" class="ui-button ui-widget ui-corner-all"><i class="fa fa-minus-circle"></i> <span data-i18n="german-holidays.label.clearSpecialdayBtn"></span></button>
+        <button type="button" id="node-button-clearSpecialDays" class="rdg-ui-btn"><i class="fa fa-minus-circle"></i> <span data-i18n="german-holidays.label.clearSpecialdayBtn"></span></button> &nbsp;
+        <button type="button" id="node-button-addSpecialDays" class="rdg-ui-btn"><i class="fa fa-plus-circle"></i> <span data-i18n="german-holidays.label.addSpecialdayBtn"></span></button>
         <br>
-    </div>
-
-    <div class="form-row">
-        <label for="node-button-addSpecialDays"><i class="fa fa-plus-circle"></i><span data-i18n="german-holidays.label.addpreDefined2"></span></label>
-        <button type="button" id="node-button-addSpecialDays" class="ui-button ui-widget ui-corner-all"><i class="fa fa-plus-circle"></i> <span data-i18n="german-holidays.label.addSpecialdayBtn"></span></button>
     </div>
 
     <div class="form-tips" data-i18n="[html]german-holidays.tips.specialday"></div>
@@ -102,6 +95,9 @@
         <div class="form-row dialog-input-offset-row">
             <label for="name">offset</label>
             <input type="number" name="dialog-input-offset" id="dialog-input-offset" min="1" max="31" step="1" class="text ui-widget-content ui-corner-all">
+        </div>
+        <div>
+            <label id="dialog-label-date-out"></label>
         </div>
     </div>
 </script>
@@ -266,325 +262,41 @@
 <!-- Finally, the node type is registered along with all of its properties   -->
 <!-- The example below shows a small subset of the properties that can be set-->
 <script type="text/javascript">
-    const allRegions = [
-        'BW',
-        'BY',
-        'BE',
-        'BB',
-        'HB',
-        'HE',
-        'HH',
-        'MV',
-        'NI',
-        'NW',
-        'RP',
-        'SL',
-        'SN',
-        'ST',
-        'SH',
-        'TH',
-        'BUND',
-        'ALL'
-    ];
+    function getData(rule) {
+        return {
+            id: rule.find('.node-input-item-id').val(),
+            name: rule.find('.node-input-item-name').val(),
+            nameAlt: rule.find('.node-input-item-nameAlt').val(),
+            month: parseInt(rule.find('.node-input-item-month').val()),
+            day: parseInt(rule.find('.node-input-item-day').val())
+        };
+    }
 
-    const easterX = -1;
-    const adventX = -2;
-
-    const allDaysDefinition = {
-        NEUJAHRSTAG: {
-            nameDE: 'Neujahrstag', // 1.1.
-            month: 1,
-            day: 1,
-            regions: allRegions
-        },
-        HEILIGEDREIKOENIGE: {
-            nameDE: 'Heilige Drei Könige', // 6.1.
-            nameAlt: 'Epiphanias',
-            month: 1,
-            day: 6,
-            regions: ['BW', 'BY', 'ST', 'ALL']
-        },
-        VALENTINSTAG: {
-            nameDE: 'Valentinstag', // 14. 2.
-            month: 2,
-            day: 14,
-            regions: []
-        },
-        SCHMUDONN: {
-            nameDE: 'Schmutziger Donnerstag', // 52 Tage vor dem Ostersonntag
-            ref: easterX,
-            day: -52,
-            regions: []
-        },
-        ROSENMONTAG: {
-            nameDE: 'Rosenmontag', // 48 Tage vor dem Ostersonntag
-            ref: easterX,
-            day: -48,
-            regions: []
-        },
-        FASTNACHTSDIENSTAG: {
-            nameDE: 'Fastnachtsdienstag', // 47 Tage vor dem Ostersonntag
-            ref: easterX,
-            day: -47,
-            regions: []
-        },
-        ASCHERMITTWOCH: {
-            nameDE: 'Aschermittwoch', // 46 Tage vor dem Ostersonntag (der erste Tag der Fastenzeit)
-            ref: easterX,
-            day: -46,
-            regions: []
-        },
-        PALMSONNTAG: {
-            nameDE: 'Palmsonntag', // 7 Tage vor dem Ostersonntag
-            ref: easterX,
-            day: -7,
-            regions: []
-        },
-        GRUENDONNERSTAG: {
-            nameDE: 'Gründonnerstag', // 4 Tage vor dem Ostersonntag
-            ref: easterX,
-            day: -4,
-            regions: []
-        },
-        KARFREITAG: {
-            nameDE: 'Karfreitag',
-            ref: easterX,
-            day: -2,
-            regions: allRegions
-        },
-        OSTERSONNTAG: {
-            nameDE: 'Ostersonntag',
-            ref: easterX,
-            day: 0,
-            regions: ['BB', 'ALL']
-        },
-        OSTERMONTAG: {
-            nameDE: 'Ostermontag',
-            ref: easterX,
-            day: 1,
-            regions: allRegions
-        },
-        JOHANISTAG: {
-            nameDE: 'Johannistag', // 30. April
-            month: 4,
-            day: 24,
-            regions: []
-        },
-        MICHAELISTAG: {
-            nameDE: 'Michaelistag', // 30. April
-            month: 4,
-            day: 29,
-            regions: []
-        },
-        WALPURGISNACHT: {
-            nameDE: 'Walpurgisnacht', // 30. April
-            month: 4,
-            day: 30,
-            regions: []
-        },
-        TAG_DER_ARBEIT: {
-            nameDE: 'Tag der Arbeit', // 1. Mai
-            nameAlt: 'Maifeiertag',
-            month: 1,
-            day: 5,
-            regions: allRegions
-        },
-        EISHEILIGEN1: {
-            nameDE: 'Eisheiliger Mamertus', // 11. Mai
-            month: 5,
-            day: 11,
-            regions: []
-        },
-        EISHEILIGEN2: {
-            nameDE: 'Eisheiliger Pankratius', // 12. Mai
-            month: 5,
-            day: 12,
-            regions: []
-        },
-        EISHEILIGEN3: {
-            nameDE: 'Eisheiliger Servatius', // 13. Mai
-            month: 5,
-            day: 13,
-            regions: []
-        },
-        EISHEILIGEN4: {
-            nameDE: 'Eisheiliger Bonifatius', // 14. Mai
-            month: 5,
-            day: 14,
-            regions: []
-        },
-        EISHEILIGEN5: {
-            nameDE: 'Eisheilige Kalte Sophie', // 15. Mai
-            month: 5,
-            day: 15,
-            regions: []
-        },
-        MUTTERTAG: {
-            nameDE: 'Muttertag', // 2. Sonntag im Mai
-            month: 12 + 5,
-            day: 7,
-            regions: []
-        },
-        KINDERTAG: {
-            nameDE: 'Kindertag', // 1.6.
-            month: 6,
-            day: 1,
-            regions: []
-        },
-        CHRISTIHIMMELFAHRT: {
-            nameDE: 'Christi Himmelfahrt',
-            nameAlt: 'Vatertag',
-            ref: easterX,
-            day: 39,
-            regions: allRegions
-        },
-        PFINGSTSONNTAG: {
-            nameDE: 'Pfingstsonntag',
-            ref: easterX,
-            day: 49,
-            regions: ['BB', 'ALL']
-        },
-        PFINGSTMONTAG: {
-            nameDE: 'Pfingstmontag',
-            ref: easterX,
-            day: 50,
-            regions: allRegions
-        },
-        TRINITATISSONNTAG: {
-            nameDE: 'Trinitatissonntag',
-            ref: easterX,
-            day: 56,
-            regions: []
-        },
-        FRONLEICHNAM: {
-            nameDE: 'Fronleichnam',
-            ref: easterX,
-            day: 60,
-            regions: ['BW', 'HE', 'NW', 'RP', 'SL', 'ALL']
-        },
-        SIEBENSCHLAEFER: {
-            nameDE: 'Siebenschläfer', // 27. Juni
-            month: 6,
-            day: 27,
-            regions: []
-        },
-        MARIAHIMMELFAHRT: {
-            nameDE: 'Mariä Himmelfahrt',
-            month: 8,
-            day: 15,
-            regions: ['SL', 'BY', 'ALL']
-        },
-        ERNTEDANK: {
-            nameDE: 'Erntedank', // erster Sonntag im Oktober
-            month: 12 + 10,
-            day: 1,
-            regions: []
-        },
-        DEUTSCHEEINHEIT: {
-            nameDE: 'Tag der Deutschen Einheit',
-            month: 10,
-            day: 3,
-            regions: allRegions
-        },
-        REFORMATIONSTAG: {
-            nameDE: 'Reformationstag', // 31. Oktober
-            nameAlt: 'Halloween',
-            month: 10,
-            day: 31,
-            regions: ['BB', 'MV', 'SN', 'ST', 'TH', 'ALL']
-        },
-        ALLERHEILIGEN: {
-            nameDE: 'Allerheiligen',
-            month: 11,
-            day: 1,
-            regions: ['BW', 'BY', 'NW', 'RP', 'SL', 'ALL']
-        },
-        ALLERSEELEN: {
-            nameDE: 'Allerseelen', // 2. November
-            month: 11,
-            day: 2,
-            regions: []
-        },
-        MARTINSTAG: {
-            nameDE: 'Martinstag', // 11. November
-            month: 11,
-            day: 11,
-            regions: []
-        },
-        VOLKSTRAUERTAG: {
-            nameDE: 'Volkstrauertages', // Sonntag (3 Tage) vor dem Buß- und Bettag
-            ref: adventX,
-            day: -35,
-            regions: []
-        },
-        BUBETAG: {
-            nameDE: 'Buß- und Bettag',
-            ref: adventX,
-            day: -32,
-            regions: ['SN', 'ALL']
-        },
-        TOTENSONNTAG: {
-            nameDE: 'Totensonntag', // Sonntag (4 Tage) nach dem Buß- und Bettag; eine Woche vor dem ersten Advent
-            nameAlt: 'Ewigkeitssonntag',
-            ref: adventX,
-            day: -28,
-            regions: []
-        },
-        ADVENT1: {
-            nameDE: 'erste Advent', // vierte Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 1. Advent liegen 11 Tage
-            ref: adventX,
-            day: -21,
-            regions: []
-        },
-        ADVENT2: {
-            nameDE: 'zweite Advent', // dritte Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 2. Advent liegen 18 Tage
-            ref: adventX,
-            day: -14,
-            regions: []
-        },
-        NIKOLAUS: {
-            nameDE: 'Nikolaus', // 6.12.
-            month: 12,
-            day: 6,
-            regions: []
-        },
-        ADVENT3: {
-            nameDE: 'dritte Advent', // zweite Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 3. Advent liegen 25 Tage
-            ref: adventX,
-            day: -7,
-            regions: []
-        },
-        ADVENT4: {
-            nameDE: 'vierte Advent', // Sonntag direkt vor Weihnachten; Zwischen Buss und Bettag und dem 4. Advent liegen 32 Tage
-            ref: adventX,
-            day: 0,
-            regions: []
-        },
-        HEILIGABEND: {
-            nameDE: 'Heiligabend',
-            month: 12,
-            day: 24,
-            regions: []
-        },
-        ERSTERWEIHNACHTSFEIERTAG: {
-            nameDE: '1. Weihnachtstag',
-            month: 12,
-            day: 25,
-            regions: allRegions
-        },
-        ZWEITERWEIHNACHTSFEIERTAG: {
-            nameDE: '2. Weihnachtstag',
-            month: 12,
-            day: 26,
-            regions: allRegions
-        },
-        SILVESTER: {
-            nameDE: 'Silvester', // 31.12.
-            month: 12,
-            day: 31,
-            regions: []
+    function saveHolidays(node) {
+        console.log('saveHolidays'); // eslint-disable-line
+        node.holidays = [];
+        const holidaysArr = $('#node-input-holiday-container').editableList('items');
+        if (holidaysArr) {
+            holidaysArr.each(function (_i) {
+                const rule = $(this);
+                node.holidays.push(getData(rule));
+            });
         }
-    };
+        console.log(node.holidays); // eslint-disable-line
+    }
+
+    function saveSpecialdays(node) {
+        console.log('saveSpecialdays'); // eslint-disable-line
+        node.specialdays = [];
+        const specialdaysArr = $('#node-input-specialday-container').editableList('items');
+        if (specialdaysArr) {
+            specialdaysArr.each(function (_i) {
+                const rule = $(this);
+                node.specialdays.push(getData(rule));
+            });
+        }
+        console.log(node.specialdays); // eslint-disable-line
+    }
 
     RED.nodes.registerType('german-holidays', {
         category: 'function',
@@ -594,7 +306,8 @@
                 required: false
             },
             topic: {
-                value: ''
+                value: '',
+                required: false
             },
             region: {
                 value: '',
@@ -604,10 +317,12 @@
                 }
             },
             holidays: {
-                value: []
+                value: [],
+                required: false
             },
             specialdays: {
-                value: []
+                value: [],
+                required: false
             }
         },
         inputs: 1, // set the number of inputs - only 0 or 1
@@ -622,8 +337,378 @@
         },
         paletteLabel: 'Holidays',
         oneditprepare() {
-            const node = this;
+            // #region data
+            const allRegions = [
+                'BW',
+                'BY',
+                'BE',
+                'BB',
+                'HB',
+                'HE',
+                'HH',
+                'MV',
+                'NI',
+                'NW',
+                'RP',
+                'SL',
+                'SN',
+                'ST',
+                'SH',
+                'TH',
+                'BUND',
+                'ALL'
+            ];
 
+            const easterX = -1;
+            const adventX = -2;
+
+            const allDaysDefinition = {
+                NEUJAHRSTAG: {
+                    nameDE: 'Neujahrstag', // 1.1.
+                    month: 1,
+                    day: 1,
+                    regions: allRegions
+                },
+                HEILIGEDREIKOENIGE: {
+                    nameDE: 'Heilige Drei Könige', // 6.1.
+                    nameAlt: 'Epiphanias',
+                    month: 1,
+                    day: 6,
+                    regions: ['BW', 'BY', 'ST', 'ALL']
+                },
+                VALENTINSTAG: {
+                    nameDE: 'Valentinstag', // 14. 2.
+                    month: 2,
+                    day: 14,
+                    regions: []
+                },
+                SCHMUDONN: {
+                    nameDE: 'Schmutziger Donnerstag', // 52 Tage vor dem Ostersonntag
+                    month: easterX,
+                    day: -52,
+                    regions: []
+                },
+                ROSENMONTAG: {
+                    nameDE: 'Rosenmontag', // 48 Tage vor dem Ostersonntag
+                    month: easterX,
+                    day: -48,
+                    regions: []
+                },
+                FASTNACHTSDIENSTAG: {
+                    nameDE: 'Fastnachtsdienstag', // 47 Tage vor dem Ostersonntag
+                    month: easterX,
+                    day: -47,
+                    regions: []
+                },
+                ASCHERMITTWOCH: {
+                    nameDE: 'Aschermittwoch', // 46 Tage vor dem Ostersonntag (der erste Tag der Fastenzeit)
+                    month: easterX,
+                    day: -46,
+                    regions: []
+                },
+                PALMSONNTAG: {
+                    nameDE: 'Palmsonntag', // 7 Tage vor dem Ostersonntag
+                    month: easterX,
+                    day: -7,
+                    regions: []
+                },
+                GRUENDONNERSTAG: {
+                    nameDE: 'Gründonnerstag', // 4 Tage vor dem Ostersonntag
+                    month: easterX,
+                    day: -4,
+                    regions: []
+                },
+                KARFREITAG: {
+                    nameDE: 'Karfreitag',
+                    month: easterX,
+                    day: -2,
+                    regions: allRegions
+                },
+                OSTERSONNTAG: {
+                    nameDE: 'Ostersonntag',
+                    month: easterX,
+                    day: 0,
+                    regions: ['BB', 'ALL']
+                },
+                OSTERMONTAG: {
+                    nameDE: 'Ostermontag',
+                    month: easterX,
+                    day: 1,
+                    regions: allRegions
+                },
+                JOHANISTAG: {
+                    nameDE: 'Johannistag', // 30. April
+                    month: 4,
+                    day: 24,
+                    regions: []
+                },
+                MICHAELISTAG: {
+                    nameDE: 'Michaelistag', // 30. April
+                    month: 4,
+                    day: 29,
+                    regions: []
+                },
+                WALPURGISNACHT: {
+                    nameDE: 'Walpurgisnacht', // 30. April
+                    month: 4,
+                    day: 30,
+                    regions: []
+                },
+                TAG_DER_ARBEIT: {
+                    nameDE: 'Tag der Arbeit', // 1. Mai
+                    nameAlt: 'Maifeiertag',
+                    month: 1,
+                    day: 5,
+                    regions: allRegions
+                },
+                EISHEILIGEN1: {
+                    nameDE: 'Eisheiliger Mamertus', // 11. Mai
+                    month: 5,
+                    day: 11,
+                    regions: []
+                },
+                EISHEILIGEN2: {
+                    nameDE: 'Eisheiliger Pankratius', // 12. Mai
+                    month: 5,
+                    day: 12,
+                    regions: []
+                },
+                EISHEILIGEN3: {
+                    nameDE: 'Eisheiliger Servatius', // 13. Mai
+                    month: 5,
+                    day: 13,
+                    regions: []
+                },
+                EISHEILIGEN4: {
+                    nameDE: 'Eisheiliger Bonifatius', // 14. Mai
+                    month: 5,
+                    day: 14,
+                    regions: []
+                },
+                EISHEILIGEN5: {
+                    nameDE: 'Eisheilige Kalte Sophie', // 15. Mai
+                    month: 5,
+                    day: 15,
+                    regions: []
+                },
+                MUTTERTAG: {
+                    nameDE: 'Muttertag', // 2. Sonntag im Mai
+                    month: 12 + 5,
+                    day: 7,
+                    regions: []
+                },
+                KINDERTAG: {
+                    nameDE: 'Kindertag', // 1.6.
+                    month: 6,
+                    day: 1,
+                    regions: []
+                },
+                CHRISTIHIMMELFAHRT: {
+                    nameDE: 'Christi Himmelfahrt',
+                    nameAlt: 'Vatertag',
+                    month: easterX,
+                    day: 39,
+                    regions: allRegions
+                },
+                PFINGSTSONNTAG: {
+                    nameDE: 'Pfingstsonntag',
+                    month: easterX,
+                    day: 49,
+                    regions: ['BB', 'ALL']
+                },
+                PFINGSTMONTAG: {
+                    nameDE: 'Pfingstmontag',
+                    month: easterX,
+                    day: 50,
+                    regions: allRegions
+                },
+                TRINITATISSONNTAG: {
+                    nameDE: 'Trinitatissonntag',
+                    month: easterX,
+                    day: 56,
+                    regions: []
+                },
+                FRONLEICHNAM: {
+                    nameDE: 'Fronleichnam',
+                    month: easterX,
+                    day: 60,
+                    regions: ['BW', 'HE', 'NW', 'RP', 'SL', 'ALL']
+                },
+                SIEBENSCHLAEFER: {
+                    nameDE: 'Siebenschläfer', // 27. Juni
+                    month: 6,
+                    day: 27,
+                    regions: []
+                },
+                MARIAHIMMELFAHRT: {
+                    nameDE: 'Mariä Himmelfahrt',
+                    month: 8,
+                    day: 15,
+                    regions: ['SL', 'BY', 'ALL']
+                },
+                ERNTEDANK: {
+                    nameDE: 'Erntedank', // erster Sonntag im Oktober
+                    month: 12 + 10,
+                    day: 1,
+                    regions: []
+                },
+                DEUTSCHEEINHEIT: {
+                    nameDE: 'Tag der Deutschen Einheit',
+                    month: 10,
+                    day: 3,
+                    regions: allRegions
+                },
+                REFORMATIONSTAG: {
+                    nameDE: 'Reformationstag', // 31. Oktober
+                    nameAlt: 'Halloween',
+                    month: 10,
+                    day: 31,
+                    regions: ['BB', 'MV', 'SN', 'ST', 'TH', 'ALL']
+                },
+                ALLERHEILIGEN: {
+                    nameDE: 'Allerheiligen',
+                    month: 11,
+                    day: 1,
+                    regions: ['BW', 'BY', 'NW', 'RP', 'SL', 'ALL']
+                },
+                ALLERSEELEN: {
+                    nameDE: 'Allerseelen', // 2. November
+                    month: 11,
+                    day: 2,
+                    regions: []
+                },
+                MARTINSTAG: {
+                    nameDE: 'Martinstag', // 11. November
+                    month: 11,
+                    day: 11,
+                    regions: []
+                },
+                VOLKSTRAUERTAG: {
+                    nameDE: 'Volkstrauertages', // Sonntag (3 Tage) vor dem Buß- und Bettag
+                    month: adventX,
+                    day: -35,
+                    regions: []
+                },
+                BUBETAG: {
+                    nameDE: 'Buß- und Bettag',
+                    month: adventX,
+                    day: -32,
+                    regions: ['SN', 'ALL']
+                },
+                TOTENSONNTAG: {
+                    nameDE: 'Totensonntag', // Sonntag (4 Tage) nach dem Buß- und Bettag; eine Woche vor dem ersten Advent
+                    nameAlt: 'Ewigkeitssonntag',
+                    month: adventX,
+                    day: -28,
+                    regions: []
+                },
+                ADVENT1: {
+                    nameDE: 'erste Advent', // vierte Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 1. Advent liegen 11 Tage
+                    month: adventX,
+                    day: -21,
+                    regions: []
+                },
+                ADVENT2: {
+                    nameDE: 'zweite Advent', // dritte Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 2. Advent liegen 18 Tage
+                    month: adventX,
+                    day: -14,
+                    regions: []
+                },
+                NIKOLAUS: {
+                    nameDE: 'Nikolaus', // 6.12.
+                    month: 12,
+                    day: 6,
+                    regions: []
+                },
+                ADVENT3: {
+                    nameDE: 'dritte Advent', // zweite Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 3. Advent liegen 25 Tage
+                    month: adventX,
+                    day: -7,
+                    regions: []
+                },
+                ADVENT4: {
+                    nameDE: 'vierte Advent', // Sonntag direkt vor Weihnachten; Zwischen Buss und Bettag und dem 4. Advent liegen 32 Tage
+                    month: adventX,
+                    day: 0,
+                    regions: []
+                },
+                HEILIGABEND: {
+                    nameDE: 'Heiligabend',
+                    month: 12,
+                    day: 24,
+                    regions: []
+                },
+                ERSTERWEIHNACHTSFEIERTAG: {
+                    nameDE: '1. Weihnachtstag',
+                    month: 12,
+                    day: 25,
+                    regions: allRegions
+                },
+                ZWEITERWEIHNACHTSFEIERTAG: {
+                    nameDE: '2. Weihnachtstag',
+                    month: 12,
+                    day: 26,
+                    regions: allRegions
+                },
+                SILVESTER: {
+                    nameDE: 'Silvester', // 31.12.
+                    month: 12,
+                    day: 31,
+                    regions: []
+                }
+            };
+            // #endregion data
+            const node = this;
+            $('.rdg-ui-btn').button(); // ui-button ui-widget ui-corner-all
+
+            // #region generic DateTimeFunctions
+            function getEasterDate(year) {
+                const C = Math.floor(year / 100);
+                const N = year - 19 * Math.floor(year / 19);
+                const K = Math.floor((C - 17) / 25);
+                let I = C - Math.floor(C / 4) - Math.floor((C - K) / 3) + 19 * N + 15;
+                I -= 30 * Math.floor(I / 30);
+                I -=
+                    Math.floor(I / 28) *
+                    (1 -
+                        Math.floor(I / 28) *
+                        Math.floor(29 / (I + 1)) *
+                        Math.floor((21 - N) / 11));
+                let J = year + Math.floor(year / 4) + I + 2 - C + Math.floor(C / 4);
+                J -= 7 * Math.floor(J / 7);
+                const L = I - J;
+                const M = 3 + Math.floor((L + 40) / 44);
+                const D = L + 28 - 31 * Math.floor(M / 4);
+                return new Date(Date.UTC(year, M - 1, D));
+            }
+
+            function _makeDate(year, naturalMonthOrRef, day) {
+                if (typeof year === 'object') {
+                    year = year.getUTCFullYear();
+                }
+
+                if (typeof naturalMonthOrRef === 'object' && !isNaN(day)) {
+                    const date = new Date(naturalMonthOrRef.getTime());
+                    date.setDate(date.getDate() + day);
+                    return date;
+                } else if (isNaN(naturalMonthOrRef) || isNaN(day) || naturalMonthOrRef < 1) {
+                    return null;
+                }
+
+                if (naturalMonthOrRef >= 13 && naturalMonthOrRef <= 24) {
+                    let sd = new Date(Date.UTC(year, naturalMonthOrRef - 13, 1)).getUTCDay();
+                    if (sd === 0) { sd = 7; }
+                    return new Date(Date.UTC(year, naturalMonthOrRef - 13, ((day + 7) - sd)));
+                }
+
+                if (naturalMonthOrRef <= 12 && day >= 1 && day <= 31) {
+                    return new Date(Date.UTC(year, naturalMonthOrRef - 1, day));
+                }
+                return null;
+            }
+            // #endregion generic DateTimeFunctions
+
+            // #region list generic functions
             function _pushUnique(arr, el) {
                 const pos = arr.findIndex((x) => {
                     return (el.day === x.day) && (el.month === x.month);
@@ -634,30 +719,9 @@
                 arr.push(el);
             }
 
-            function getData(rule) {
-                return {
-                    id: rule.find('.node-input-item-id').val(),
-                    name: rule.find('.node-input-item-name').val(),
-                    nameAlt: rule.find('.node-input-item-nameAlt').val(),
-                    month: parseInt(rule.find('.node-input-item-month').val()),
-                    day: parseInt(rule.find('.node-input-item-day').val())
-                };
-            }
-
-            function saveHolidays() {
-                console.log('saveHolidays');
-                node.holidays = [];
-                const holidays = $('#node-input-holiday-container').editableList('items');
-                holidays.each(function (_i) {
-                    const rule = $(this);
-                    node.holidays.push(getData(rule));
-                });
-                console.log(node.holidays);
-            }
-
             function loadHolidays() {
-                console.log('addHolidays');
-                console.log(node.holidays);
+                console.log('loadHolidays'); // eslint-disable-line
+                console.log(node.holidays); // eslint-disable-line
                 if (node.holidays) {
                     node.holidays.forEach((item) => {
                         $('#node-input-holiday-container').editableList('addItem', item);
@@ -665,30 +729,8 @@
                 }
             }
 
-            function saveSpecialdays() {
-                console.log('saveSpecialdays');
-                node.specialdays = [];
-                const specialdays = $('#node-input-specialday-container').editableList('items');
-                specialdays.each(function (_i) {
-                    const rule = $(this);
-                    node.specialdays.push(getData(rule));
-                });
-                console.log(node.specialdays);
-            }
-
-            function loadSpecialdays() {
-                console.log('loadSpecialdays');
-                console.log(node.specialdays);
-                if (node.specialdays) {
-                    node.specialdays.forEach((item) => {
-                        $('#node-input-specialday-container').editableList('addItem', item);
-                    });
-                }
-            }
-
             function addHolidays(region) {
-                console.log('addHolidays');
-                saveHolidays();
+                saveHolidays(node);
 
                 Object.keys(allDaysDefinition).forEach((key) => {
                     const d = allDaysDefinition[key];
@@ -696,7 +738,8 @@
                         _pushUnique(node.holidays, {
                             id: key,
                             name : d.nameDE,
-                            month: d.month || d.ref,
+                            nameAlt : d.nameAlt,
+                            month: d.month,
                             day: d.day
                         });
                     }
@@ -705,17 +748,26 @@
                 loadHolidays();
             }
 
+            function loadSpecialdays(node) {
+                console.log('loadSpecialdays'); // eslint-disable-line
+                console.log(node.specialdays); // eslint-disable-line
+                if (node.specialdays) {
+                    node.specialdays.forEach((item) => {
+                        $('#node-input-specialday-container').editableList('addItem', item);
+                    });
+                }
+            }
+
             function addSpecialdays() {
-                console.log('addSpecialdays');
-                saveHolidays();
-                saveSpecialdays();
+                saveHolidays(node);
+                saveSpecialdays(node);
 
                 Object.keys(allDaysDefinition).forEach((key) => {
                     const d = allDaysDefinition[key];
                     const obj = {
                         id: key,
                         name: d.nameDE,
-                        month: d.month || d.ref,
+                        month: d.month,
                         day: d.day
                     };
                     if (!node.holidays.some(e => (e.month === obj.month && e.day === obj.day))) {
@@ -725,18 +777,7 @@
 
                 loadSpecialdays();
             }
-
-            function checkSpecialdays() {
-                console.log('checkSpecialdays');
-                const $addSpecialdayBtn = $('#node-button-addSpecialdayBtn');
-                const length = $('#node-input-specialday-container').editableList('length');
-                if (length <=0 ) {
-                    $addSpecialdayBtn.hide();
-                } else {
-                    $addSpecialdayBtn.show();
-                }
-            }
-
+            // #endregion list generic functions
             // #region container generic
             function edtLstResizeItem(row) {
                 const newWidth = row.width() - 10;
@@ -759,29 +800,25 @@
                 // id
                 $('<input/>', {
                     class: 'node-input-item-id',
-                    id: 'node-input-item-id' + containerIndex,
                     type: 'hidden',
                     value: id
                 }).appendTo(row);
                 // name
                 const $name = $('<input/>', {
                     class: 'node-input-item-name',
-                    id: 'node-input-item-name' + containerIndex,
                     type: 'text',
                     value: (data.name || ''),
-                    title: (id !== '') ?  node._('german-holidays.placeholder.namePreDefined') : node._('german-holidays.placeholder.name'),
+                    title: node._('german-holidays.placeholder.name'),
                     placeholder: node._('german-holidays.placeholder.name')
                 }).appendTo(row);
                 $('<input/>', {
                     class: 'node-input-item-namealt',
-                    id: 'node-input-item-namealt' + containerIndex,
                     type: 'hidden',
                     value: (data.nameAlt || '')
                 }).appendTo(row);
                 // month
                 const $month = $('<select/>', {
                     class: 'node-input-item-month',
-                    id: 'node-input-item-month' + containerIndex,
                     title: node._('german-holidays.placeholder.month')
                 });
                 $month.appendTo(row);
@@ -797,7 +834,6 @@
                 // day
                 const $day = $('<input/>', {
                     class: 'node-input-item-day',
-                    id: 'node-input-item-day' + containerIndex,
                     type: 'number',
                     min: 1,
                     max: 31,
@@ -809,9 +845,8 @@
                 // edit Button
                 // <a id="node-config-lookup-ipaddress" class="btn"><i id="node-config-lookup-ipaddress-icon" class="fa fa-search"></i></a>
                 const $btn = $('<a />', {
-                    class: 'node-button-item-edit btn ui-button ui-widget ui-corner-all',
-                    id: 'node-button-item-edit' + containerIndex
-                }).append('<i class= "fa fa-plus" >').appendTo(row);
+                    class: 'node-button-item-edit btn ui-button ui-widget ui-corner-all'
+                }).append('<i class= "fa fa-pencil-square-o" >').appendTo(row);
                 // set day
                 $month.change(() => {
                     const month = $month.val();
@@ -834,17 +869,16 @@
                 });
                 $month.val(data.month || 1);
                 $month.change();
-                $day.val(data.month || 1);
+                $day.val(data.day || 1);
                 if (id !== '') {
                     $name.prop( 'disabled', true );
                 }
-
+                $btn.button();
                 $btn.click(() => {
                     dialogLoadData(row);
                 });
 
                 edtLstResizeItem(containerRow);
-                checkSpecialdays();
             }
             // #endregion container generic
             // #region holiday-container
@@ -857,9 +891,6 @@
                     });
                 },
                 resizeItem: edtLstResizeItem,
-                removeItem: () => {
-                    checkSpecialdays();
-                },
                 sortable: true,
                 removable: true
             });
@@ -873,12 +904,20 @@
             });
             // #endregion specialday-container
 
-            // #region migrate
-            const oldValue = $('#node-input-regon').val();
+            // #region migrate and load
+            const oldValue = $('#node-input-region').val();
             if (oldValue && oldValue !== '') {
                 // Backward compatibility
                 addHolidays(oldValue);
-                $('#node-input-regon').val('');
+                $('#node-input-region').val('');
+            }
+
+            const year = (new Date()).getUTCFullYear();
+            const easter_date = getEasterDate(year);
+            const christmas_date = _makeDate(year, 12, 25);
+            let advent4th_Offset = christmas_date.getDay() % 7;
+            if (advent4th_Offset === 0) {
+                advent4th_Offset = 7;
             }
             // #endregion migrate
 
@@ -892,9 +931,10 @@
             const $dialogMonth = $('#dialog-input-month');
             const $dialogOffset = $('#dialog-input-offset');
             const $dialogDaysRel = $('#dialog-input-daysRel');
+            const $dialogLabel = $('dialog-label-date-out');
 
             function dialogLoadData(rule) {
-                console.log('dialogLoadData');
+                console.log('dialogLoadData'); // eslint-disable-line
                 $dialogConnFields = rule;
                 $dialogId.val(rule.find('.node-input-item-id').val());
                 $dialogName.val(rule.find('.node-input-item-name').val());
@@ -906,14 +946,11 @@
                 $dialogOffset.val('1');
                 $dialogDaysRel.val('1');
 
-                console.log(month);
-                console.log(day);
                 if (month >= 1 && month <= 12) {
                     $dialogTyp.val('date');
                     const date = new Date();
                     date.setUTCHours(0,0,0,0);
                     date.setUTCMonth(month - 1,day);
-                    console.log(date);
                     $dialogDate.datepicker('setDate', date);
                 } else if (month >= 13 && month <= 24) {
                     $dialogTyp.val('weekday');
@@ -934,7 +971,7 @@
             }
 
             function dialogSaveData() {
-                console.log('dialogSaveData');
+                console.log('dialogSaveData'); // eslint-disable-line
 
                 $dialogConnFields.find('.node-input-item-id').val($dialogId.val());
                 $dialogConnFields.find('.node-input-item-name').val($dialogName.val());
@@ -963,6 +1000,32 @@
                 $dialog.dialog( 'close' );
             }
 
+            function dialogDateOutChg() {
+                console.log('dialogDateOutChg');
+                switch ($dialogTyp.val()) {
+                    case 'easter': {
+                        const date = _makeDate(year, easter_date, $dialogDaysRel.val());
+                        $dialogLabel.text('easter based: ' + $.datepicker.formatDate('MM d (yyyy-mm-dd)', date));
+                        break;
+                    }
+                    case 'advent': {
+                        const date = _makeDate(year, advent4th_Offset, $dialogDaysRel.val());
+                        $dialogLabel.text('advent based: ' + $.datepicker.formatDate('MM d (yyyy-mm-dd)', date));
+                        break;
+                    }
+                    case 'weekday': {
+                        const date = _makeDate(year, $dialogMonth.val() + 12, $dialogOffset.val());
+                        $dialogLabel.text('weekday based: ' + $.datepicker.formatDate('MM d (yyyy-mm-dd)', date));
+                        break;
+                    }
+                    default: {
+                        const date = $dialogDate.datepicker('getDate');
+                        $dialogLabel.text('date: ' + $.datepicker.formatDate('MM d (yyyy-mm-dd)', date));
+                        break;
+                    }
+                }
+            }
+
             $dialogDate.datepicker({
                 dateFormat: 'MM d (mm-dd)',
                 showOtherMonths: true,
@@ -977,6 +1040,7 @@
             }
 
             $dialogTyp.change(() => {
+                console.log('$dialogTyp.change');
                 switch ($dialogTyp.val()) {
                     case 'easter':
                         $('.dialog-input-date-row').hide();
@@ -1002,11 +1066,16 @@
                         $('.dialog-input-offset-row').hide();
                         $('.dialog-input-daysRel-row').hide();
                 }
+                dialogDateOutChg();
             });
+            $dialogMonth.change(() => { dialogDateOutChg(); });
+            $dialogOffset.change(() => { dialogDateOutChg(); });
+            $dialogDaysRel.change(() => { dialogDateOutChg(); });
+            $dialogDate.change(() => { dialogDateOutChg(); });
 
             const $dialog = $('#dialog-edit-day').dialog({
                 autoOpen: false,
-                height: 450,
+                height: 460,
                 width: 530,
                 modal: true,
                 buttons: {
@@ -1030,32 +1099,39 @@
             // #endregion dialog
 
             // #region Button
-            console.log('initialize button?');
+            const $clearHolidayBtn = $('#node-button-clearHolidays');
+            $clearHolidayBtn.click(() => {
+                $('#node-input-holiday-container').editableList('empty');
+            });
 
-            const $addHoliday = $('#node-button-addHolidays');
-            $addHoliday.click(() => {
-                console.log('$addHoliday.click');
+            const $addHolidayBtn = $('#node-button-addHolidays');
+            $addHolidayBtn.click(() => {
                 addHolidays($('#node-regionSel').val());
                 $dialog.dialog('close');
             });
+            $('#node-regionSel').change(() => {
+                const b = !$('#node-regionSel').val();
+                $addHolidayBtn.prop('disabled', b);
+                if (b) {
+                    $addHolidayBtn.hide();
+                    $addHolidayBtn.button('disable');
+                } else {
+                    $addHolidayBtn.show();
+                    $addHolidayBtn.button('enable');
+                }
 
-            const $clearHolidayBtn = $('#node-button-clearHolidayBtn');
-            $clearHolidayBtn.click(() => {
-                console.log('$clearHolidayBtn.click');
-                $('#node-input-holiday-container').editableList('empty');
+            });
+            $('#node-regionSel').change();
+
+            const $clearSpecialdayBtn = $('#node-button-clearSpecialDays');
+            $clearSpecialdayBtn.click(() => {
+                $('#node-input-specialday-container').editableList('empty');
             });
 
             const $addSpecialdayBtn = $('#node-button-addSpecialDays');
             $addSpecialdayBtn.click(() => {
-                console.log('$addSpecialdayBtn.click');
                 addSpecialdays();
                 $dialog.dialog('close');
-            });
-
-            const $clearSpecialdayBtn = $('#node-button-clearSpecialdayBtn');
-            $clearSpecialdayBtn.click(() => {
-                console.log('$clearSpecialdayBtn.click');
-                $('#node-input-specialday-container').editableList('empty');
             });
             // #endregion Button
 
@@ -1066,30 +1142,7 @@
         },
         oneditsave() {
             const node = this;
-            function getData(rule) {
-                return {
-                    id: rule.find('.node-input-item-id').val(),
-                    name: rule.find('.node-input-item-name').val(),
-                    nameAlt: rule.find('.node-input-item-nameAlt').val(),
-                    month: parseInt(rule.find('.node-input-item-month').val()),
-                    day: parseInt(rule.find('.node-input-item-day').val())
-                };
-            }
-            // #region holiday-container
-            node.holidays = [];
-            const holidays = $('#node-input-holiday-container').editableList('items');
-            holidays.each(function (_i) {
-                const rule = $(this);
-                node.holidays.push(getData(rule));
-            });
-            // #endregion holiday-container
-            // #region specialday-container
-            node.specialdays = [];
-            const specialdays = $('#node-input-specialday-container').editableList('items');
-            specialdays.each(function (_i) {
-                const rule = $(this);
-                node.specialdays.push(getData(rule));
-            });
-            // #endregion specialday-container
+            saveHolidays(node);
+            saveSpecialdays(node);
         }
     });</script>

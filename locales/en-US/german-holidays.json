@@ -4,9 +4,7 @@
             "region": "state",
             "holidayList": "define holidays",
             "specialdayList": "define special days",
-            "addpreDefined": "add to list",
-            "addpreDefined2": "add",
-            "addSpecialdayBtn": "add all non holidays",
+            "addSpecialdayBtn": "add pre defined non holidays",
             "clearHolidayBtn": "clear list",
             "clearSpecialdayBtn": "clear list",
             "relEaster": "🥚  relative to easter sunday",
@@ -18,6 +16,27 @@
             "namePreDefined": "name of the pre defined day",
             "month": "month 1-12",
             "day": "day - absolute: 1-31, relative -300 - 300"
+        },
+        "region": {
+            "none": "<select region to add to list>",
+            "ALL": "alle",
+            "BUND": "allgemeine",
+            "BW": "Baden-Württemberg",
+            "BY": "Bayern",
+            "BE": "Berlin",
+            "BB": "Brandenburg",
+            "HB": "Bremen",
+            "HH": "Hamburg",
+            "HE": "Hessen",
+            "MV": "Mecklenburg-Vorpommern",
+            "NI": "Niedersachsen",
+            "NW": "Nordrhein-Westfalen",
+            "RP": "Rheinland-Pfalz",
+            "SL": "Saarland",
+            "SN": "Sachsen",
+            "ST": "Sachsen-Anhalt",
+            "SH": "Schleswig-Holstein",
+            "TH": "Thüringen"
         },
         "days": [
             "Sunday",
@@ -62,22 +81,22 @@
             "Dec"
         ],
         "relday": [
-            "rJan  -  relative day in Jan",
-            "rFeb  -  relative day in Feb",
-            "rMar  -  relative day in Mar",
-            "rApr  -  relative day in Apr",
+            "rJan  -  relative day in January",
+            "rFeb  -  relative day in February",
+            "rMar  -  relative day in March",
+            "rApr  -  relative day in April",
             "rMay  -  relative day in May",
-            "rJun  -  relative day in Jun",
-            "rJul  -  relative day in Jul",
-            "rAug  -  relative day in Aug",
-            "rSep  -  relative day in Sep",
-            "rOct  -  relative day in Oct",
-            "rNov  -  relative day in Nov",
-            "rDec  -  relative day in Dec"
+            "rJun  -  relative day in June",
+            "rJul  -  relative day in July",
+            "rAug  -  relative day in August",
+            "rSep  -  relative day in September",
+            "rOct  -  relative day in October",
+            "rNov  -  relative day in November",
+            "rDec  -  relative day in December"
         ],
         "tips": {
-            "holiday": "Use this definition to define holidays. If for the same day multiple entries exists the first one will choosen. With the add button you can add a pre defined list for your region.",
-            "specialday": "Use this definition to define special days of the year which are not holidays. If for the same day multiple entries exists the first one will choosen. With the add button all entries of the pre defined days will be added to the list which are not in the holiday list. Typically you will forst add all holidays for your region and then add all non holidays as special days."
+            "holiday": "Only Holidays will be considered which are in the list. You can use the selectionbox and the add Button to add pre defined holidays for a region of germany. If for the same day multiple entries exists the first one will choosen.",
+            "specialday": "Use this definition to define special days of the year which are not holidays. If for the same day multiple entries exists the first one will choosen. With the add button all entries of the pre defined internal list will be added to the list which are not in the holiday list. Typically you will forst add all holidays for your region and then add all non holidays as special days."
         }
     }
 }

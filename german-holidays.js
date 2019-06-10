@@ -146,17 +146,6 @@ const holidayDef = {
     }
 };
 
-const dayNames = [
-    { id: 'SUNDAY', name: 'Sonntag' },
-    { id: 'MONDAY', name: 'Montag'},
-    { id: 'TUESDAY', name: 'Dienstag'},
-    { id: 'WEDNESDAY', name: 'Mittwoch'},
-    { id: 'THURSDAY', name: 'Donnerstag'},
-    { id: 'FRIDAY', name: 'Freitag' },
-    { id: 'SATURDAY', name: 'Samstag' },
-    { id: 'SUNDAY', name : 'Sonntag' }
-];
-
 /*******************************************************************************************************/
 const errorHandler = function (node, err, messageText, stateText) {
     if (!err) {
@@ -206,77 +195,6 @@ function _dateToString(d) {
 }
 /*******************************************************************************************************/
 /**
- * get Holiday Data for a specific Day
- * @param {Date} date Date to check
- * @param {*} [offsetToday] offset from today
- * @param {*} daysObjects Holidays object Data
- * @returns object of all information for the day
- */
-function getDataForDay(date, offsetToday, daysObjects) {
-    if (offsetToday !== 0) {
-        const d = new Date(date);
-        d.setDate(d.getDate() + offsetToday);
-        return getDataForDate(d, daysObjects, offsetToday);
-    }
-
-    return getDataForDate(date, daysObjects, 0);
-}
-
-// holidays API
-/**
- * get the data for a date.
- * @param date date to get data for
- * @param daysObjects list of daysObjects
- * @param offsetToday (optional)
- * @returns object of all information for the day
- */
-function getDataForDate(date, daysObjects, offsetToday) {
-    const d = date.getDay(); // gets the day of week
-    // const internalDate = toUtcTimestamp(date);
-    const result = _newDay(dayNames[d].id, date, dayNames[d].name);
-
-    result.weekday = {
-        id: result.id,
-        name: result.name
-    };
-
-    result.isSunday = (result.dayOfWeek === 0);
-    result.isSaturday = (result.dayOfWeek === 6);
-
-    result.holiday = daysObjects.holidays.find(holiday => holiday.equals(date));
-    result.isHoliday = ((typeof result.holiday !== 'undefined') && (result.holiday !== null));
-
-    if (result.isHoliday) {
-        result.specialday = result.holiday;
-        result.isSpecialday = result.isHoliday;
-    } else {
-        result.specialday = daysObjects.specialdays.find(specialday => specialday.equals(date));
-        result.isSpecialday = ((typeof result.specialday !== 'undefined') && (result.specialday !== null));
-    }
-
-    if (offsetToday) {
-        result.dayOffset = offsetToday;
-    }
-
-    result.isWeekend = result.isSunday || result.isSaturday;
-    result.isSunOrHoliday = result.isSunday || result.isHoliday;
-    result.isWeekendOrHoliday = result.isSaturday || result.isSunday || result.isHoliday;
-
-    if (result.isHoliday) {
-        result.idExt = result.holiday.id;
-        result.nameExt = result.holiday.name;
-    } else if (result.isSpecialday) {
-        result.idExt = result.specialday.id;
-        result.nameExt = result.specialday.name;
-    } else {
-        result.idExt = result.id;
-        result.nameExt = result.name;
-    }
-
-    return result;
-}
-
-/**
  * determinates the current week number of UTC timestamp.
  * @param d date for determinate week number
  * @returns number current week number
@@ -295,7 +213,7 @@ function _checkDefault(node) {
     const newYear = node.default.ts.getUTCFullYear();
     if (newYear !== node.default.year) {
         node.default.year = newYear;
-        node.default.dayObjs = _getSpecialDaysOfYear(node, node.default.year, undefined, true);
+        node.default.dayObjs = _getSpecialDaysOfYear(node, node.default.year, undefined, true, true);
     }
 }
 
@@ -309,7 +227,7 @@ function _pushUnique(arr, el) {
         return;
     }
     const pos = arr.findIndex( (x) => {
-        return (el.day === x.day) && (el.month === x.month);
+        return (el.day === x.day) && (el.month === x.month) && (el.year === x.year);
     });
     if (pos > -1) {
         return;
@@ -323,8 +241,6 @@ function _pushUnique(arr, el) {
  * @param {String} region region for adding
  */
 function _addToArrayForRegion(arrayToAdd, region) {
-    console.log('_addToArrayForRegion');
-    console.log(region);
     if (region && region !== '') {
         Object.keys(holidayDef).forEach((key) => {
             const d = holidayDef[key];
@@ -334,7 +250,6 @@ function _addToArrayForRegion(arrayToAdd, region) {
             }
         });
     }
-    console.log(arrayToAdd);
 }
 
 /**
@@ -343,11 +258,18 @@ function _addToArrayForRegion(arrayToAdd, region) {
  * @param {Number} year  -  the year for calculation of the special days
  * @param {String} [region]  -  force to recalculate, otherwise load existing data
  * @param {Boolean} [force]  -  force to recalculate, otherwise load existing data
+ * @param {Boolean} [calcNext]  -  calculate the holiday also for the next year
  * @returns objects: Array,integers
  * @private
  */
-function _getSpecialDaysOfYear(node, year, region, force) {
-    if (node.default.dayObjs && node.default.year === year && (force !== true) && !region) {
+function _getSpecialDaysOfYear(node, year, region, force, calcNext) {
+    node.debug(`_getSpecialDaysOfYear year=${year}, region=${region}, force=${force}, calcNext=${calcNext}`);
+    if (isNaN(year)) {
+        year = node.default.year;
+    }
+
+    if (node.default.dayObjs && (node.default.year === year) && (force !== true) && !region) {
+        node.debug('return default obj');
         return node.default.dayObjs;
     }
 
@@ -361,10 +283,16 @@ function _getSpecialDaysOfYear(node, year, region, force) {
 
     const specialdaysObjects = [];
     _addDaysToArray(node.specialdaysArray, specialdaysObjects, year, easter_date, christmas_date, advent4th);
+    if (calcNext === true) {
+        _addDaysToArray(node.specialdaysArray, specialdaysObjects, year + 1, easter_date, christmas_date, advent4th);
+    }
 
     const holidayObjects = [];
     _addToArrayForRegion(holidayObjects, region);
     _addDaysToArray(node.holidaysArray, holidayObjects, year, easter_date, christmas_date, advent4th);
+    if (calcNext === true) {
+        _addDaysToArray(node.holidaysArray, holidayObjects, year + 1, easter_date, christmas_date, advent4th);
+    }
 
     return {
         holidays: holidayObjects,
@@ -457,7 +385,7 @@ function _newDay(id, date, name, nameAlt) {
     if (!date) {
         return null;
     }
-    return {
+    const obj = {
         id,
         name,
         nameAlt,
@@ -477,6 +405,10 @@ function _newDay(id, date, name, nameAlt) {
             return this.dateString === string;
         }
     };
+    if (!obj.id) {
+        obj.id = (pad2(obj.naturalMonth) + '-' + pad2(obj.day));
+    }
+    return obj;
 }
 
 /**
@@ -488,20 +420,17 @@ function _newDay(id, date, name, nameAlt) {
  * @param {Date} advent4th  -  advent data for relative day setting
  */
 function _addDaysToArray(daysDefinitionArray, outArr, year, easter_date, advent4th) {
-    console.log('_addDaysToArray');
     if (daysDefinitionArray && daysDefinitionArray.length > 0) {
         daysDefinitionArray.forEach(d => {
             let month = parseInt(d.month);
             const day = parseInt(d.day);
             if (!isNaN(month) && !isNaN(day) && month <= 24 && month !== 0 && month >= -3) {
-                console.log(d);
                 if (month === easterX) {
                     month = easter_date;
                 } else if (month === adventX) {
                     month = advent4th;
                 }
-                const id = d.id || (pad2(month) + '-' + pad2(day));
-                _pushUnique(outArr, _newDay(id, _makeDate(year, month, day), d.name, d.nameAlt));
+                _pushUnique(outArr, _newDay(d.id, _makeDate(year, month, day), d.name, d.nameAlt));
             }
         });
     }
@@ -554,6 +483,79 @@ module.exports = function (RED) {
         }
         // const node = this;
 
+        // holidays API
+        /**
+         * get the data for a date.
+         * @param RED Red Data
+         * @param date date to get data for
+         * @param daysObjects list of daysObjects
+         * @param offsetToday (optional)
+         * @returns object of all information for the day
+         */
+        this.getDataForDate = (date, daysObjects, offsetToday) => {
+            const d = date.getDay(); // gets the day of week
+            // const internalDate = toUtcTimestamp(date);
+            const result = _newDay(undefined, date, RED._('german-holidays.days.' + d), RED._('german-holidays.days.' + (d+7)));
+
+            result.weekday = {
+                id: result.id,
+                name: result.name,
+                nameAlt: result.nameAlt
+            };
+
+            result.isSunday = (result.dayOfWeek === 0);
+            result.isSaturday = (result.dayOfWeek === 6);
+
+            result.holiday = daysObjects.holidays.find(holiday => holiday.equals(date));
+            result.isHoliday = ((typeof result.holiday !== 'undefined') && (result.holiday !== null));
+            result.specialday = daysObjects.specialdays.find(specialday => specialday.equals(date));
+            result.isSpecialday = ((typeof result.specialday !== 'undefined') && (result.specialday !== null));
+
+            if (offsetToday) {
+                result.dayOffset = offsetToday;
+            }
+
+            result.isWeekend = result.isSunday || result.isSaturday;
+            result.isSunOrHoliday = result.isSunday || result.isHoliday;
+            result.isWeekendOrHoliday = result.isSaturday || result.isSunday || result.isHoliday;
+            result.isHolidayOrSpecialday = result.isHoliday || result.isSpecialday;
+
+            if (result.isHoliday) {
+                result.id = result.holiday.id;
+                result.name = result.holiday.name;
+            } else if (result.isSpecialday) {
+                result.id = result.specialday.id;
+                result.name = result.specialday.name;
+            }
+
+            if (result.holiday && result.holiday.nameAlt) {
+                result.nameAlt = result.holiday.nameAlt;
+            } else if (result.specialday && result.specialday.nameAlt) {
+                result.nameAlt = result.specialday.name;
+            } else {
+                result.nameAlt = result.weekday.name;
+            }
+
+            return result;
+        };
+
+        /**
+         * get Holiday Data for a specific Day
+         * @param {Date} date Date to check
+         * @param {*} [offsetToday] offset from today
+         * @param {*} daysObjects Holidays object Data
+         * @returns object of all information for the day
+         */
+        this.getDataForDay = (date, offsetToday, daysObjects) => {
+            if (offsetToday !== 0) {
+                const d = new Date(date);
+                d.setDate(d.getDate() + offsetToday);
+                return this.getDataForDate(d, daysObjects, offsetToday);
+            }
+
+            return this.getDataForDate(date, daysObjects, 0);
+        };
+
         this.on('input', function (msg) {
             this.debug('Holiday!! Start');
             try {
@@ -561,7 +563,7 @@ module.exports = function (RED) {
                 * versenden:
                 *********************************************/
                 // var creds = RED.nodes.getNode(config.creds); - not used
-                const attrs = ['region', 'day', 'date', 'ts'];
+                const attrs = ['region', 'day', 'date', 'ts', 'year'];
 
                 const outMsg = {
                     payload: {},
@@ -626,7 +628,7 @@ module.exports = function (RED) {
                     if (dto !== 'Invalid Date' && !isNaN(dto)) {
                         outMsg.data.year = dto.getUTCFullYear();
                         const specialdays = _getSpecialDaysOfYear(this, outMsg.data.year, outMsg.data.region);
-                        outMsg.payload = getDataForDate(dto, specialdays);
+                        outMsg.payload = this.getDataForDate(dto, specialdays);
                         this.send(outMsg);
                         this.status({
                             fill: 'grey',
@@ -645,15 +647,17 @@ module.exports = function (RED) {
                 }
 
                 _checkDefault(this);
-                if ((typeof outMsg.data.ts === 'undefined') || !(outMsg.data.ts instanceof Date)) {
+                if ((typeof outMsg.data.ts !== 'undefined') && (outMsg.data.ts instanceof Date)) {
+                    outMsg.data.year = outMsg.data.ts.getUTCFullYear();
+                } else  if ((typeof outMsg.data.ts === 'undefined') || !(outMsg.data.ts instanceof Date)) {
                     outMsg.data.ts = this.default.ts;
                 }
 
-                outMsg.data.year = outMsg.data.ts.getUTCFullYear();
-                const dayObjs = _getSpecialDaysOfYear(this, outMsg.data.year, outMsg.data.region);
-
                 if (typeof outMsg.data.day !== 'undefined' || !isNaN(outMsg.data.day)) {
-                    outMsg.payload = getDataForDay(outMsg.data.ts, outMsg.data.day, dayObjs);
+                    outMsg.data.year = outMsg.data.ts.getUTCFullYear();
+                    const dataObjs = _getSpecialDaysOfYear(this, outMsg.data.year, outMsg.data.region);
+
+                    outMsg.payload = this.getDataForDay(outMsg.data.ts, outMsg.data.day, dataObjs);
                     this.send(outMsg);
                     this.status({
                         fill: 'grey',
@@ -662,6 +666,8 @@ module.exports = function (RED) {
                     });
                     return;
                 }
+
+                const dayObjs = _getSpecialDaysOfYear(this, outMsg.data.year, outMsg.data.region);
 
                 outMsg.payload = {
                     // lastUpdate: outMsg.data.ts.toISOString(),
@@ -674,14 +680,19 @@ module.exports = function (RED) {
                     hollidaysNum: dayObjs.integers.holidays,
                     specialdays: dayObjs.specialdays,
                     specialdaysNum: dayObjs.integers.specialdays,
-                    next: {},
+                    next: {
+                        hollidays : [],
+                        hollidaysDiff : [],
+                        specialdays: [],
+                        specialdaysDiff: []
+                    },
                     weekNumber: getWeekNumber(outMsg.data.ts)
                 };
-                outMsg.payload.yesterday = getDataForDay(outMsg.data.ts, -1, dayObjs);
-                outMsg.payload.today = getDataForDate(outMsg.data.ts, dayObjs, 0); // getDataForDay(outMsg.data.ts, 0, holidays);
-                outMsg.payload.tomorrow = getDataForDay(outMsg.data.ts, 1, dayObjs);
-                outMsg.payload.dayAfterTomorrow = getDataForDay(outMsg.data.ts, 2, dayObjs);
-                outMsg.payload.afterTheDayAfterTomorrow = getDataForDay(outMsg.data.ts, 3, dayObjs);
+                outMsg.payload.yesterday = this.getDataForDay(outMsg.data.ts, -1, dayObjs);
+                outMsg.payload.today = this.getDataForDate(outMsg.data.ts, dayObjs, 0); // getDataForDay(outMsg.data.ts, 0, holidays);
+                outMsg.payload.tomorrow = this.getDataForDay(outMsg.data.ts, 1, dayObjs);
+                outMsg.payload.dayAfterTomorrow = this.getDataForDay(outMsg.data.ts, 2, dayObjs);
+                outMsg.payload.afterTheDayAfterTomorrow = this.getDataForDay(outMsg.data.ts, 3, dayObjs);
 
                 outMsg.payload.weekNumberEven = !(outMsg.payload.weekNumber % 2);
 
@@ -702,28 +713,43 @@ module.exports = function (RED) {
                 outMsg.payload.tomorrow.isCurrentOrBetweenWeekendOrHoliday = (outMsg.payload.tomorrow.isWeekendOrHoliday || outMsg.payload.tomorrow.isBetweenWeekendOrHoliday);
                 outMsg.payload.dayAfterTomorrow.isCurrentOrBetweenWeekendOrHoliday = (outMsg.payload.dayAfterTomorrow.isWeekendOrHoliday || outMsg.payload.today.isBetweenWeekendOrHoliday);
 
+                const tNow = outMsg.data.ts.getTime();
+                // const t7 = outMsg.data.ts.getTime() + 604800000;
+
                 for (let i = 0; i < outMsg.payload.hollidays.length; i++) {
                     const hd = outMsg.payload.hollidays[i];
                     const d = hd.date;
 
-                    const timeDiff = d.getTime() - outMsg.data.ts.getTime();
-                    if (timeDiff > 0) {
-                        outMsg.payload.next.holliday = hd;
-                        outMsg.payload.next.hollidayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                        break;
+                    const time = d.getTime();
+                    if (time > tNow) {
+                        hd.diff = (time - tNow);
+                        hd.diffDays = Math.ceil(hd.diff / (1000 * 3600 * 24));
+                        outMsg.payload.next.hollidays.push(hd);
+                        if (outMsg.payload.next.hollidays.length > 9) {
+                            break;
+                        }
                     }
+                }
+                if (outMsg.payload.next.hollidays[0]) {
+                    outMsg.payload.next.holliday = outMsg.payload.next.hollidays[0];
+                    outMsg.payload.next.hollidayDiff = outMsg.payload.next.hollidays[0].diffDays;
                 }
 
                 for (let i = 0; i < outMsg.payload.specialdays.length; i++) {
                     const sd = outMsg.payload.specialdays[i];
                     const d = sd.date;
-
-                    const timeDiff = d.getTime() - outMsg.data.ts.getTime();
-                    if (timeDiff > 0) {
-                        outMsg.payload.next.specialday = sd;
-                        outMsg.payload.next.specialdayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                        break;
+                    const time = d.getTime();
+                    if (time > tNow) {
+                        sd.diff = (time - tNow);
+                        sd.diffDays = Math.ceil(sd.diff / (1000 * 3600 * 24));
+                        outMsg.payload.next.specialdays.push(sd);
+                        if (outMsg.payload.next.specialdays.length > 9) {
+                            break;
+                        }
                     }
+                }
+                if (outMsg.payload.next.specialdays[0]) {
+                    outMsg.payload.next.specialday = outMsg.payload.next.specialdays[0];
                 }
 
                 // 0 S 1 M 2 D 3 M 4 D 5 F 6 S 0 S
@@ -731,7 +757,7 @@ module.exports = function (RED) {
                 if (outMsg.payload.today.dayOfWeek === 6) {
                     const date = new Date(outMsg.data.ts);
                     date.setDate(date.getDate() + 1);
-                    outMsg.payload.next.weekendDay = _newDay(dayNames[0].id, date, dayNames[0].name);
+                    outMsg.payload.next.weekendDay = _newDay(undefined, date, RED._('german-holidays.days.0'), RED._('german-holidays.days.7'));
                 } else {
                     const dayOfWeek = 6; // Saturday
                     const date = new Date(outMsg.data.ts);
@@ -742,7 +768,7 @@ module.exports = function (RED) {
                         date.setDate(date.getDate() + ((-1) * diff));
                     }
 
-                    outMsg.payload.next.weekendDay = _newDay(dayNames[6].id, date, dayNames[6].name);
+                    outMsg.payload.next.weekendDay = _newDay(undefined, date, RED._('german-holidays.days.6'), RED._('german-holidays.days.13'));
                 }
 
                 outMsg.payload.next.weekendOrHolidayDiff = (outMsg.payload.next.hollidayDiff) ? Math.min(outMsg.payload.next.hollidayDiff, outMsg.payload.next.weekendDayDiff) : outMsg.payload.next.weekendDayDiff;

@@ -719,7 +719,7 @@
                 arr.push(el);
             }
 
-            function loadHolidays() {
+            function loadHolidays(node) {
                 console.log('loadHolidays'); // eslint-disable-line
                 console.log(node.holidays); // eslint-disable-line
                 if (node.holidays) {
@@ -729,7 +729,7 @@
                 }
             }
 
-            function addHolidays(region) {
+            function addHolidays(node, region) {
                 saveHolidays(node);
 
                 Object.keys(allDaysDefinition).forEach((key) => {
@@ -745,7 +745,7 @@
                     }
                 });
 
-                loadHolidays();
+                loadHolidays(node);
             }
 
             function loadSpecialdays(node) {
@@ -758,7 +758,7 @@
                 }
             }
 
-            function addSpecialdays() {
+            function addSpecialdays(node) {
                 saveHolidays(node);
                 saveSpecialdays(node);
 
@@ -775,7 +775,7 @@
                     }
                 });
 
-                loadSpecialdays();
+                loadSpecialdays(node);
             }
             // #endregion list generic functions
             // #region container generic
@@ -908,7 +908,7 @@
             const oldValue = $('#node-input-region').val();
             if (oldValue && oldValue !== '') {
                 // Backward compatibility
-                addHolidays(oldValue);
+                addHolidays(node, oldValue);
                 $('#node-input-region').val('');
             }
 
@@ -1107,7 +1107,7 @@
 
             const $addHolidayBtn = $('#node-button-addHolidays');
             $addHolidayBtn.click(() => {
-                addHolidays($('#node-regionSel').val());
+                addHolidays(node, $('#node-regionSel').val());
                 $dialog.dialog('close');
             });
             $('#node-regionSel').change(() => {
@@ -1131,14 +1131,14 @@
 
             const $addSpecialdayBtn = $('#node-button-addSpecialDays');
             $addSpecialdayBtn.click(() => {
-                addSpecialdays();
+                addSpecialdays(node);
                 $dialog.dialog('close');
             });
             // #endregion Button
 
             // #region load data
-            loadHolidays();
-            loadSpecialdays();
+            loadHolidays(node);
+            loadSpecialdays(node);
             // #endregion load data
         },
         oneditsave() {

@@ -18,8 +18,9 @@
         },
         "region": {
             "none": "<wählen um vordefinierte Hinzugefügt werden sollen>",
-            "ALL": "alle",
-            "BUND": "allgemeine",
+            "AUSTRIA": "Österreichische",
+            "ALL": "alle Deutsche",
+            "BUND": "allgemeine Deutsche",
             "BW": "Baden-Württemberg",
             "BY": "Bayern",
             "BE": "Berlin",

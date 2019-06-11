@@ -20,8 +20,9 @@
         },
         "region": {
             "none": "<select region to add to list>",
-            "ALL": "alle",
-            "BUND": "allgemeine",
+            "AUSTRIA": "Österreich",
+            "ALL": "alle Deutsche",
+            "BUND": "allgemeine Deutsche",
             "BW": "Baden-Württemberg",
             "BY": "Bayern",
             "BE": "Berlin",

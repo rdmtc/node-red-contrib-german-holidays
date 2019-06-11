@@ -72,8 +72,8 @@ const holidayDef = {
     TAG_DER_ARBEIT: {
         name :  'Tag der Arbeit', // 1. Mai
         nameAlt: 'Maifeiertag',
-        month: 1,
-        day: 5,
+        month: 5,
+        day: 1,
         regions: allRegions
     },
     CHRISTIHIMMELFAHRT: {

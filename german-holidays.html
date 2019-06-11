@@ -7,6 +7,7 @@
         <button type="button" id="node-button-clearHolidays" class="rdg-ui-btn"><i class="fa fa-minus-square"></i> <span data-i18n="german-holidays.label.clearHolidayBtn"></span></button> &nbsp;
         <select type="text" id="node-regionSel" style="width:200px">
             <option value="" data-i18n="german-holidays.region.none"></option>
+            <option value="A" data-i18n="german-holidays.region.AUSTRIA"></option>
             <option value="ALL" data-i18n="german-holidays.region.ALL"></option>
             <option value="BUND" data-i18n="german-holidays.region.BUND"></option>
             <option value="BW" data-i18n="german-holidays.region.BW"></option>
@@ -338,7 +339,7 @@
         paletteLabel: 'Holidays',
         oneditprepare() {
             // #region data
-            const allRegions = [
+            const allDERegions = [
                 'BW',
                 'BY',
                 'BE',
@@ -359,299 +360,335 @@
                 'ALL'
             ];
 
+            const allRegions = [
+                'BW',
+                'BY',
+                'BE',
+                'BB',
+                'HB',
+                'HE',
+                'HH',
+                'MV',
+                'NI',
+                'NW',
+                'RP',
+                'SL',
+                'SN',
+                'ST',
+                'SH',
+                'TH',
+                'BUND',
+                'ALL',
+                'A'
+            ];
+
             const easterX = -1;
             const adventX = -2;
 
             const allDaysDefinition = {
                 NEUJAHRSTAG: {
-                    nameDE: 'Neujahrstag', // 1.1.
+                    name: 'Neujahrstag', // 1.1.
                     month: 1,
                     day: 1,
                     regions: allRegions
                 },
                 HEILIGEDREIKOENIGE: {
-                    nameDE: 'Heilige Drei Könige', // 6.1.
+                    name: 'Heilige Drei Könige', // 6.1.
                     nameAlt: 'Epiphanias',
                     month: 1,
                     day: 6,
-                    regions: ['BW', 'BY', 'ST', 'ALL']
+                    regions: ['BW', 'BY', 'ST', 'ALL', 'A']
                 },
                 VALENTINSTAG: {
-                    nameDE: 'Valentinstag', // 14. 2.
+                    name: 'Valentinstag', // 14. 2.
                     month: 2,
                     day: 14,
                     regions: []
                 },
                 SCHMUDONN: {
-                    nameDE: 'Schmutziger Donnerstag', // 52 Tage vor dem Ostersonntag
+                    name: 'Schmutziger Donnerstag', // 52 Tage vor dem Ostersonntag
                     month: easterX,
                     day: -52,
                     regions: []
                 },
                 ROSENMONTAG: {
-                    nameDE: 'Rosenmontag', // 48 Tage vor dem Ostersonntag
+                    name: 'Rosenmontag', // 48 Tage vor dem Ostersonntag
                     month: easterX,
                     day: -48,
                     regions: []
                 },
                 FASTNACHTSDIENSTAG: {
-                    nameDE: 'Fastnachtsdienstag', // 47 Tage vor dem Ostersonntag
+                    name: 'Fastnachtsdienstag', // 47 Tage vor dem Ostersonntag
                     month: easterX,
                     day: -47,
                     regions: []
                 },
                 ASCHERMITTWOCH: {
-                    nameDE: 'Aschermittwoch', // 46 Tage vor dem Ostersonntag (der erste Tag der Fastenzeit)
+                    name: 'Aschermittwoch', // 46 Tage vor dem Ostersonntag (der erste Tag der Fastenzeit)
                     month: easterX,
                     day: -46,
                     regions: []
                 },
                 PALMSONNTAG: {
-                    nameDE: 'Palmsonntag', // 7 Tage vor dem Ostersonntag
+                    name: 'Palmsonntag', // 7 Tage vor dem Ostersonntag
                     month: easterX,
                     day: -7,
                     regions: []
                 },
                 GRUENDONNERSTAG: {
-                    nameDE: 'Gründonnerstag', // 4 Tage vor dem Ostersonntag
+                    name: 'Gründonnerstag', // 4 Tage vor dem Ostersonntag
                     month: easterX,
                     day: -4,
                     regions: []
                 },
                 KARFREITAG: {
-                    nameDE: 'Karfreitag',
+                    name: 'Karfreitag',
                     month: easterX,
                     day: -2,
-                    regions: allRegions
+                    regions: allDERegions
                 },
                 OSTERSONNTAG: {
-                    nameDE: 'Ostersonntag',
+                    name: 'Ostersonntag',
                     month: easterX,
                     day: 0,
                     regions: ['BB', 'ALL']
                 },
                 OSTERMONTAG: {
-                    nameDE: 'Ostermontag',
+                    name: 'Ostermontag',
                     month: easterX,
                     day: 1,
                     regions: allRegions
                 },
                 JOHANISTAG: {
-                    nameDE: 'Johannistag', // 30. April
+                    name: 'Johannistag', // 30. April
                     month: 4,
                     day: 24,
                     regions: []
                 },
                 MICHAELISTAG: {
-                    nameDE: 'Michaelistag', // 30. April
+                    name: 'Michaelistag', // 30. April
                     month: 4,
                     day: 29,
                     regions: []
                 },
                 WALPURGISNACHT: {
-                    nameDE: 'Walpurgisnacht', // 30. April
+                    name: 'Walpurgisnacht', // 30. April
                     month: 4,
                     day: 30,
                     regions: []
                 },
                 TAG_DER_ARBEIT: {
-                    nameDE: 'Tag der Arbeit', // 1. Mai
-                    nameAlt: 'Maifeiertag',
-                    month: 1,
-                    day: 5,
+                    name: 'Maifeiertag', // 1. Mai
+                    nameAlt: 'Tag der Arbeit',
+                    month: 5,
+                    day: 1,
                     regions: allRegions
                 },
                 EISHEILIGEN1: {
-                    nameDE: 'Eisheiliger Mamertus', // 11. Mai
+                    name: 'Eisheiliger Mamertus', // 11. Mai
                     month: 5,
                     day: 11,
                     regions: []
                 },
                 EISHEILIGEN2: {
-                    nameDE: 'Eisheiliger Pankratius', // 12. Mai
+                    name: 'Eisheiliger Pankratius', // 12. Mai
                     month: 5,
                     day: 12,
                     regions: []
                 },
                 EISHEILIGEN3: {
-                    nameDE: 'Eisheiliger Servatius', // 13. Mai
+                    name: 'Eisheiliger Servatius', // 13. Mai
                     month: 5,
                     day: 13,
                     regions: []
                 },
                 EISHEILIGEN4: {
-                    nameDE: 'Eisheiliger Bonifatius', // 14. Mai
+                    name: 'Eisheiliger Bonifatius', // 14. Mai
                     month: 5,
                     day: 14,
                     regions: []
                 },
                 EISHEILIGEN5: {
-                    nameDE: 'Eisheilige Kalte Sophie', // 15. Mai
+                    name: 'Eisheilige Kalte Sophie', // 15. Mai
                     month: 5,
                     day: 15,
                     regions: []
                 },
                 MUTTERTAG: {
-                    nameDE: 'Muttertag', // 2. Sonntag im Mai
+                    name: 'Muttertag', // 2. Sonntag im Mai
                     month: 12 + 5,
                     day: 7,
                     regions: []
                 },
                 KINDERTAG: {
-                    nameDE: 'Kindertag', // 1.6.
+                    name: 'Kindertag', // 1.6.
                     month: 6,
                     day: 1,
                     regions: []
                 },
                 CHRISTIHIMMELFAHRT: {
-                    nameDE: 'Christi Himmelfahrt',
+                    name: 'Christi Himmelfahrt',
                     nameAlt: 'Vatertag',
                     month: easterX,
                     day: 39,
                     regions: allRegions
                 },
                 PFINGSTSONNTAG: {
-                    nameDE: 'Pfingstsonntag',
+                    name: 'Pfingstsonntag',
                     month: easterX,
                     day: 49,
                     regions: ['BB', 'ALL']
                 },
                 PFINGSTMONTAG: {
-                    nameDE: 'Pfingstmontag',
+                    name: 'Pfingstmontag',
                     month: easterX,
                     day: 50,
                     regions: allRegions
                 },
                 TRINITATISSONNTAG: {
-                    nameDE: 'Trinitatissonntag',
+                    name: 'Trinitatissonntag',
                     month: easterX,
                     day: 56,
                     regions: []
                 },
                 FRONLEICHNAM: {
-                    nameDE: 'Fronleichnam',
+                    name: 'Fronleichnam',
                     month: easterX,
                     day: 60,
-                    regions: ['BW', 'HE', 'NW', 'RP', 'SL', 'ALL']
+                    regions: ['BW', 'HE', 'NW', 'RP', 'SL', 'ALL', 'A']
                 },
                 SIEBENSCHLAEFER: {
-                    nameDE: 'Siebenschläfer', // 27. Juni
+                    name: 'Siebenschläfer', // 27. Juni
                     month: 6,
                     day: 27,
                     regions: []
                 },
                 MARIAHIMMELFAHRT: {
-                    nameDE: 'Mariä Himmelfahrt',
+                    name: 'Mariä Himmelfahrt',
                     month: 8,
                     day: 15,
-                    regions: ['SL', 'BY', 'ALL']
+                    regions: ['SL', 'BY', 'ALL', 'A']
                 },
                 ERNTEDANK: {
-                    nameDE: 'Erntedank', // erster Sonntag im Oktober
+                    name: 'Erntedank', // erster Sonntag im Oktober
                     month: 12 + 10,
                     day: 1,
                     regions: []
                 },
                 DEUTSCHEEINHEIT: {
-                    nameDE: 'Tag der Deutschen Einheit',
+                    name: 'Tag der Deutschen Einheit',
                     month: 10,
                     day: 3,
-                    regions: allRegions
+                    regions: allDERegions
+                },
+                NATIONALFEIERTAG: {
+                    name: 'Nationalfeiertag', // 26. Oktober
+                    month: 10,
+                    day: 26,
+                    regions: ['A']
                 },
                 REFORMATIONSTAG: {
-                    nameDE: 'Reformationstag', // 31. Oktober
+                    name: 'Reformationstag', // 31. Oktober
                     nameAlt: 'Halloween',
                     month: 10,
                     day: 31,
                     regions: ['BB', 'MV', 'SN', 'ST', 'TH', 'ALL']
                 },
                 ALLERHEILIGEN: {
-                    nameDE: 'Allerheiligen',
+                    name: 'Allerheiligen',
                     month: 11,
                     day: 1,
-                    regions: ['BW', 'BY', 'NW', 'RP', 'SL', 'ALL']
+                    regions: ['BW', 'BY', 'NW', 'RP', 'SL', 'ALL', 'A']
                 },
                 ALLERSEELEN: {
-                    nameDE: 'Allerseelen', // 2. November
+                    name: 'Allerseelen', // 2. November
                     month: 11,
                     day: 2,
                     regions: []
                 },
                 MARTINSTAG: {
-                    nameDE: 'Martinstag', // 11. November
+                    name: 'Martinstag', // 11. November
                     month: 11,
                     day: 11,
                     regions: []
                 },
                 VOLKSTRAUERTAG: {
-                    nameDE: 'Volkstrauertages', // Sonntag (3 Tage) vor dem Buß- und Bettag
+                    name: 'Volkstrauertages', // Sonntag (3 Tage) vor dem Buß- und Bettag
                     month: adventX,
                     day: -35,
                     regions: []
                 },
                 BUBETAG: {
-                    nameDE: 'Buß- und Bettag',
+                    name: 'Buß- und Bettag',
                     month: adventX,
                     day: -32,
                     regions: ['SN', 'ALL']
                 },
                 TOTENSONNTAG: {
-                    nameDE: 'Totensonntag', // Sonntag (4 Tage) nach dem Buß- und Bettag; eine Woche vor dem ersten Advent
+                    name: 'Totensonntag', // Sonntag (4 Tage) nach dem Buß- und Bettag; eine Woche vor dem ersten Advent
                     nameAlt: 'Ewigkeitssonntag',
                     month: adventX,
                     day: -28,
                     regions: []
                 },
                 ADVENT1: {
-                    nameDE: 'erste Advent', // vierte Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 1. Advent liegen 11 Tage
+                    name: 'erste Advent', // vierte Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 1. Advent liegen 11 Tage
                     month: adventX,
                     day: -21,
                     regions: []
                 },
                 ADVENT2: {
-                    nameDE: 'zweite Advent', // dritte Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 2. Advent liegen 18 Tage
+                    name: 'zweite Advent', // dritte Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 2. Advent liegen 18 Tage
                     month: adventX,
                     day: -14,
                     regions: []
                 },
                 NIKOLAUS: {
-                    nameDE: 'Nikolaus', // 6.12.
+                    name: 'Nikolaus', // 6.12.
                     month: 12,
                     day: 6,
                     regions: []
                 },
+                MARIAEMPFAENGNIS: {
+                    name: 'Mariä Empfängnis', // 6.12.
+                    month: 12,
+                    day: 8,
+                    regions: ['A']
+                },
                 ADVENT3: {
-                    nameDE: 'dritte Advent', // zweite Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 3. Advent liegen 25 Tage
+                    name: 'dritte Advent', // zweite Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 3. Advent liegen 25 Tage
                     month: adventX,
                     day: -7,
                     regions: []
                 },
                 ADVENT4: {
-                    nameDE: 'vierte Advent', // Sonntag direkt vor Weihnachten; Zwischen Buss und Bettag und dem 4. Advent liegen 32 Tage
+                    name: 'vierte Advent', // Sonntag direkt vor Weihnachten; Zwischen Buss und Bettag und dem 4. Advent liegen 32 Tage
                     month: adventX,
                     day: 0,
                     regions: []
                 },
                 HEILIGABEND: {
-                    nameDE: 'Heiligabend',
+                    name: 'Heiligabend',
                     month: 12,
                     day: 24,
                     regions: []
                 },
                 ERSTERWEIHNACHTSFEIERTAG: {
-                    nameDE: '1. Weihnachtstag',
+                    name: '1. Weihnachtstag',
+                    nameAlt: 'Christtag',
                     month: 12,
                     day: 25,
                     regions: allRegions
                 },
                 ZWEITERWEIHNACHTSFEIERTAG: {
-                    nameDE: '2. Weihnachtstag',
+                    name: '2. Weihnachtstag',
+                    nameAlt: 'Stefanitag',
                     month: 12,
                     day: 26,
                     regions: allRegions
                 },
                 SILVESTER: {
-                    nameDE: 'Silvester', // 31.12.
+                    name: 'Silvester', // 31.12.
                     month: 12,
                     day: 31,
                     regions: []
@@ -735,9 +772,10 @@
                 Object.keys(allDaysDefinition).forEach((key) => {
                     const d = allDaysDefinition[key];
                     if (d.regions.includes(region)) {
+                        console.log(d);
                         _pushUnique(node.holidays, {
                             id: key,
-                            name : d.nameDE,
+                            name : d.name,
                             nameAlt : d.nameAlt,
                             month: d.month,
                             day: d.day
@@ -766,7 +804,8 @@
                     const d = allDaysDefinition[key];
                     const obj = {
                         id: key,
-                        name: d.nameDE,
+                        name: d.name,
+                        nameAlt: d.nameAlt,
                         month: d.month,
                         day: d.day
                     };
@@ -812,7 +851,7 @@
                     placeholder: node._('german-holidays.placeholder.name')
                 }).appendTo(row);
                 $('<input/>', {
-                    class: 'node-input-item-namealt',
+                    class: 'node-input-item-nameAlt',
                     type: 'hidden',
                     value: (data.nameAlt || '')
                 }).appendTo(row);

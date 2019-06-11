@@ -269,7 +269,7 @@ function _getSpecialDaysOfYear(node, year, region, force, calcNext) {
     }
 
     if (node.default.dayObjs && (node.default.year === year) && (force !== true) && !region) {
-        node.debug('return default obj');
+        // node.debug('return default obj');
         return node.default.dayObjs;
     }
 
@@ -474,8 +474,8 @@ module.exports = function (RED) {
         this.holidaysArray = config.holidays || [];
         this.specialdaysArray = config.specialdays || [];
 
-        this.debug('Holiday!!');
-        this.debug(JSON.stringify(config, Object.getOwnPropertyNames(config)));
+        // this.debug('Holiday!!');
+        // this.debug(JSON.stringify(config, Object.getOwnPropertyNames(config)));
 
         if (config.region && config.region !== '' && config.region !== null && typeof config.region !== 'undefined') {
             _addToArrayForRegion(this.holidaysArray, config.region);
@@ -557,7 +557,7 @@ module.exports = function (RED) {
         };
 
         this.on('input', function (msg) {
-            this.debug('Holiday!! Start');
+            // this.debug('Holiday!! Start');
             try {
                 /********************************************
                 * versenden:
@@ -595,7 +595,7 @@ module.exports = function (RED) {
                         outMsg.data.ts = dto;
                     }
                 }
-                this.debug(JSON.stringify(outMsg, Object.getOwnPropertyNames(outMsg)));
+                // this.debug(JSON.stringify(outMsg, Object.getOwnPropertyNames(outMsg)));
 
                 //-------------------------------------------------------------------
                 if (this.holidaysArray.length < 0) {

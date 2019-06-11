@@ -772,7 +772,6 @@
                 Object.keys(allDaysDefinition).forEach((key) => {
                     const d = allDaysDefinition[key];
                     if (d.regions.includes(region)) {
-                        console.log(d);
                         _pushUnique(node.holidays, {
                             id: key,
                             name : d.name,
@@ -1040,7 +1039,7 @@
             }
 
             function dialogDateOutChg() {
-                console.log('dialogDateOutChg');
+                console.log('dialogDateOutChg'); // eslint-disable-line
                 switch ($dialogTyp.val()) {
                     case 'easter': {
                         const date = _makeDate(year, easter_date, $dialogDaysRel.val());
@@ -1079,7 +1078,6 @@
             }
 
             $dialogTyp.change(() => {
-                console.log('$dialogTyp.change');
                 switch ($dialogTyp.val()) {
                     case 'easter':
                         $('.dialog-input-date-row').hide();

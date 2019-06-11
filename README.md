@@ -28,7 +28,7 @@ Simple flow:
 
 ## Implemented Nodes
 
-- german-holidays Node -get german holidays on any input
+- holidays Node -get holidays on any input
 
 ## How to use
 
@@ -38,7 +38,7 @@ Simple flow:
 
 there are 2 lists one for definition of Holidays and one for special days which are not Holidays.
 
-Under the lists are Buttons to fill the lists with pre defined Holidays for german. If all is selected, all holidays are used (independent if they are really for all regions are available) and id "allgemeine" are used only holidays will be considered which are available in all regions of Germany.
+Under the lists are Buttons to fill the lists with pre defined Holidays for German and Austria. If all is selected, all holidays are used (independent if they are really for all regions are available) and id "allgemeine" are used only holidays will be considered which are available in all regions of Germany.
 
 ### Options for the incoming message object
 
@@ -49,7 +49,7 @@ The incoming message is mainly used for trigger the calculation. This will be do
 - **date**, `msg.date` if defined only the Holiday information for the defined date will given. If this is given, the output will be **only** a day object representing this day.
 - **year**, `msg.year` if defined only the Holiday information for the defined year will given. Will only work if no `msg.date` or `msg.ts` are in the input message, because otherwise the year information from there will be used.
 
-- **region**, `msg.region` the region which should be used for getting holidays. If this property is in the input message only the holidays of the region will be considered and nit the setup holidays in the configuration of the node. This property must be a string of two letters with the german state shortcut (BY=Bayern, BE=Berlin, ...).
+- **region**, `msg.region` the region which should be used for getting holidays. If this property is in the input message only the holidays of the region will be considered and nit the setup holidays in the configuration of the node. This property must be a string of two letters with the German state shortcut (BY=Bayern, BE=Berlin, ...).
 
 ### generic day object **day-object**
 

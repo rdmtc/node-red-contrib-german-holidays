@@ -27,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HM-RedMatic/node-red-contrib-german-holidays.git"
+    "url": "git+https://github.com/rdmtc/node-red-contrib-german-holidays.git"
   },
   "author": {
     "name": "Hypnos3",
@@ -46,9 +46,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/HM-RedMatic/node-red-contrib-german-holidays/issues"
+    "url": "https://github.com/rdmtc/node-red-contrib-german-holidays/issues"
   },
-  "homepage": "https://github.com/HM-RedMatic/node-red-contrib-german-holidays#readme",
+  "homepage": "https://github.com/rdmtc/node-red-contrib-german-holidays#readme",
   "node-red": {
     "nodes": {
       "german-holidays": "german-holidays.js"

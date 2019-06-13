@@ -9,7 +9,16 @@
             "clearSpecialdayBtn": "clear list",
             "relEaster": "🥚  relative to easter sunday",
             "rel4ThAdvent": "🎄  relative to 4th. advent",
-            "dialogtitle": "edit entry"
+            "relDayOfWeek":"relativ day of week",
+            "dialogtitle": "edit entry",
+            "date": "Date",
+            "month": "Month",
+            "relDays": "relative Days",
+            "dowRel": "relative day of week",
+            "type": "type",
+            "id": "ID",
+            "name":"name",
+            "nameAlt":"alternate name"
         },
         "placeholder": {
             "region": "select state for holidays",
@@ -20,7 +29,7 @@
         },
         "region": {
             "none": "<select region to add to list>",
-            "AUSTRIA": "Österreich",
+            "AUSTRIA": "Austria",
             "ALL": "alle Deutsche",
             "BUND": "allgemeine Deutsche",
             "BW": "Baden-Württemberg",

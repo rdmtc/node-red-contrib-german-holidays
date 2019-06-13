@@ -8,17 +8,27 @@
             "clearHolidayBtn": "Liste leeren",
             "clearSpecialdayBtn": "Liste leeren",
             "relEaster": "🥚  relativ zum Oster Sonntag",
-            "rel4ThAdvent": "🎄  relativ zum 4. Advent"
+            "rel4ThAdvent": "🎄  relativ zum 4. Advent",
+            "relDayOfWeek": "relativer Wochentag im Monat",
+            "dialogtitle": "Eintrag bearbeiten",
+            "date": "Datum",
+            "month": "Monat",
+            "relDays": "relative Tage",
+            "dowRel": "relativer Wochentag",
+            "type": "Typ",
+            "name": "Name",
+            "nameAlt": "Alternativer Name"
         },
         "placeholder": {
             "region": "wähle region der Feiertage",
             "name": "Name des tages",
+            "namePreDefined": "Name des vordefinierten Tages",
             "month": "Monat 1-12",
             "day": "Tag - absolut: 1-31, relativ -300 - 300"
         },
         "region": {
             "none": "<wählen um vordefinierte Hinzugefügt werden sollen>",
-            "AUSTRIA": "Österreichische",
+            "AUSTRIA": "Österreich",
             "ALL": "alle Deutsche",
             "BUND": "allgemeine Deutsche",
             "BW": "Baden-Württemberg",
@@ -96,7 +106,7 @@
         ],
         "tips": {
             "holiday": "Es werden nur Feiertage oder freie Tage betrachtet, welche in der liste aufgeführt sind. Sie können die Auswahl und den Hinzufügen Knopf benutzen um eine vorgefertigte Auswahl an Feiertagen für ein Bundesland hintzuzufügen. Fallen mehrere Einträge auf das selbe Datum wird später nur der erste berücksichtigt.",
-s            "specialday": "Benutzen Sie diese Definition um zusätzliche besondere Tage wie Gedenk-, Aktions-, Geburts- und Jahrestage zu hinterlegen, die keine Freie oder Feiertage sind. Mit dem hinzufügen Knopf werden alle intern bekannten Tage hinzugefügt, die nicht in der Liste der Feiertage oben aufgeführt sind. Fallen mehrere Einträge auf das selbe Datum wird später nur der erste EIntrag berücksichtigt."
+            "specialday": "Benutzen Sie diese Definition um zusätzliche besondere Tage wie Gedenk-, Aktions-, Geburts- und Jahrestage zu hinterlegen, die keine Freie oder Feiertage sind. Mit dem hinzufügen Knopf werden alle intern bekannten Tage hinzugefügt, die nicht in der Liste der Feiertage oben aufgeführt sind. Fallen mehrere Einträge auf das selbe Datum wird später nur der erste EIntrag berücksichtigt."
         }
     }
 }

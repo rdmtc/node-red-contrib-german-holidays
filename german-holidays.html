@@ -54,52 +54,50 @@
     </div>
     <div class="form-row" data-i18n="[title]node-red:common.label.name">
         <label for="node-input-name"><i class="icon-tag"></i> <span data-i18n="node-red:common.label.name"></span></label>
-        <input type="text" id="node-input-name" data-i18n="[placeholder]time-span.placeholder.name">
+        <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
     </div>
 
-    <div id="dialog-edit-day" title="E" class="red-ui-editor" data-i18n="[title]time-span.label.dialogtitle">
+    <div id="dialog-edit-day" class="red-ui-editor">
         <div class="form-row">
-            <label for="name">ID</label>
+            <label for="dialog-input-id">includes</label>
             <input type="text" name="dialog-input-id" id="dialog-input-id" class="text ui-widget-content ui-corner-all">
         </div>
         <div class="form-row">
-            <label for="name">Name</label>
+            <label for="dialog-input-name">name</label>
             <input type="text" name="dialog-input-name" id="dialog-input-name" class="text ui-widget-content ui-corner-all">
         </div>
         <div class="form-row">
-            <label for="name">Alternativer Name</label>
+            <label for="dialog-input-nameAlt">name alternate</label>
             <input type="text" name="dialog-input-nameAlt" id="dialog-input-nameAlt" class="text ui-widget-content ui-corner-all">
         </div>
         <div class="form-row">
-            <label for="name">Typ</label>
+            <label for="dialog-input-typ">type</label>
             <select type="text" id="dialog-input-typ" name="dialog-input-typ" >
-                    <option value="date" >Datum</option>
-                    <option value="easter" >relativ zu Ostern</option>
-                    <option value="advent" >relativ zum 4. Advent</option>
-                    <option value="weekday" >relativer Wochentag im Monat</option>
             </select>
         </div>
 
         <div class="form-row dialog-input-date-row">
-            <label for="name">Datum</label>
+            <label for="dialog-input-date">date</label>
             <input type="text" name="dialog-input-date" id="dialog-input-date" min="1" max="31" step="1" class="text ui-widget-content ui-corner-all">
         </div>
         <div class="form-row dialog-input-daysRel-row">
-            <label for="name">relative Days</label>
+            <label for="dialog-input-daysRel">days</label>
             <input type="number" name="dialog-input-daysRel" id="dialog-input-daysRel" min="-370" max="370" step="1" class="text ui-widget-content ui-corner-all">
         </div>
         <div class="form-row dialog-input-month-row">
-            <label for="name">Month</label>
+            <label for="dialog-input-month">month</label>
             <select type="text" id="dialog-input-month" name="dialog-input-month" class="text ui-widget-content ui-corner-all" >
             </select>
         </div>
-        <div class="form-row dialog-input-offset-row">
-            <label for="name">offset</label>
-            <input type="number" name="dialog-input-offset" id="dialog-input-offset" min="1" max="31" step="1" class="text ui-widget-content ui-corner-all">
+        <div class="form-row dialog-input-dowRel-row">
+            <label for="dialog-input-nthdow">relative</label>
+            <input type="number" id="dialog-input-nthdow" name="dialog-input-nthdow" min="1" max="5" step="1" class="text ui-widget-content ui-corner-all" style="width:90px">
+            <select type="text" id="dialog-input-dayofweek" name="dialog-input-dayofweek" >
+            </select>
         </div>
-        <div>
+        <!-- div>
             <label id="dialog-label-date-out"></label>
-        </div>
+        </div -->
     </div>
 </script>
 
@@ -269,7 +267,9 @@
             name: rule.find('.node-input-item-name').val(),
             nameAlt: rule.find('.node-input-item-nameAlt').val(),
             month: parseInt(rule.find('.node-input-item-month').val()),
-            day: parseInt(rule.find('.node-input-item-day').val())
+            day: parseInt(rule.find('.node-input-item-day').val()),
+            nth: parseInt(rule.find('.node-input-item-nth').val()),
+            dow: parseInt(rule.find('.node-input-item-dow').val())
         };
     }
 
@@ -517,7 +517,9 @@
                 MUTTERTAG: {
                     name: 'Muttertag', // 2. Sonntag im Mai
                     month: 12 + 5,
-                    day: 7,
+                    day: 7, // (1 * 7) + 0,
+                    nth: 1, // 0 based
+                    dow: 0,
                     regions: []
                 },
                 KINDERTAG: {
@@ -572,7 +574,9 @@
                 ERNTEDANK: {
                     name: 'Erntedank', // erster Sonntag im Oktober
                     month: 12 + 10,
-                    day: 1,
+                    day: 0, // (0 * 7) + 0, // old= 1,
+                    nth: 0, // 0 based
+                    dow: 0,
                     regions: []
                 },
                 DEUTSCHEEINHEIT: {
@@ -719,7 +723,31 @@
                 return new Date(Date.UTC(year, M - 1, D));
             }
 
+            /**
+             * get a date for the specific day of week in the given month
+             * @param {number} year year to check
+             * @param {number} month month to check
+             * @param {number} dayOfWeek day of week 0=Sunday, 1=Monday, ..., 6=Saturday
+             * @param {number} n the nTh Numer of the day of week - 0 basiert
+             */
+            function _getNthWeekdayOfMonth(year, month, dayOfWeek, n) {
+                console.log(`_getNthWeekdayOfMonth year=${year} month=${month} dayOfWeek=${dayOfWeek} nth=${n}`);
+                const date = new Date(year, month, 1);
+                const add = (dayOfWeek - date.getDay() + 7) % 7 + n * 7;
+                date.setDate(1 + add);
+                return date;
+            }
+
+            /**
+             * Creates a new {@link Date}.
+             * @param {Number|Date} yearOrRef  -  utc year of the day
+             * @param {Number|Date} naturalMonthOrRef  - natural utc month (1-12) or a date object if the new Date should be calculated in realative to the given Date
+             * @param {Number} day  - day of month (1 - 31) or if a reference Date is given the number of days as offset from the reference date
+             * @returns {Date}  -  new Date
+             * @private
+             */
             function _makeDate(year, naturalMonthOrRef, day) {
+                console.log(`_makeDate year=${year} naturalMonthOrRef=${naturalMonthOrRef} day=${day} `);
                 if (typeof year === 'object') {
                     year = year.getUTCFullYear();
                 }
@@ -733,9 +761,10 @@
                 }
 
                 if (naturalMonthOrRef >= 13 && naturalMonthOrRef <= 24) {
-                    let sd = new Date(Date.UTC(year, naturalMonthOrRef - 13, 1)).getUTCDay();
-                    if (sd === 0) { sd = 7; }
-                    return new Date(Date.UTC(year, naturalMonthOrRef - 13, ((day + 7) - sd)));
+                    return _getNthWeekdayOfMonth(year, naturalMonthOrRef - 13, (day % 7), Math.trunc(day / 7));
+                    // let sd = new Date(Date.UTC(year, naturalMonthOrRef - 13, 1)).getUTCDay();
+                    // if (sd === 0) { sd = 7; }
+                    // return new Date(Date.UTC(year, naturalMonthOrRef - 13, ((day + 7) - sd)));
                 }
 
                 if (naturalMonthOrRef <= 12 && day >= 1 && day <= 31) {
@@ -777,7 +806,9 @@
                             name : d.name,
                             nameAlt : d.nameAlt,
                             month: d.month,
-                            day: d.day
+                            day: d.day,
+                            nth: d.nth,
+                            dow: d.dow
                         });
                     }
                 });
@@ -806,7 +837,10 @@
                         name: d.name,
                         nameAlt: d.nameAlt,
                         month: d.month,
-                        day: d.day
+                        day: d.day,
+                        nth: d.nth,
+                        dow: d.dow
+
                     };
                     if (!node.holidays.some(e => (e.month === obj.month && e.day === obj.day))) {
                         _pushUnique(node.specialdays, obj);
@@ -880,6 +914,16 @@
                     placeholder: node._('german-holidays.placeholder.day')
                 });
                 $day.appendTo(row);
+                $('<input/>', {
+                    class: 'node-input-item-nth',
+                    type: 'hidden',
+                    value: (Math.trunc(data.day / 7) || 0)
+                }).appendTo(row);
+                $('<input/>', {
+                    class: 'node-input-item-dow',
+                    type: 'hidden',
+                    value: ((data.day % 7) || 0)
+                }).appendTo(row);
                 // edit Button
                 // <a id="node-config-lookup-ipaddress" class="btn"><i id="node-config-lookup-ipaddress-icon" class="fa fa-search"></i></a>
                 const $btn = $('<a />', {
@@ -895,9 +939,10 @@
                         });
                     } else if (month >= 13 && month <= 24) {
                         $day.attr({
-                            'max' : 31,
+                            'max' : 41,
                             'min' : 1
                         });
+                        $day.prop('disabled', true);
                     } else if (month < 1) {
                         $day.attr({
                             'max' : 370,
@@ -905,9 +950,9 @@
                         });
                     }
                 });
+                $day.val(data.day || 1);
                 $month.val(data.month || 1);
                 $month.change();
-                $day.val(data.day || 1);
                 if (id !== '') {
                     $name.prop( 'disabled', true );
                 }
@@ -957,6 +1002,7 @@
             if (advent4th_Offset === 0) {
                 advent4th_Offset = 7;
             }
+            const advent4th_date = _makeDate(year, christmas_date, -advent4th_Offset);
             // #endregion migrate
 
             // #region dialog
@@ -967,22 +1013,27 @@
             const $dialogTyp = $('#dialog-input-typ');
             const $dialogDate = $('#dialog-input-date');
             const $dialogMonth = $('#dialog-input-month');
-            const $dialogOffset = $('#dialog-input-offset');
+            const $dialogNthdow = $('#dialog-input-nthdow');
+            const $dialogDayofweek = $('#dialog-input-dayofweek');
+
             const $dialogDaysRel = $('#dialog-input-daysRel');
-            const $dialogLabel = $('#dialog-label-date-out');
+            // const $dialogLabel = $('#dialog-label-date-out');
 
             function dialogLoadData(rule) {
-                console.log('dialogLoadData'); // eslint-disable-line
                 $dialogConnFields = rule;
                 $dialogId.val(rule.find('.node-input-item-id').val());
                 $dialogName.val(rule.find('.node-input-item-name').val());
                 $dialogNameAlt.val(rule.find('.node-input-item-nameAlt').val());
+                $dialogDaysRel.val(rule.find('.node-input-item-day').val());
+                // $dialogNthdow.val(rule.find('.node-input-item-nth').val() || 0);
+                // $dialogDayofweek.val(rule.find('.node-input-item-dow').val() || 0);
+
                 const month = parseInt(rule.find('.node-input-item-month').val());
-                const day = parseInt(rule.find('.node-input-item-day').val());
+                const day = parseInt($dialogDaysRel.val());
+                $dialogNthdow.val(String(Math.trunc(day / 7) + 1));
+                $dialogDayofweek.val(String(day % 7));
                 $dialogDate.datepicker('setDate', null);
                 $dialogMonth.val('1');
-                $dialogOffset.val('1');
-                $dialogDaysRel.val('1');
 
                 if (month >= 1 && month <= 12) {
                     $dialogTyp.val('date');
@@ -992,14 +1043,13 @@
                     $dialogDate.datepicker('setDate', date);
                 } else if (month >= 13 && month <= 24) {
                     $dialogTyp.val('weekday');
-                    $dialogMonth.val(month - 12);
-                    $dialogOffset.val(day);
+                    $dialogMonth.val(String(month - 12));
                 } else if (month === -1) {
                     $dialogTyp.val('easter');
-                    $dialogDaysRel.val(day);
+                    $dialogMonth.val('-1');
                 } else if (month === -2) {
                     $dialogTyp.val('advent');
-                    $dialogDaysRel.val(day);
+                    $dialogMonth.val('-2');
                 } else {
                     $dialogTyp.val('date');
                     $dialogDate.datepicker('setDate', null);
@@ -1023,14 +1073,21 @@
                         $dialogConnFields.find('.node-input-item-month').val('-2');
                         $dialogConnFields.find('.node-input-item-day').val($dialogDaysRel.val());
                         break;
-                    case 'weekday':
-                        $dialogConnFields.find('.node-input-item-month').val($dialogMonth.val() + 12);
-                        $dialogConnFields.find('.node-input-item-day').val($dialogOffset.val());
+                    case 'weekday': {
+                        $dialogConnFields.find('.node-input-item-month').val(String(parseInt($dialogMonth.val()) + 12));
+                        const nth = (parseInt($dialogNthdow.val()) - 1);
+                        $dialogConnFields.find('.node-input-item-nth').val(String(nth));
+                        $dialogConnFields.find('.node-input-item-dow').val($dialogDayofweek.val());
+
+                        const val = (nth * 7 + parseInt($dialogDayofweek.val()));
+                        $dialogDaysRel.val(String(val));
+                        $dialogConnFields.find('.node-input-item-day').val(String(val));
                         break;
+                    }
                     default: {
                         const date = $dialogDate.datepicker( 'getDate' );
                         if (date !== null) {
-                            $dialogConnFields.find('.node-input-item-month').val(date.getUTCMonth() + 1);
+                            $dialogConnFields.find('.node-input-item-month').val(String(date.getUTCMonth() + 1));
                             $dialogConnFields.find('.node-input-item-day').val(date.getUTCDate());
                         }
                     }
@@ -1039,29 +1096,32 @@
             }
 
             function dialogDateOutChg() {
-                console.log('dialogDateOutChg'); // eslint-disable-line
+                let date = null;
                 switch ($dialogTyp.val()) {
                     case 'easter': {
-                        const date = _makeDate(year, easter_date, $dialogDaysRel.val());
-                        $dialogLabel.text('easter based: ' + $.datepicker.formatDate('MM d (yyyy-mm-dd)', date));
+                        date = _makeDate(year, easter_date, parseInt($dialogDaysRel.val()));
                         break;
                     }
                     case 'advent': {
-                        const date = _makeDate(year, advent4th_Offset, $dialogDaysRel.val());
-                        $dialogLabel.text('advent based: ' + $.datepicker.formatDate('MM d (yyyy-mm-dd)', date));
+                        date = _makeDate(year, advent4th_date, parseInt($dialogDaysRel.val()));
                         break;
                     }
                     case 'weekday': {
-                        const date = _makeDate(year, $dialogMonth.val() + 12, $dialogOffset.val());
-                        $dialogLabel.text('weekday based: ' + $.datepicker.formatDate('MM d (yyyy-mm-dd)', date));
+                        const val = ((parseInt($dialogNthdow.val()) - 1) * 7 + parseInt($dialogDayofweek.val()));
+                        $dialogDaysRel.val(String(val));
+                        date = _makeDate(year, parseInt($dialogMonth.val()) + 12, val);
                         break;
                     }
                     default: {
-                        const date = $dialogDate.datepicker('getDate');
-                        $dialogLabel.text('date: ' + $.datepicker.formatDate('MM d (yyyy-mm-dd)', date));
+                        date = $dialogDate.datepicker('getDate');
                         break;
                     }
                 }
+                // const lblText = $.datepicker.formatDate('MM d (yy-mm-dd)', date);
+                // $dialogLabel.text(lblText);
+                const dlgTitle = node._('german-holidays.label.dialogtitle') + ' [' + $.datepicker.formatDate('MM d (yy-mm-dd)', date) + ']';
+                $dialog.dialog('option', 'title', dlgTitle);
+
             }
 
             $dialogDate.datepicker({
@@ -1073,46 +1133,67 @@
                 showButtonPanel: true
             });
 
+            $dialogTyp.append($('<option></option>').val('date').text(node._('german-holidays.label.date')));
+            $dialogTyp.append($('<option></option>').val('easter').text(node._('german-holidays.label.relEaster')));
+            $dialogTyp.append($('<option></option>').val('advent').text(node._('german-holidays.label.rel4ThAdvent')));
+            $dialogTyp.append($('<option></option>').val('weekday').text(node._('german-holidays.label.relDayOfWeek')));
+
             for (let index = 1; index <= 12; index++) {
-                $dialogMonth.append($('<option></option>').val(index).text(node._('german-holidays.month.' + String(index + 11))));
+                $dialogMonth.append($('<option></option>').val(index).text(node._('german-holidays.month.' + String(index - 1))));
             }
+
+            for (let index = 0; index <= 6; index++) {
+                $dialogDayofweek.append($('<option></option>').val(index).text(node._('german-holidays.days.' + String(index))));
+            }
+
+            $("label[for='dialog-input-id']").text(node._('german-holidays.label.id'));
+            $("label[for='dialog-input-name']").text(node._('german-holidays.label.name'));
+            $("label[for='dialog-input-nameAlt']").text(node._('german-holidays.label.nameAlt'));
+            $("label[for='dialog-input-typ']").text(node._('german-holidays.label.type'));
+            $("label[for='dialog-input-date']").text(node._('german-holidays.label.date'));
+            $("label[for='dialog-input-month']").text(node._('german-holidays.label.month'));
+            $("label[for='dialog-input-nthdow']").text(node._('german-holidays.label.dowRel'));
+            $("label[for='dialog-input-month']").text(node._('german-holidays.label.month'));
+
 
             $dialogTyp.change(() => {
                 switch ($dialogTyp.val()) {
                     case 'easter':
                         $('.dialog-input-date-row').hide();
                         $('.dialog-input-month-row').hide();
-                        $('.dialog-input-offset-row').hide();
+                        $('.dialog-input-dowRel-row').hide();
                         $('.dialog-input-daysRel-row').show();
                         break;
                     case 'advent':
                         $('.dialog-input-date-row').hide();
                         $('.dialog-input-month-row').hide();
-                        $('.dialog-input-offset-row').hide();
+                        $('.dialog-input-dowRel-row').hide();
                         $('.dialog-input-daysRel-row').show();
                         break;
                     case 'weekday':
                         $('.dialog-input-date-row').hide();
                         $('.dialog-input-month-row').show();
-                        $('.dialog-input-offset-row').show();
+                        $('.dialog-input-dowRel-row').show();
                         $('.dialog-input-daysRel-row').hide();
                         break;
                     default:
                         $('.dialog-input-date-row').show();
                         $('.dialog-input-month-row').hide();
-                        $('.dialog-input-offset-row').hide();
+                        $('.dialog-input-dowRel-row').hide();
                         $('.dialog-input-daysRel-row').hide();
                 }
                 dialogDateOutChg();
             });
             $dialogMonth.change(() => { dialogDateOutChg(); });
-            $dialogOffset.change(() => { dialogDateOutChg(); });
             $dialogDaysRel.change(() => { dialogDateOutChg(); });
+            $dialogNthdow.change(() => { dialogDateOutChg(); });
+            $dialogDayofweek.change(() => { dialogDateOutChg(); });
             $dialogDate.change(() => { dialogDateOutChg(); });
 
             const $dialog = $('#dialog-edit-day').dialog({
+                title: node._('german-holidays.label.dialogtitle'),
                 autoOpen: false,
-                height: 460,
+                height: 500,
                 width: 530,
                 modal: true,
                 closeOnEscape: true,

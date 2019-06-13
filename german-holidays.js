@@ -341,6 +341,20 @@ function getEasterDate(year) {
 }
 
 /**
+ * get a date for the specific day of week in the given month
+ * @param {number} year year to check
+ * @param {number} month month to check
+ * @param {number} dayOfWeek day of week 0=Sunday, 1=Monday, ..., 6=Saturday
+ * @param {number} n the nTh Numer of the day of week - 0 based
+ */
+function _getNthWeekdayOfMonth(year, month, dayOfWeek, n) {
+    const date = new Date(year, month, 1);
+    const add = (dayOfWeek - date.getDay() + 7) % 7 + n * 7;
+    date.setDate(1 + add);
+    return date;
+}
+
+/**
  * Creates a new {@link Date}.
  * @param {Number|Date} yearOrRef  -  utc year of the day
  * @param {Number|Date} naturalMonthOrRef  - natural utc month (1-12) or a date object if the new Date should be calculated in realative to the given Date
@@ -362,9 +376,10 @@ function _makeDate(year, naturalMonthOrRef, day) {
     }
 
     if (naturalMonthOrRef >= 13 && naturalMonthOrRef <= 24) {
-        let sd = new Date(Date.UTC(year, naturalMonthOrRef - 13, 1)).getUTCDay();
-        if (sd === 0) { sd = 7; }
-        return new Date(Date.UTC(year, naturalMonthOrRef - 13, ((day + 7) - sd)));
+        return _getNthWeekdayOfMonth(year, naturalMonthOrRef - 13, (day % 7), Math.trunc(day / 7));
+        // let sd = new Date(Date.UTC(year, naturalMonthOrRef - 13, 1)).getUTCDay();
+        // if (sd === 0) { sd = 7; }
+        // return new Date(Date.UTC(year, naturalMonthOrRef - 13, ((day + 7) - sd)));
     }
 
     if (naturalMonthOrRef <= 12 && day >= 1 && day <= 31) {

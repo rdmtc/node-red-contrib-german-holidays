@@ -275,10 +275,8 @@ function _getSpecialDaysOfYear(node, year, region, force, calcNext) {
 
     const easter_date = getEasterDate(year);
     const christmas_date = _makeDate(year, 12, 25);
-    let advent4th_Offset = christmas_date.getDay() % 7;
-    if (advent4th_Offset === 0) {
-        advent4th_Offset = 7;
-    }
+    const advent4th_Offset = (christmas_date.getDay() % 7) || 7;
+    // if (advent4th_Offset === 0) { advent4th_Offset = 7; }
     const advent4th = _makeDate(year, christmas_date, -advent4th_Offset);
 
     const specialdaysObjects = [];
@@ -341,16 +339,35 @@ function getEasterDate(year) {
 }
 
 /**
- * get a date for the specific day of week in the given month
+ * get a {@link Date} for the specific day of week in the given month
  * @param {number} year year to check
  * @param {number} month month to check
  * @param {number} dayOfWeek day of week 0=Sunday, 1=Monday, ..., 6=Saturday
  * @param {number} n the nTh Numer of the day of week - 0 based
+ * @returns {Date}  -  new Date
  */
-function _getNthWeekdayOfMonth(year, month, dayOfWeek, n) {
+function _firstNthWeekdayOfMonth(year, month, dayOfWeek, n) {
     const date = new Date(year, month, 1);
     const add = (dayOfWeek - date.getDay() + 7) % 7 + n * 7;
     date.setDate(1 + add);
+    return date;
+}
+
+/**
+ * get a {@link Date} for the last specific day of week in the given month
+ * @param {number} year year to check
+ * @param {number} month month to check
+ * @param {number} dayOfWeek day of week 0=Sunday, 1=Monday, ..., 6=Saturday
+ * @param {number} n the nTh Numer of the day of week - 0 based
+ * @returns {Date}  -  new Date
+ */
+function _lastNthWeekdayOfMonth(year, month, dayOfWeek, n) {
+    const date = new Date(year, month + 1, 0);
+    const dy = date.getDay(); // day of week
+    if ( dy < dayOfWeek) {
+        dayOfWeek -= 7;
+    }
+    date.setDate(date.getDate() - (dy - dayOfWeek - n * 7));
     return date;
 }
 
@@ -376,10 +393,11 @@ function _makeDate(year, naturalMonthOrRef, day) {
     }
 
     if (naturalMonthOrRef >= 13 && naturalMonthOrRef <= 24) {
-        return _getNthWeekdayOfMonth(year, naturalMonthOrRef - 13, (day % 7), Math.trunc(day / 7));
-        // let sd = new Date(Date.UTC(year, naturalMonthOrRef - 13, 1)).getUTCDay();
-        // if (sd === 0) { sd = 7; }
-        // return new Date(Date.UTC(year, naturalMonthOrRef - 13, ((day + 7) - sd)));
+        return _firstNthWeekdayOfMonth(year, naturalMonthOrRef - 13, (day % 7), Math.trunc(day / 7));
+    }
+
+    if (naturalMonthOrRef >= 25 && naturalMonthOrRef <= 36) {
+        return _lastNthWeekdayOfMonth(year, naturalMonthOrRef - 25, (day % 7), Math.trunc(day / 7));
     }
 
     if (naturalMonthOrRef <= 12 && day >= 1 && day <= 31) {

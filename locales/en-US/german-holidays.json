@@ -17,10 +17,12 @@
             "relDays": "relative Days",
             "dowRelFirst": "first weekday",
             "dowRelLast": "last weekday",
-            "type": "type",
+            "dateType": "date type",
+            "character": "character",
             "id": "ID",
             "name":"name",
-            "nameAlt":"alternate name"
+            "nameAlt":"alternate name",
+            "exampleDate": "exemplary date:"
         },
         "placeholder": {
             "region": "select state for holidays",
@@ -28,6 +30,24 @@
             "namePreDefined": "name of the pre defined day",
             "month": "month 1-12",
             "day": "day - absolute: 1-31, relative -300 - 300"
+        },
+        "characteristic": {
+            "unspecified": "<unspecified>",
+            "calendar": "calendar event",
+            "holiday": "holiday",
+            "nationalholiday": "national holiday",
+            "birthday": "birthday",
+            "anniversary": "anniversary",
+            "actionday": "action day",
+            "customday": "custom day",
+            "specialday": "special day",
+            "remembranceday": "remembrance day",
+            "carnival": "carnival",
+            "religion": "religion",
+            "event": "event",
+            "festival": "festival",
+            "meeting": "meeting",
+            "operation": "operation"
         },
         "region": {
             "none": "<select region to add to list>",

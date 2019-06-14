@@ -71,8 +71,13 @@
             <input type="text" name="dialog-input-nameAlt" id="dialog-input-nameAlt" class="text ui-widget-content ui-corner-all">
         </div>
         <div class="form-row">
-            <label for="dialog-input-typ">type</label>
-            <select type="text" id="dialog-input-typ" name="dialog-input-typ" >
+            <label for="dialog-input-character">character</label>
+            <select type="text" id="dialog-input-character" name="dialog-input-character" style="width:70%" >
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="dialog-input-date-type">type</label>
+            <select type="text" id="dialog-input-date-type" name="dialog-input-date-type" style="width:70%" >
             </select>
         </div>
 
@@ -86,18 +91,18 @@
         </div>
         <div class="form-row dialog-input-month-row">
             <label for="dialog-input-month">month</label>
-            <select type="text" id="dialog-input-month" name="dialog-input-month" class="text ui-widget-content ui-corner-all" >
+            <select type="text" id="dialog-input-month" name="dialog-input-month" class="text ui-widget-content ui-corner-all" style="width:70%" >
             </select>
         </div>
         <div class="form-row dialog-input-dowRel-row">
             <label for="dialog-input-nthdow">relative</label>
-            <input type="number" id="dialog-input-nthdow" name="dialog-input-nthdow" min="1" max="5" step="1" class="text ui-widget-content ui-corner-all" style="width:90px">
-            <select type="text" id="dialog-input-dayofweek" name="dialog-input-dayofweek" >
+            <input type="number" id="dialog-input-nthdow" name="dialog-input-nthdow" min="1" max="5" step="1" class="text ui-widget-content ui-corner-all" style="width:30%">
+            <select type="text" id="dialog-input-dayofweek" name="dialog-input-dayofweek" style="width:40%" >
             </select>
         </div>
-        <!-- div>
+        <div>
             <label id="dialog-label-date-out"></label>
-        </div -->
+        </div>
     </div>
 </script>
 
@@ -384,135 +389,205 @@
 
             const easterX = -1;
             const adventX = -2;
+            const characteristic = {
+                unspecified: 0,
+                calendar : 1,
+                holiday : 2, // Feiertag
+                nationalholiday: 4, // Nationalfeiertag
+                birthday: 8, // Geburtstag
+                anniversary: 16,
+                actionday : 32, // Aktionstag
+                customday : 64, // Brauchtumstag
+                specialday: 128, // Festtag
+                remembranceday: 256, // Gedenktag
+                carnival: 512, // Volksfest
+                religion: 1024,
+                event: 2048, // Veranstaltung
+                festival: 4096, // Festspiele, Festival
+                meeting: 8196, // Treffen, Tagung, Versammlung
+                operation: 16384 // Einsatz
+            };
 
             const allDaysDefinition = {
                 NEUJAHRSTAG: {
                     name: 'Neujahrstag', // 1.1.
                     month: 1,
                     day: 1,
-                    regions: allRegions
+                    regions: allRegions,
+                    character: characteristic.holiday
                 },
                 HEILIGEDREIKOENIGE: {
                     name: 'Heilige Drei Könige', // 6.1.
                     nameAlt: 'Epiphanias',
                     month: 1,
                     day: 6,
-                    regions: ['BW', 'BY', 'ST', 'ALL', 'A']
+                    regions: ['BW', 'BY', 'ST', 'ALL', 'A'],
+                    character: characteristic.holiday
                 },
                 VALENTINSTAG: {
                     name: 'Valentinstag', // 14. 2.
+                    nameAlt: 'St.-Valentinstag',
                     month: 2,
                     day: 14,
-                    regions: []
+                    regions: [],
+                    character: characteristic.specialday
                 },
-                SCHMUDONN: {
-                    name: 'Schmutziger Donnerstag', // 52 Tage vor dem Ostersonntag
+                WEIBERFASTNACHT: {
+                    name: 'Weiberfastnacht', // 52 Tage vor dem Ostersonntag
+                    nameAlt: 'Schmotziger Donnerstag',
                     month: easterX,
                     day: -52,
-                    regions: []
+                    regions: [],
+                    character: characteristic.customday
                 },
                 ROSENMONTAG: {
                     name: 'Rosenmontag', // 48 Tage vor dem Ostersonntag
                     month: easterX,
                     day: -48,
-                    regions: []
+                    regions: [],
+                    character: characteristic.customday
                 },
                 FASTNACHTSDIENSTAG: {
                     name: 'Fastnachtsdienstag', // 47 Tage vor dem Ostersonntag
+                    namerAlt: 'Fastnacht',
                     month: easterX,
                     day: -47,
-                    regions: []
+                    regions: [],
+                    character: characteristic.customday
                 },
                 ASCHERMITTWOCH: {
                     name: 'Aschermittwoch', // 46 Tage vor dem Ostersonntag (der erste Tag der Fastenzeit)
                     month: easterX,
                     day: -46,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 PALMSONNTAG: {
                     name: 'Palmsonntag', // 7 Tage vor dem Ostersonntag
                     month: easterX,
                     day: -7,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 GRUENDONNERSTAG: {
                     name: 'Gründonnerstag', // 4 Tage vor dem Ostersonntag
                     month: easterX,
                     day: -4,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 KARFREITAG: {
                     name: 'Karfreitag',
                     month: easterX,
                     day: -2,
-                    regions: allDERegions
+                    regions: allDERegions,
+                    character: characteristic.holiday
                 },
                 OSTERSONNTAG: {
                     name: 'Ostersonntag',
                     month: easterX,
                     day: 0,
-                    regions: ['BB', 'ALL']
+                    regions: ['BB', 'ALL'],
+                    character: characteristic.holiday
                 },
                 OSTERMONTAG: {
                     name: 'Ostermontag',
                     month: easterX,
                     day: 1,
-                    regions: allRegions
+                    regions: allRegions,
+                    character: characteristic.holiday
                 },
-                JOHANISTAG: {
-                    name: 'Johannistag', // 30. April
-                    month: 4,
-                    day: 24,
-                    regions: []
+                WEISSERSONNTAG: {
+                    name: 'Weißer Sonntag',
+                    month: easterX,
+                    day: 7,
+                    regions: allRegions,
+                    character: characteristic.religion
                 },
-                MICHAELISTAG: {
-                    name: 'Michaelistag', // 30. April
+                FRUEHLINGSANFANG: {
+                    name: 'Frühlingsanfang', // 1.3. - meteorologische Frühlingsanfang
+                    month: 3,
+                    day: 1,
+                    regions: [],
+                    character: characteristic.calendar
+                },
+                FRAUENTAG: {
+                    name: 'Frauentag', // 8. März - Internationaler Frauentag
+                    month: 3,
+                    day: 8,
+                    regions: [],
+                    character: characteristic.actionday
+                },
+                APRILSCHERZ: {
+                    name: '1. April',
                     month: 4,
-                    day: 29,
-                    regions: []
+                    day: 1,
+                    regions: [],
+                    character: characteristic.customday
+                },
+                BIERTAG: {
+                    name: 'Tag des Deutschen Bieres', // 23. 4.
+                    month: 4,
+                    day: 23,
+                    regions: [],
+                    character: characteristic.actionday
                 },
                 WALPURGISNACHT: {
                     name: 'Walpurgisnacht', // 30. April
                     month: 4,
                     day: 30,
-                    regions: []
+                    regions: [],
+                    character: characteristic.customday
                 },
                 TAG_DER_ARBEIT: {
                     name: 'Maifeiertag', // 1. Mai
                     nameAlt: 'Tag der Arbeit',
                     month: 5,
                     day: 1,
-                    regions: allRegions
+                    regions: allRegions,
+                    character: characteristic.remembranceday
+                },
+                STAR_WARS_TAG: {
+                    name: '⭐ Star-Wars',
+                    month: 5,
+                    day: 4,
+                    regions: [],
+                    character: characteristic.actionday
                 },
                 EISHEILIGEN1: {
-                    name: 'Eisheiliger Mamertus', // 11. Mai
+                    name: 'Eisheiliger Mamertus', // 11. Mai - Bischof von Vienne
                     month: 5,
                     day: 11,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 EISHEILIGEN2: {
-                    name: 'Eisheiliger Pankratius', // 12. Mai
+                    name: 'Eisheiliger Pankratius', // 12. Mai - frühchristlicher Märtyre
                     month: 5,
                     day: 12,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 EISHEILIGEN3: {
-                    name: 'Eisheiliger Servatius', // 13. Mai
+                    name: 'Eisheiliger Servatius', // 13. Mai - Bischof von Tongeren
                     month: 5,
                     day: 13,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 EISHEILIGEN4: {
-                    name: 'Eisheiliger Bonifatius', // 14. Mai
+                    name: 'Eisheiliger Bonifatius', // 14. Mai - frühchristlicher Märtyrer
                     month: 5,
                     day: 14,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 EISHEILIGEN5: {
-                    name: 'Eisheilige Kalte Sophie', // 15. Mai
+                    name: 'Eisheilige Kalte Sophie', // 15. Mai - frühchristliche Märtyrin und Mutter dreier geweihter Jungfrauen
                     month: 5,
                     day: 15,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 MUTTERTAG: {
                     name: 'Muttertag', // 2. Sonntag im Mai
@@ -520,56 +595,111 @@
                     day: 7, // (1 * 7) + 0,
                     nth: 1, // 0 based
                     dow: 0,
-                    regions: []
+                    regions: [],
+                    character: characteristic.actionday
                 },
-                KINDERTAG: {
-                    name: 'Kindertag', // 1.6.
+                SOMMERANFANG: {
+                    name: 'Sommeranfang', // 1.6. - meteorologische Sommeranfang
+                    nameALt: 'Kindertag',
                     month: 6,
                     day: 1,
-                    regions: []
+                    regions: [],
+                    character: characteristic.calendar
                 },
                 CHRISTIHIMMELFAHRT: {
                     name: 'Christi Himmelfahrt',
                     nameAlt: 'Vatertag',
                     month: easterX,
                     day: 39,
-                    regions: allRegions
+                    regions: allRegions,
+                    character: characteristic.holiday
                 },
                 PFINGSTSONNTAG: {
                     name: 'Pfingstsonntag',
                     month: easterX,
                     day: 49,
-                    regions: ['BB', 'ALL']
+                    regions: ['BB', 'ALL'],
+                    character: characteristic.holiday
                 },
                 PFINGSTMONTAG: {
                     name: 'Pfingstmontag',
                     month: easterX,
                     day: 50,
-                    regions: allRegions
+                    regions: allRegions,
+                    character: characteristic.holiday
                 },
-                TRINITATISSONNTAG: {
-                    name: 'Trinitatissonntag',
+                TRINITATIS: {
+                    name: 'Trinitatis',
+                    nameAlt: 'Dreifaltigkeitssonntag',
                     month: easterX,
                     day: 56,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 FRONLEICHNAM: {
                     name: 'Fronleichnam',
                     month: easterX,
                     day: 60,
-                    regions: ['BW', 'HE', 'NW', 'RP', 'SL', 'ALL', 'A']
+                    regions: ['BW', 'HE', 'NW', 'RP', 'SL', 'ALL', 'A'],
+                    character: characteristic.holiday
+                },
+                GDRINJUSTICE: {
+                    name: 'Gedenktag des DDR-Unrechts',
+                    nameAlt: 'Aufstand des 17. Juni',
+                    month: 6,
+                    day: 17,
+                    regions: [],
+                    character: characteristic.remembranceday
+                },
+                SOMMERSONNENWENDE: {
+                    name: 'Sommersonnenwende', // 21. Juni - kalendarischer Sommeranfang (ändert sich ev. auf 20.Juni)
+                    month: 6,
+                    day: 21,
+                    regions: [],
+                    character: characteristic.calendar
+                },
+                JOHANISTAG: {
+                    name: 'Johannistag',
+                    month: 6,
+                    day: 24,
+                    regions: [],
+                    character: characteristic.religion
                 },
                 SIEBENSCHLAEFER: {
                     name: 'Siebenschläfer', // 27. Juni
                     month: 6,
                     day: 27,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
+                },
+                MITTJAHR: {
+                    name: 'Mittjahrestag',
+                    nameAlt: 'Mittjahrstag',
+                    month: 7,
+                    day: 2,
+                    regions: [],
+                    character: characteristic.calendar
                 },
                 MARIAHIMMELFAHRT: {
                     name: 'Mariä Himmelfahrt',
                     month: 8,
                     day: 15,
-                    regions: ['SL', 'BY', 'ALL', 'A']
+                    regions: ['SL', 'BY', 'ALL', 'A'],
+                    character: characteristic.religion
+                },
+                HERBSTANFANG: {
+                    name: 'Herbstanfang', // 1.9. - meteorologischer Herbstanfang
+                    month: 9,
+                    day: 1,
+                    regions: [],
+                    character: characteristic.calendar
+                },
+                MICHAELISTAG: {
+                    name: 'Michaelistag', // Tag Erzengels Michael und aller Engel
+                    month: 9,
+                    day: 29,
+                    regions: [],
+                    character: characteristic.religion
                 },
                 ERNTEDANK: {
                     name: 'Erntedank', // erster Sonntag im Oktober
@@ -577,125 +707,177 @@
                     day: 0, // (0 * 7) + 0, // old= 1,
                     nth: 0, // 0 based
                     dow: 0,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 DEUTSCHEEINHEIT: {
                     name: 'Tag der Deutschen Einheit',
                     month: 10,
                     day: 3,
-                    regions: allDERegions
+                    regions: allDERegions,
+                    character: characteristic.nationalholiday
+                },
+                KIRCHWEIH: {
+                    name: 'Kirchweih',
+                    nameAlt: 'Allerweltskirchweih', // 3. Sonntag Oktober
+                    month: 12 + 10,
+                    day: 14, // (2 * 7) + 0
+                    nth: 2, // 0 based
+                    dow: 0,
+                    regions: allDERegions,
+                    character: characteristic.holiday
                 },
                 NATIONALFEIERTAG: {
                     name: 'Nationalfeiertag', // 26. Oktober
                     month: 10,
                     day: 26,
-                    regions: ['A']
+                    regions: ['A'],
+                    character: characteristic.holiday
                 },
                 REFORMATIONSTAG: {
                     name: 'Reformationstag', // 31. Oktober
                     nameAlt: 'Halloween',
                     month: 10,
                     day: 31,
-                    regions: ['BB', 'MV', 'SN', 'ST', 'TH', 'ALL']
+                    regions: ['BB', 'MV', 'SN', 'ST', 'TH', 'ALL'],
+                    character: characteristic.holiday
                 },
                 ALLERHEILIGEN: {
                     name: 'Allerheiligen',
                     month: 11,
                     day: 1,
-                    regions: ['BW', 'BY', 'NW', 'RP', 'SL', 'ALL', 'A']
+                    regions: ['BW', 'BY', 'NW', 'RP', 'SL', 'ALL', 'A'],
+                    character: characteristic.holiday
                 },
                 ALLERSEELEN: {
                     name: 'Allerseelen', // 2. November
                     month: 11,
                     day: 2,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 MARTINSTAG: {
                     name: 'Martinstag', // 11. November
                     month: 11,
                     day: 11,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 VOLKSTRAUERTAG: {
                     name: 'Volkstrauertages', // Sonntag (3 Tage) vor dem Buß- und Bettag
                     month: adventX,
                     day: -35,
-                    regions: []
+                    regions: [],
+                    character: characteristic.remembranceday
                 },
                 BUBETAG: {
                     name: 'Buß- und Bettag',
                     month: adventX,
                     day: -32,
-                    regions: ['SN', 'ALL']
+                    regions: ['SN', 'ALL'],
+                    character: characteristic.religion
                 },
                 TOTENSONNTAG: {
                     name: 'Totensonntag', // Sonntag (4 Tage) nach dem Buß- und Bettag; eine Woche vor dem ersten Advent
                     nameAlt: 'Ewigkeitssonntag',
                     month: adventX,
                     day: -28,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 ADVENT1: {
                     name: 'erste Advent', // vierte Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 1. Advent liegen 11 Tage
                     month: adventX,
                     day: -21,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 ADVENT2: {
                     name: 'zweite Advent', // dritte Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 2. Advent liegen 18 Tage
                     month: adventX,
                     day: -14,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
+                },
+                WINTERANFANG: {
+                    name: 'Winteranfang', // 1.9. - meteorologischer Winteranfang
+                    month: 12,
+                    day: 1,
+                    regions: [],
+                    character: characteristic.calendar
                 },
                 NIKOLAUS: {
                     name: 'Nikolaus', // 6.12.
                     month: 12,
                     day: 6,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 MARIAEMPFAENGNIS: {
                     name: 'Mariä Empfängnis', // 6.12.
                     month: 12,
                     day: 8,
-                    regions: ['A']
+                    regions: ['A'],
+                    character: characteristic.religion
+                },
+                NOBELPREIS: {
+                    name: 'Nobelpreis',
+                    month: 12,
+                    day: 10,
+                    regions: [],
+                    character: characteristic.actionday
                 },
                 ADVENT3: {
                     name: 'dritte Advent', // zweite Sonntag vor Weihnachten; Zwischen Buss und Bettag und dem 3. Advent liegen 25 Tage
                     month: adventX,
                     day: -7,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 ADVENT4: {
                     name: 'vierte Advent', // Sonntag direkt vor Weihnachten; Zwischen Buss und Bettag und dem 4. Advent liegen 32 Tage
                     month: adventX,
                     day: 0,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
+                },
+                WINTERSONNENWENDE: {
+                    name: 'Wintersonnenwende', // 21.12. - kalendarischer Winteranfang
+                    month: 12,
+                    day: 22,
+                    regions: [],
+                    character: characteristic.calendar
                 },
                 HEILIGABEND: {
                     name: 'Heiligabend',
+                    nameAlt: 'Weihnachtsabend',
                     month: 12,
                     day: 24,
-                    regions: []
+                    regions: [],
+                    character: characteristic.religion
                 },
                 ERSTERWEIHNACHTSFEIERTAG: {
                     name: '1. Weihnachtstag',
                     nameAlt: 'Christtag',
                     month: 12,
                     day: 25,
-                    regions: allRegions
+                    regions: allRegions,
+                    character: characteristic.holiday
                 },
                 ZWEITERWEIHNACHTSFEIERTAG: {
                     name: '2. Weihnachtstag',
                     nameAlt: 'Stefanitag',
                     month: 12,
                     day: 26,
-                    regions: allRegions
+                    regions: allRegions,
+                    character: characteristic.holiday
                 },
                 SILVESTER: {
                     name: 'Silvester', // 31.12.
                     month: 12,
                     day: 31,
-                    regions: []
+                    regions: [],
+                    character: characteristic.calendar
                 }
             };
             // #endregion data
@@ -824,6 +1006,7 @@
                             id: key,
                             name : d.name,
                             nameAlt : d.nameAlt,
+                            character: d.character,
                             month: d.month,
                             day: d.day,
                             nth: d.nth,
@@ -855,6 +1038,7 @@
                         id: key,
                         name: d.name,
                         nameAlt: d.nameAlt,
+                        character: d.character,
                         month: d.month,
                         day: d.day,
                         nth: d.nth,
@@ -886,13 +1070,12 @@
             function edtLstAddItem(containerRow, containerIndex, data) {
                 containerRow.css({ overflow: 'hidden', whiteSpace: 'nowrap' });
                 const row = $('<div/>').appendTo(containerRow);
-                const id = (data.id || '');
                 // row1
                 // id
                 $('<input/>', {
                     class: 'node-input-item-id',
                     type: 'hidden',
-                    value: id
+                    value: (data.id || '')
                 }).appendTo(row);
                 // name
                 const $name = $('<input/>', {
@@ -906,6 +1089,11 @@
                     class: 'node-input-item-nameAlt',
                     type: 'hidden',
                     value: (data.nameAlt || '')
+                }).appendTo(row);
+                $('<input/>', {
+                    class: 'node-input-item-character',
+                    type: 'hidden',
+                    value: (data.character || 0)
                 }).appendTo(row);
                 // month
                 const $month = $('<select/>', {
@@ -966,7 +1154,7 @@
                 });
                 $month.val(isNaN(data.month) ? 1 : data.month);
                 $month.change();
-                if (id !== '') {
+                if (data.id || data.nameAlt || data.character) {
                     $name.prop( 'disabled', true );
                 }
                 $btn.button();
@@ -1007,34 +1195,41 @@
                 addHolidays(node, oldValue);
                 $('#node-input-region').val('');
             }
-
-            const year = (new Date()).getUTCFullYear();
-            const easter_date = getEasterDate(year);
-            const christmas_date = _makeDate(year, 12, 25);
-            const advent4th_Offset = (christmas_date.getDay() % 7) || 7;
-            // if (advent4th_Offset === 0) { advent4th_Offset = 7; }
-            const advent4th_date = _makeDate(year, christmas_date, -advent4th_Offset);
             // #endregion migrate
 
             // #region dialog
+            const year = (new Date()).getUTCFullYear();
+            const easter_date = getEasterDate(year);
+            const christmas_date = _makeDate(year, 12, 25);
+            const advent4th_Offset = (christmas_date.getDay() % 7) || 7; // 0 will changed to 7
+            const advent4th_date = _makeDate(year, christmas_date, -advent4th_Offset);
+
+            const year_next = year + 1;
+            const easter_date_next = getEasterDate(year_next);
+            const christmas_date_next = _makeDate(year_next, 12, 25);
+            const advent4th_Offset_next = (christmas_date.getDay() % 7) || 7; // 0 will changed to 7
+            const advent4th_date_next = _makeDate(year_next, christmas_date_next, -advent4th_Offset_next);
+
             let $dialogConnFields = {};
             const $dialogId = $('#dialog-input-id');
             const $dialogName = $('#dialog-input-name');
             const $dialogNameAlt = $('#dialog-input-nameAlt');
-            const $dialogTyp = $('#dialog-input-typ');
+            const $dialogCharacter = $('#dialog-input-character');
+            const $dialogDateType = $('#dialog-input-date-type');
             const $dialogDate = $('#dialog-input-date');
             const $dialogMonth = $('#dialog-input-month');
             const $dialogNthdow = $('#dialog-input-nthdow');
             const $dialogDayofweek = $('#dialog-input-dayofweek');
 
             const $dialogDaysRel = $('#dialog-input-daysRel');
-            // const $dialogLabel = $('#dialog-label-date-out');
+            const $dialogLabel = $('#dialog-label-date-out');
 
             function dialogLoadData(rule) {
                 $dialogConnFields = rule;
                 $dialogId.val(rule.find('.node-input-item-id').val());
                 $dialogName.val(rule.find('.node-input-item-name').val());
                 $dialogNameAlt.val(rule.find('.node-input-item-nameAlt').val());
+                $dialogCharacter.val(rule.find('.node-input-item-character').val());
                 $dialogDaysRel.val(rule.find('.node-input-item-day').val());
 
                 const month = parseInt(rule.find('.node-input-item-month').val());
@@ -1045,28 +1240,28 @@
                 $dialogMonth.val('1');
 
                 if (month >= 1 && month <= 12) {
-                    $dialogTyp.val('date');
+                    $dialogDateType.val('date');
                     const date = new Date();
                     date.setUTCHours(0,0,0,0);
                     date.setUTCMonth(month - 1,day);
                     $dialogDate.datepicker('setDate', date);
                 } else if (month >= 13 && month <= 24) {
-                    $dialogTyp.val('weekdayfirst');
+                    $dialogDateType.val('weekdayfirst');
                     $dialogMonth.val(String(month - 12));
                 } else if (month >= 25 && month <= 36) {
-                    $dialogTyp.val('weekdaylast');
+                    $dialogDateType.val('weekdaylast');
                     $dialogMonth.val(String(month - 24));
                 } else if (month === -1) {
-                    $dialogTyp.val('easter');
+                    $dialogDateType.val('easter');
                     $dialogMonth.val('-1');
                 } else if (month === -2) {
-                    $dialogTyp.val('advent');
+                    $dialogDateType.val('advent');
                     $dialogMonth.val('-2');
                 } else {
-                    $dialogTyp.val('date');
+                    $dialogDateType.val('date');
                     $dialogDate.datepicker('setDate', null);
                 }
-                $dialogTyp.change();
+                $dialogDateType.change();
                 $dialog.dialog('open');
             }
 
@@ -1076,7 +1271,8 @@
                 $dialogConnFields.find('.node-input-item-id').val($dialogId.val());
                 $dialogConnFields.find('.node-input-item-name').val($dialogName.val());
                 $dialogConnFields.find('.node-input-item-nameAlt').val($dialogNameAlt.val());
-                switch ($dialogTyp.val()) {
+                $dialogConnFields.find('.node-input-item-character').val($dialogCharacter.val());
+                switch ($dialogDateType.val()) {
                     case 'easter':
                         $dialogConnFields.find('.node-input-item-month').val('-1');
                         $dialogConnFields.find('.node-input-item-day').val($dialogDaysRel.val());
@@ -1120,26 +1316,35 @@
 
             function dialogDateOutChg() {
                 let date = null;
-                switch ($dialogTyp.val()) {
+                let date2 = null;
+                switch ($dialogDateType.val()) {
                     case 'easter': {
-                        date = _makeDate(year, easter_date, parseInt($dialogDaysRel.val()));
+                        const val = parseInt($dialogDaysRel.val());
+                        date = _makeDate(year, easter_date, val);
+                        date2 = _makeDate(year_next, easter_date_next, val);
                         break;
                     }
                     case 'advent': {
-                        date = _makeDate(year, advent4th_date, parseInt($dialogDaysRel.val()));
+                        const val = parseInt($dialogDaysRel.val());
+                        date = _makeDate(year, advent4th_date, val);
+                        date2 = _makeDate(year_next, advent4th_date_next, val);
                         break;
                     }
                     case 'weekdayfirst': {
                         const val = ((parseInt($dialogNthdow.val()) - 1) * 7 + parseInt($dialogDayofweek.val()));
                         $dialogDaysRel.val(String(val));
-                        date = _makeDate(year, parseInt($dialogMonth.val()) + 12, val);
+                        const month = parseInt($dialogMonth.val()) + 12;
+                        date = _makeDate(year, month, val);
+                        date2 = _makeDate(year_next, month, val);
                         $("label[for='dialog-input-nthdow']").text(node._('german-holidays.label.dowRelFirst'));
                         break;
                     }
                     case 'weekdaylast': {
                         const val = ((parseInt($dialogNthdow.val()) - 1) * 7 + parseInt($dialogDayofweek.val()));
                         $dialogDaysRel.val(String(val));
-                        date = _makeDate(year, parseInt($dialogMonth.val()) + 24, val);
+                        const month = parseInt($dialogMonth.val()) + 24;
+                        date = _makeDate(year, month, val);
+                        date2 = _makeDate(year_next, month, val);
                         $("label[for='dialog-input-nthdow']").text(node._('german-holidays.label.dowRelLast'));
                         break;
                     }
@@ -1148,9 +1353,12 @@
                         break;
                     }
                 }
-                // const lblText = $.datepicker.formatDate('MM d (yy-mm-dd)', date);
-                // $dialogLabel.text(lblText);
-                const dlgTitle = node._('german-holidays.label.dialogtitle') + ' [' + $.datepicker.formatDate('MM d (yy-mm-dd)', date) + ']';
+                const dlgTitle = node._('german-holidays.label.dialogtitle') + ' [' + $dialogId.val() + ' / ' + $.datepicker.formatDate('yy-mm-dd', date) + ']';
+                if (date2) {
+                    $dialogLabel.text(node._('german-holidays.label.exampleDate') + ' ' + $.datepicker.formatDate('yy: MM d', date) + ' / ' + $.datepicker.formatDate('yy: MM d', date2));
+                } else {
+                    $dialogLabel.text(node._('german-holidays.label.exampleDate') + ' ' + $.datepicker.formatDate('MM d (mm-dd)', date));
+                }
                 $dialog.dialog('option', 'title', dlgTitle);
 
             }
@@ -1164,11 +1372,16 @@
                 showButtonPanel: true
             });
 
-            $dialogTyp.append($('<option></option>').val('date').text(node._('german-holidays.label.date')));
-            $dialogTyp.append($('<option></option>').val('easter').text(node._('german-holidays.label.relEaster')));
-            $dialogTyp.append($('<option></option>').val('advent').text(node._('german-holidays.label.rel4ThAdvent')));
-            $dialogTyp.append($('<option></option>').val('weekdayfirst').text(node._('german-holidays.label.relDayOfWeekFirst')));
-            $dialogTyp.append($('<option></option>').val('weekdaylast').text(node._('german-holidays.label.relDayOfWeekLast')));
+            Object.keys(characteristic).forEach((key) => {
+                const c = characteristic[key];
+                $dialogCharacter.append($('<option></option>').val(c).text(node._('german-holidays.characteristic.' + key)));
+            });
+
+            $dialogDateType.append($('<option></option>').val('date').text(node._('german-holidays.label.date')));
+            $dialogDateType.append($('<option></option>').val('easter').text(node._('german-holidays.label.relEaster')));
+            $dialogDateType.append($('<option></option>').val('advent').text(node._('german-holidays.label.rel4ThAdvent')));
+            $dialogDateType.append($('<option></option>').val('weekdayfirst').text(node._('german-holidays.label.relDayOfWeekFirst')));
+            $dialogDateType.append($('<option></option>').val('weekdaylast').text(node._('german-holidays.label.relDayOfWeekLast')));
 
             for (let index = 1; index <= 12; index++) {
                 $dialogMonth.append($('<option></option>').val(index).text(node._('german-holidays.month.' + String(index - 1))));
@@ -1181,14 +1394,15 @@
             $("label[for='dialog-input-id']").text(node._('german-holidays.label.id'));
             $("label[for='dialog-input-name']").text(node._('german-holidays.label.name'));
             $("label[for='dialog-input-nameAlt']").text(node._('german-holidays.label.nameAlt'));
-            $("label[for='dialog-input-typ']").text(node._('german-holidays.label.type'));
+            $("label[for='dialog-input-character']").text(node._('german-holidays.label.character'));
+            $("label[for='dialog-input-date-type']").text(node._('german-holidays.label.dateType'));
             $("label[for='dialog-input-date']").text(node._('german-holidays.label.date'));
             $("label[for='dialog-input-month']").text(node._('german-holidays.label.month'));
             $("label[for='dialog-input-month']").text(node._('german-holidays.label.month'));
 
 
-            $dialogTyp.change(() => {
-                switch ($dialogTyp.val()) {
+            $dialogDateType.change(() => {
+                switch ($dialogDateType.val()) {
                     case 'easter':
                         $('.dialog-input-date-row').hide();
                         $('.dialog-input-month-row').hide();
@@ -1216,6 +1430,7 @@
                 }
                 dialogDateOutChg();
             });
+            $dialogId.change(() => { dialogDateOutChg(); });
             $dialogMonth.change(() => { dialogDateOutChg(); });
             $dialogDaysRel.change(() => { dialogDateOutChg(); });
             $dialogNthdow.change(() => { dialogDateOutChg(); });
@@ -1225,8 +1440,9 @@
             const $dialog = $('#dialog-edit-day').dialog({
                 title: node._('german-holidays.label.dialogtitle'),
                 autoOpen: false,
-                height: 500,
-                width: 530,
+                resizable: true,
+                height: Math.min(580, $(window).height() * 0.8),
+                width: Math.min(530, $(window).width() * 0.8),
                 modal: true,
                 closeOnEscape: true,
                 buttons: {

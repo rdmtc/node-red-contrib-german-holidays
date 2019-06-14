@@ -3,7 +3,7 @@
         "label": {
             "region": "Bundesland",
             "holidayList": "Freie oder Feiertage",
-            "specialdayList": "Gedenk-, Aktions-, Geburts- und Jahrestage die keine Feiertage sind",
+            "specialdayList": "Gedenk-, Aktions-, Geburts-, Jahres- und Brauchtumstage die keine Feiertage sind",
             "addSpecialdayBtn": "vordefinierte hinzufügen",
             "clearHolidayBtn": "Liste leeren",
             "clearSpecialdayBtn": "Liste leeren",
@@ -17,10 +17,12 @@
             "relDays": "relative Tage",
             "dowRelFirst": "erster Wochentag",
             "dowRelLast": "letzter Wochentag",
-            "type": "Typ",
+            "dateType": "Datumstyp",
+            "character": "Eigenschaft",
             "id": "ID",
             "name": "Name",
-            "nameAlt": "Alternativer Name"
+            "nameAlt": "Alternativer Name",
+            "exampleDate": "beispielhaftes Datum:"
         },
         "placeholder": {
             "region": "wähle region der Feiertage",
@@ -28,6 +30,24 @@
             "namePreDefined": "Name des vordefinierten Tages",
             "month": "Monat 1-12",
             "day": "Tag - absolut: 1-31, relativ -300 - 300"
+        },
+        "characteristic": {
+            "unspecified": "<nicht spezifiziert>",
+            "calendar": "Kalender Ereignis",
+            "holiday": "Feiertag",
+            "nationalholiday": "Nationalfeiertag",
+            "birthday": "Geburtstag",
+            "anniversary": "Jahrestag",
+            "actionday": "Aktionstag",
+            "customday": "Brauchtumstag",
+            "specialday": "Festtag",
+            "remembranceday": "Gedenktag",
+            "carnival": "Volksfest, Karneval, Fest",
+            "religion": "Religion, Glaube, Kult",
+            "event": "Veranstaltung",
+            "festival": "Festspiele, Festival",
+            "meeting": "Treffen, Tagung, Versammlung, Meeting",
+            "operation": "Einsatz, Operation"
         },
         "region": {
             "none": "<wählen um vordefinierte Hinzugefügt werden sollen>",

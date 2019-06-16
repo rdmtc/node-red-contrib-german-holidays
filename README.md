@@ -73,13 +73,13 @@ if the input property day or date was set, the payload is only a day object with
 
 This object has all properties of the generic day object:
 
-- `id` _string_ an id of the object. If it is a holiday the `holiday.id`, if it is a special day `specialday.id`, otherwise equal to `weekday.id`.
-- `name` _string_ name of the day. If it is a holiday the `holiday.name`, if it is a special day `specialday.name`, otherwise equal to `weekday.name`.
-- `nameAlt` _string_ alternative name of the day if defined. If it is a holiday the `holiday.nameAlt`, if it is a special day `specialday.nameAlt`, otherwise equal to `weekday.nameAlt`.
-- `weekday` _object_ object of the day of week.
-- `weekday.id` _string_  id of the day of week.
-- `weekday.name` _string_  name of the day of week.
-- `weekday.nameAlt` _string_  alternate name of the day of week.
+- `id` _string_ an id of the object. If it is a holiday the `holiday.id`, if it is a special day `specialday.id`, otherwise equal to `type[0].id`.
+- `name` _string_ name of the day. If it is a holiday the `holiday.name`, if it is a special day `specialday.name`, otherwise equal to `type[0].name`.
+- `nameAlt` _string_ alternative name of the day if defined. If it is a holiday the `holiday.nameAlt`, if it is a special day `specialday.nameAlt`, otherwise equal to `type[0].nameAlt`.
+- `type` _array_ array of objects, where first element represents the day of week.
+- `type[0].id` _string_  id of the day of week.
+- `type[0].name` _string_  name of the day of week.
+- `type[0].nameAlt` _string_  alternate name of the day of week.
 - `isSaturday` _boolean_ is true if the day is Saturday.
 - `isSunday` _boolean_ is true if the day is Sunday.
 - `isHoliday` _boolean_ is true if the day is a holiday.
@@ -144,6 +144,10 @@ Even for those that don't have the technical knowhow to help developing on there
 
 Licensed under the MIT License (MIT) License. (See LICENCE file)
 This was developed by using the https://github.com/sfakir/feiertagejs.
+
+## TODO
+
+[] allow more then one holiday and special day for a day. (currently only one are allowed)
 
 ## Other
 

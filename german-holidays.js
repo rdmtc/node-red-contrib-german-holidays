@@ -217,7 +217,7 @@ const errorHandler = function (node, err, messageText, stateText) {
  * @param {number} n number to format
  * @returns {string} number with minimum two digits
  */
-function pad2(n) { // always returns a string
+function _pad2(n) { // always returns a string
     return (n < 0 || (n > 9 ? '' : '0')) + n;
 }
 
@@ -227,7 +227,7 @@ function pad2(n) { // always returns a string
  *  @returns {string} date representation
  */
 function _dateToString(d) {
-    return d.getUTCFullYear() + '-' + pad2(d.getUTCMonth() + 1) + '-' + pad2(d.getUTCDate()) + 'T' + pad2(d.getUTCHours()) + ':' + pad2(d.getUTCMinutes()) + 'Z';
+    return d.getUTCFullYear() + '-' + _pad2(d.getUTCMonth() + 1) + '-' + _pad2(d.getUTCDate()) + 'T' + _pad2(d.getUTCHours()) + ':' + _pad2(d.getUTCMinutes()) + 'Z';
 }
 /*******************************************************************************************************/
 /**
@@ -235,7 +235,7 @@ function _dateToString(d) {
  * @param d date for determinate week number
  * @returns number current week number
  */
-function getWeekNumber(d) {
+function _getWeekNumber(d) {
     // Copy date so don't modify original
     d = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
     const dayNum = d.getUTCDay() || 7;
@@ -309,31 +309,38 @@ function _getSpecialDaysOfYear(node, year, region, force, calcNext) {
         return node.default.dayObjs;
     }
 
-    const easter_date = getEasterDate(year);
-    const christmas_date = _makeDate(year, 12, 25);
-    const advent4th_Offset = (christmas_date.getDay() % 7) || 7;
-    // if (advent4th_Offset === 0) { advent4th_Offset = 7; }
-    const advent4th = _makeDate(year, christmas_date, -advent4th_Offset);
+    const easter = _getEasterDate(year);
+    const advent4th = _getAdvent4th(year);
 
-    const specialdaysObjects = [];
-    _addDaysToArray(node.specialdaysArray, specialdaysObjects, year, easter_date, christmas_date, advent4th);
-    if (calcNext === true) {
-        _addDaysToArray(node.specialdaysArray, specialdaysObjects, year + 1, easter_date, christmas_date, advent4th);
-    }
 
     const holidayObjects = [];
+    const specialdaysObjects = [];
     _addToArrayForRegion(holidayObjects, region);
-    _addDaysToArray(node.holidaysArray, holidayObjects, year, easter_date, christmas_date, advent4th);
+    _addDaysToArray(node.holidaysArray, holidayObjects, year, easter, advent4th, node.characters);
+    _addDaysToArray(node.specialdaysArray, specialdaysObjects, year, easter, advent4th, node.characters);
+
     if (calcNext === true) {
-        _addDaysToArray(node.holidaysArray, holidayObjects, year + 1, easter_date, christmas_date, advent4th);
+        const yearNext = year + 1;
+        const easterNext = _getEasterDate(yearNext);
+        const advent4thNext = _getAdvent4th(yearNext);
+
+        _addDaysToArray(node.holidaysArray, holidayObjects, yearNext, easterNext, advent4thNext, node.characters);
+        _addDaysToArray(node.specialdaysArray, specialdaysObjects, yearNext, easterNext, advent4thNext, node.characters);
     }
+
+    holidayObjects.sort(
+        (a, b) => a.date.getTime() - b.date.getTime()
+    );
+    specialdaysObjects.sort(
+        (a, b) => a.date.getTime() - b.date.getTime()
+    );
 
     return {
         holidays: holidayObjects,
         specialdays: specialdaysObjects,
         integers: {
-            holidays: generateIntegerRepresentation(holidayObjects),
-            specialdays: generateIntegerRepresentation(specialdaysObjects)
+            holidays: _getIntRepr(holidayObjects),
+            specialdays: _getIntRepr(specialdaysObjects)
         }
     };
 }
@@ -344,8 +351,8 @@ function _getSpecialDaysOfYear(node, year, region, force, calcNext) {
  * @returns {Array}
  * @private
  */
-function generateIntegerRepresentation(objects) {
-    return objects.map(holiday => toUtcTimestamp(holiday.date));
+function _getIntRepr(objects) {
+    return objects.map(holiday => _toUtcTimestamp(holiday.date));
 }
 
 /**
@@ -354,7 +361,7 @@ function generateIntegerRepresentation(objects) {
  * @returns {Date} Easter date
  * @private
  */
-function getEasterDate(year) {
+function _getEasterDate(year) {
     const C = Math.floor(year / 100);
     const N = year - 19 * Math.floor(year / 19);
     const K = Math.floor((C - 17) / 25);
@@ -372,6 +379,18 @@ function getEasterDate(year) {
     const M = 3 + Math.floor((L + 40) / 44);
     const D = L + 28 - 31 * Math.floor(M / 4);
     return new Date(Date.UTC(year, M - 1, D));
+}
+
+/**
+ * Calculates the 4th Advent date of a given year.
+ * @param year {number}
+ * @returns {Date} 4th Advent date
+ * @private
+ */
+function _getAdvent4th(year) {
+    const date = _makeDate(year, 12, 25);
+    const offset = ((date.getDay() % 7) || 7);
+    return _makeDate(year, date, -offset);
 }
 
 /**
@@ -442,27 +461,18 @@ function _makeDate(year, naturalMonthOrRef, day) {
     return null;
 }
 
-function _getCharacterNames(character) {
-    const result = [];
-
-    Object.keys(characteristic).forEach((key) => {
-        const mask = characteristic[key];
-        if ((character & mask) !== 0) { // bit is set
-            result.push(RED._('german-holidays.characteristic.' + key));
-        }
-    });
-    return result;
-}
-
 /**
  * generates a day object
  * @param {String} id  -  id of the object
  * @param {Date} date  -  date of the day
  * @param {String} name  -  name of the day
+ * @param {String} [nameAlt]  -  alterntive name of the day
+ * @param {*} [character]  -  character of the day
+ * @param {*} [characteristics]  -  characteristics of the day
  * @returns day
  * @private
  */
-function _newDay(id, date, name, nameAlt, character) {
+function _newDay(id, date, name, nameAlt, character, characteristics) {
     if (!date) {
         return null;
     }
@@ -480,9 +490,9 @@ function _newDay(id, date, name, nameAlt, character) {
         date, // : new Date(year, month, day, hours, minutes, seconds, milliseconds),
         dateString: _localeDateObjectToDateString(date),
         dateISOString: date.toISOString(),
-        characteristics: _getCharacterNames(character),
+        characteristics,
         getNormalizedDate() {
-            return toUtcTimestamp(this.date);
+            return _toUtcTimestamp(this.date);
         },
         equals(date) {
             const string = _localeDateObjectToDateString(date);
@@ -490,9 +500,21 @@ function _newDay(id, date, name, nameAlt, character) {
         }
     };
     if (!obj.id) {
-        obj.id = (pad2(obj.naturalMonth) + '-' + pad2(obj.day));
+        obj.id = (_pad2(obj.naturalMonth) + '-' + _pad2(obj.day));
     }
     return obj;
+}
+
+function _getCharacterNames(character, arr) {
+    const result = [];
+    if(character && arr) {
+        arr.forEach(el => {
+            if ((character & el.id) !== 0) { // bit is set
+                result.push(el.name);
+            }
+        });
+    }
+    return result;
 }
 
 /**
@@ -502,8 +524,9 @@ function _newDay(id, date, name, nameAlt, character) {
  * @param {Number} year  -  year for makeDate
  * @param {Date} easter_date  -  easter data for relative day setting
  * @param {Date} advent4th  -  advent data for relative day setting
+ * @param {Array} characters  -  array of characteristics
  */
-function _addDaysToArray(daysDefinitionArray, outArr, year, easter_date, advent4th) {
+function _addDaysToArray(daysDefinitionArray, outArr, year, easter_date, advent4th, characters) {
     if (daysDefinitionArray && daysDefinitionArray.length > 0) {
         daysDefinitionArray.forEach(d => {
             let month = parseInt(d.month);
@@ -514,14 +537,10 @@ function _addDaysToArray(daysDefinitionArray, outArr, year, easter_date, advent4
                 } else if (month === adventX) {
                     month = advent4th;
                 }
-                _pushUnique(outArr, _newDay(d.id, _makeDate(year, month, day), d.name, d.nameAlt, d.character));
+                _pushUnique(outArr, _newDay(d.id, _makeDate(year, month, day), d.name, d.nameAlt, d.character, _getCharacterNames(d.character, characters)));
             }
         });
     }
-
-    outArr.sort(
-        (a, b) => a.date.getTime() - b.date.getTime()
-    );
 }
 
 /**
@@ -541,7 +560,7 @@ function _localeDateObjectToDateString(date) {
  * @param {Date} date
  * @returns {number} UTC timestamp
  */
-function toUtcTimestamp(date) {
+function _toUtcTimestamp(date) {
     date.setUTCHours(0, 0, 0, 0);
     return date.getTime();
 }
@@ -565,9 +584,19 @@ module.exports = function (RED) {
             _addToArrayForRegion(this.holidaysArray, config.region);
             delete config.region;
         }
+
+        this.characters = [];
+        Object.keys(characteristic).forEach((key) => {
+            const id = characteristic[key];
+            this.characters.push({
+                key,
+                id,
+                name : RED._('german-holidays.characteristic.' + key)
+            });
+        });
+
         // const node = this;
 
-        // holidays API
         /**
          * get the data for a date.
          * @param RED Red Data
@@ -578,15 +607,15 @@ module.exports = function (RED) {
          */
         this.getDataForDate = (date, daysObjects, offsetToday) => {
             const d = date.getDay(); // gets the day of week
-            // const internalDate = toUtcTimestamp(date);
+            // const internalDate = _toUtcTimestamp(date);
             const result = _newDay(undefined, date, RED._('german-holidays.days.' + d), RED._('german-holidays.days.' + (d + 7)));
-
-            result.weekday = {
+            result.type = [{
                 id: result.id,
                 name: result.name,
                 nameAlt: result.nameAlt,
-                character: result.character
-            };
+                character: result.character,
+                characteristics: result.characteristics
+            }];
 
             result.isSunday = (result.dayOfWeek === 0);
             result.isSaturday = (result.dayOfWeek === 6);
@@ -616,12 +645,14 @@ module.exports = function (RED) {
             }
 
             if (result.holiday) {
+                result.type.push(result.holiday);
                 result.character |= result.holiday.character;
             }
             if (result.specialday) {
+                result.type.push(result.specialday);
                 result.character |= result.specialday.character;
             }
-            result.characteristics = _getCharacterNames(result.character);
+            result.characteristics = _getCharacterNames(result.character, this.characters);
 
             return result;
         };
@@ -773,7 +804,7 @@ module.exports = function (RED) {
                         specialdays: [],
                         specialdaysDiff: []
                     },
-                    weekNumber: getWeekNumber(outMsg.data.ts)
+                    weekNumber: _getWeekNumber(outMsg.data.ts)
                 };
                 outMsg.payload.yesterday = this.getDataForDay(outMsg.data.ts, -1, dayObjs);
                 outMsg.payload.today = this.getDataForDate(outMsg.data.ts, dayObjs, 0); // getDataForDay(outMsg.data.ts, 0, holidays);
@@ -844,7 +875,7 @@ module.exports = function (RED) {
                 if (outMsg.payload.today.dayOfWeek === 6) {
                     const date = new Date(outMsg.data.ts);
                     date.setDate(date.getDate() + 1);
-                    outMsg.payload.next.weekendDay = _newDay(undefined, date, RED._('german-holidays.days.0'), RED._('german-holidays.days.7'), characteristic.calendar);
+                    outMsg.payload.next.weekendDay = _newDay(undefined, date, RED._('german-holidays.days.0'), RED._('german-holidays.days.7'));
                 } else {
                     const dayOfWeek = 6; // Saturday
                     const date = new Date(outMsg.data.ts);
@@ -855,7 +886,7 @@ module.exports = function (RED) {
                         date.setDate(date.getDate() + ((-1) * diff));
                     }
 
-                    outMsg.payload.next.weekendDay = _newDay(undefined, date, RED._('german-holidays.days.6'), RED._('german-holidays.days.13'), characteristic.calendar);
+                    outMsg.payload.next.weekendDay = _newDay(undefined, date, RED._('german-holidays.days.6'), RED._('german-holidays.days.13'));
                 }
 
                 outMsg.payload.next.weekendOrHolidayDiff = (outMsg.payload.next.hollidayDiff) ? Math.min(outMsg.payload.next.hollidayDiff, outMsg.payload.next.weekendDayDiff) : outMsg.payload.next.weekendDayDiff;

@@ -295,14 +295,11 @@ function _addToArrayForRegion(arrayToAdd, region) {
  * @param {String} [region]  -  force to recalculate, otherwise load existing data
  * @param {Boolean} [force]  -  force to recalculate, otherwise load existing data
  * @param {Boolean} [calcNext]  -  calculate the holiday also for the next year
- * @returns objects: Array,integers
+ * @returns objects: Array
  * @private
  */
 function _getSpecialDaysOfYear(node, year, region, force, calcNext) {
     node.debug(`_getSpecialDaysOfYear year=${year}, region=${region}, force=${force}, calcNext=${calcNext}`);
-    if (isNaN(year)) {
-        year = node.default.year;
-    }
 
     if (node.default.dayObjs && (node.default.year === year) && (force !== true) && !region) {
         // node.debug('return default obj');
@@ -337,22 +334,8 @@ function _getSpecialDaysOfYear(node, year, region, force, calcNext) {
 
     return {
         holidays: holidayObjects,
-        specialdays: specialdaysObjects,
-        integers: {
-            holidays: _getIntRepr(holidayObjects),
-            specialdays: _getIntRepr(specialdaysObjects)
-        }
+        specialdays: specialdaysObjects
     };
-}
-
-/**
- * generates an integer representation array of the days array
- * @param objects
- * @returns {Array}
- * @private
- */
-function _getIntRepr(objects) {
-    return objects.map(holiday => _toUtcTimestamp(holiday.date));
 }
 
 /**
@@ -402,7 +385,7 @@ function _getAdvent4th(year) {
  * @returns {Date}  -  new Date
  */
 function _firstNthWeekdayOfMonth(year, month, dayOfWeek, n) {
-    const date = new Date(year, month, 1);
+    const date = new Date(Date.UTC(year, month, 1));
     const add = (dayOfWeek - date.getDay() + 7) % 7 + n * 7;
     date.setDate(1 + add);
     return date;
@@ -417,7 +400,7 @@ function _firstNthWeekdayOfMonth(year, month, dayOfWeek, n) {
  * @returns {Date}  -  new Date
  */
 function _lastNthWeekdayOfMonth(year, month, dayOfWeek, n) {
-    const date = new Date(year, month + 1, 0);
+    const date = new Date(Date.UTC(year, month + 1, 0));
     const dy = date.getDay(); // day of week
     if ( dy < dayOfWeek) {
         dayOfWeek -= 7;
@@ -482,18 +465,17 @@ function _newDay(id, date, name, nameAlt, character, characteristics) {
         name,
         nameAlt,
         character,
-        dayOfWeek: date.getUTCDay(),
-        day: date.getUTCDate(),
-        month: date.getUTCMonth(),
-        naturalMonth: date.getUTCMonth() + 1,
-        year: date.getUTCFullYear(),
+        dayOfWeek: date.getDay(), // date.getUTCDay(),
+        day: date.getDate(), // date.getUTCDate(),
+        month: date.getMonth(), // date.getUTCMonth(),
+        naturalMonth: date.getMonth() + 1,// date.getUTCMonth() + 1,
+        year: date.getFullYear(), // date.getUTCFullYear(),
         date, // : new Date(year, month, day, hours, minutes, seconds, milliseconds),
+        ts: _toTimestamp(date),
+        tsUTC: _toUtcTimestamp(date),
         dateString: _localeDateObjectToDateString(date),
         dateISOString: date.toISOString(),
         characteristics,
-        getNormalizedDate() {
-            return _toUtcTimestamp(this.date);
-        },
         equals(date) {
             const string = _localeDateObjectToDateString(date);
             return this.dateString === string;
@@ -565,15 +547,15 @@ function _toUtcTimestamp(date) {
     return date.getTime();
 }
 
+function _toTimestamp(date) {
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+}
+
 module.exports = function (RED) {
     function germanHolidaysNode(config) {
         RED.nodes.createNode(this, config);
-
-
-        this.default = {
-            today: new Date()
-        };
-
+        this.default = {  };
         this.holidaysArray = config.holidays || [];
         this.specialdaysArray = config.specialdays || [];
 
@@ -607,7 +589,6 @@ module.exports = function (RED) {
          */
         this.getDataForDate = (date, daysObjects, offsetToday) => {
             const d = date.getDay(); // gets the day of week
-            // const internalDate = _toUtcTimestamp(date);
             const result = _newDay(undefined, date, RED._('german-holidays.days.' + d), RED._('german-holidays.days.' + (d + 7)));
             result.type = [{
                 id: result.id,
@@ -711,6 +692,7 @@ module.exports = function (RED) {
                     const dto = new Date(msg.payload);
                     if (dto !== 'Invalid Date' && !isNaN(dto)) {
                         outMsg.data.ts = dto;
+                        outMsg.data.comment = 'for ts using payload;';
                     }
                 }
                 // this.debug(JSON.stringify(outMsg, Object.getOwnPropertyNames(outMsg)));
@@ -744,6 +726,7 @@ module.exports = function (RED) {
                 if ((typeof outMsg.data.date !== 'undefined') && ((outMsg.data.date instanceof Date) || (typeof outMsg.data.date === 'string'))) {
                     const dto = new Date(outMsg.data.date);
                     if (dto !== 'Invalid Date' && !isNaN(dto)) {
+                        outMsg.data.comment = 'data date';
                         outMsg.data.year = dto.getUTCFullYear();
                         const specialdays = _getSpecialDaysOfYear(this, outMsg.data.year, outMsg.data.region);
                         outMsg.payload = this.getDataForDate(dto, specialdays);
@@ -751,7 +734,7 @@ module.exports = function (RED) {
                         this.status({
                             fill: 'grey',
                             shape: 'ring',
-                            text: _dateToString(outMsg.data.ts)
+                            text: _dateToString(dto)
                         });
                         return;
                     }
@@ -760,15 +743,17 @@ module.exports = function (RED) {
                 if (typeof outMsg.data.ts === 'string') {
                     const dto = new Date(outMsg.data.ts);
                     if (dto !== 'Invalid Date' && !isNaN(dto)) {
+                        outMsg.data.comment = 'data.ts "' + outMsg.data.ts + '" = ' + dto.toISOString();
                         outMsg.data.ts = dto;
                     }
                 }
 
                 _checkDefault(this);
                 if ((typeof outMsg.data.ts !== 'undefined') && (outMsg.data.ts instanceof Date)) {
-                    outMsg.data.year = outMsg.data.ts.getUTCFullYear();
+                    outMsg.data.year = outMsg.data.ts.getFullYear();
                 } else  if ((typeof outMsg.data.ts === 'undefined') || !(outMsg.data.ts instanceof Date)) {
                     outMsg.data.ts = this.default.ts;
+                    outMsg.data.comment = 'use default timestamp';
                 }
 
                 if (typeof outMsg.data.day !== 'undefined' || !isNaN(outMsg.data.day)) {
@@ -795,9 +780,7 @@ module.exports = function (RED) {
                     dayAfterTomorrow: {},
                     afterTheDayAfterTomorrow: {},
                     hollidays: dayObjs.holidays,
-                    hollidaysNum: dayObjs.integers.holidays,
                     specialdays: dayObjs.specialdays,
-                    specialdaysNum: dayObjs.integers.specialdays,
                     next: {
                         hollidays : [],
                         hollidaysDiff : [],

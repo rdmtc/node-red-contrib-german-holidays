@@ -244,10 +244,10 @@ function _getWeekNumber(d) {
     return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
 }
 
-function _checkDefault(node) {
-    node.default.ts = new Date();
-    const newYear = node.default.ts.getUTCFullYear();
+function _checkDefault(node, ts) {
+    const newYear = (new Date()).getUTCFullYear();
     if (newYear !== node.default.year) {
+        node.default.ts = ts;
         node.default.year = newYear;
         node.default.dayObjs = _getSpecialDaysOfYear(node, node.default.year, undefined, true, true);
     }
@@ -543,13 +543,15 @@ function _localeDateObjectToDateString(date) {
  * @returns {number} UTC timestamp
  */
 function _toUtcTimestamp(date) {
-    date.setUTCHours(0, 0, 0, 0);
-    return date.getTime();
+    const d = new Date(date);
+    d.setUTCHours(0, 0, 0, 0);
+    return d.getTime();
 }
 
 function _toTimestamp(date) {
-    date.setHours(0, 0, 0, 0);
-    return date.getTime();
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    return d.getTime();
 }
 
 module.exports = function (RED) {
@@ -664,11 +666,8 @@ module.exports = function (RED) {
                 // var creds = RED.nodes.getNode(config.creds); - not used
                 const attrs = ['region', 'day', 'date', 'ts', 'year'];
 
-                const outMsg = {
-                    payload: {},
-                    topic: msg.topic,
-                    data: {}
-                };
+                const outMsg = RED.util.cloneMessage(msg);
+                outMsg.data = {};
 
                 for (const attr of attrs) {
                     // value === 'undefined' || value === null --> value == null
@@ -677,6 +676,7 @@ module.exports = function (RED) {
                     }
                     if ((msg[attr] != null) && (msg[attr] !== '')) { // eslint-disable-line
                         outMsg.data[attr] = msg[attr];
+                        delete outMsg[attr];
                     }
                 }
 
@@ -686,17 +686,41 @@ module.exports = function (RED) {
                             outMsg.data[attr] = msg.payload[attr];
                         }
                     }
-                }
-
-                if ((typeof outMsg.data.ts === 'undefined') && ((typeof msg.payload === 'string') || (msg.payload instanceof Date))) {
+                } else if ((typeof outMsg.data.ts === 'undefined') && ((typeof msg.payload === 'string') || (msg.payload instanceof Date)) || (typeof msg.payload === 'number')) {
                     const dto = new Date(msg.payload);
                     if (dto !== 'Invalid Date' && !isNaN(dto)) {
+                        outMsg.data.comment = 'data.ts from payload [string] "' + msg.payload + '" = ' + dto.toISOString();
                         outMsg.data.ts = dto;
-                        outMsg.data.comment = 'for ts using payload;';
                     }
                 }
-                // this.debug(JSON.stringify(outMsg, Object.getOwnPropertyNames(outMsg)));
 
+                if (outMsg.data.ts instanceof Date) {
+                    outMsg.data.comment = 'data.ts [date] = ' + outMsg.data.ts.toISOString();
+                } else if (typeof outMsg.data.ts === 'string' || (typeof outMsg.data.ts === 'number')) {
+                    const dto = new Date(outMsg.data.ts);
+                    if (dto !== 'Invalid Date' && !isNaN(dto)) {
+                        outMsg.data.comment = 'data.ts [string] "' + outMsg.data.ts + '" = ' + dto.toISOString();
+                        outMsg.data.ts = dto;
+                    } else {
+                        outMsg.data.ts = new Date();
+                        outMsg.data.comment = 'use default timestamp ' + outMsg.data.ts.toISOString();
+                    }
+                } else {
+                    outMsg.data.ts = new Date();
+                    outMsg.data.comment = 'use default timestamp ' + outMsg.data.ts.toISOString();
+                }
+
+                outMsg.payload = {};
+
+                if (!(outMsg.data.ts instanceof Date)) {
+                    outMsg.data.ts = new Date();
+                    outMsg.data.comment = 'use default timestamp ' + outMsg.data.ts.toISOString();
+                }
+
+                // outMsg.data.year = outMsg.data.ts.getFullYear();
+                outMsg.data.year = outMsg.data.ts.getUTCFullYear();
+
+                // this.debug(JSON.stringify(outMsg, Object.getOwnPropertyNames(outMsg)));
                 //-------------------------------------------------------------------
                 if (this.holidaysArray.length < 0) {
                     this.error('configuration error: No Holiday is defined. At least one Holiday must be configured!');
@@ -740,21 +764,7 @@ module.exports = function (RED) {
                     }
                 }
 
-                if (typeof outMsg.data.ts === 'string') {
-                    const dto = new Date(outMsg.data.ts);
-                    if (dto !== 'Invalid Date' && !isNaN(dto)) {
-                        outMsg.data.comment = 'data.ts "' + outMsg.data.ts + '" = ' + dto.toISOString();
-                        outMsg.data.ts = dto;
-                    }
-                }
-
-                _checkDefault(this);
-                if ((typeof outMsg.data.ts !== 'undefined') && (outMsg.data.ts instanceof Date)) {
-                    outMsg.data.year = outMsg.data.ts.getFullYear();
-                } else  if ((typeof outMsg.data.ts === 'undefined') || !(outMsg.data.ts instanceof Date)) {
-                    outMsg.data.ts = this.default.ts;
-                    outMsg.data.comment = 'use default timestamp';
-                }
+                _checkDefault(this, outMsg.data.ts);
 
                 if (typeof outMsg.data.day !== 'undefined' || !isNaN(outMsg.data.day)) {
                     outMsg.data.year = outMsg.data.ts.getUTCFullYear();

@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+#### 0.1.7: Maintenance Release
+
+- no changes, only re-released, to fix node-red repository
+
 #### 0.1.6: Maintenance Release
 
 - reworked data model

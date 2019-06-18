@@ -5,6 +5,8 @@ node_js:
 
 cache: npm
 
+script: echo "Running tests against $(node -v) ..."
+
 deploy:
   provider: npm
   email: hypnos3@online.de

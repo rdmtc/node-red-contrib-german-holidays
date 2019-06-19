@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+#### 0.1.8: Maintenance Release
+
+- smaller changes in layout of clear/add button of the lists in settings of the node
+
 #### 0.1.7: Maintenance Release
 
 - no changes, only re-released, to fix node-red repository

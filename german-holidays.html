@@ -2,33 +2,33 @@
     <div>
         <label for="node-input-holiday-container-row"><i class="fa fa-list"></i> <span data-i18n="german-holidays.label.holidayList"></span></label>
         <div class="node-input-holiday-container-row">
-            <ol id="node-input-holiday-container"></ol>
+            <ol id="node-input-holiday-container" class="node-input-holiday-container"></ol>
+            <button type="button" id="node-button-btnHolidayAdd" class="rdg-ui-btn red-ui-button red-ui-button-small" data-i18n="[title]german-holidays.placeholder.btnHolidayAdd" style="margin-top: 4px;"><i class="fa fa-plus"></i> <span data-i18n="german-holidays.label.btnHolidayAdd"></span></button> &nbsp;
+            <button type="button" id="node-button-btnHolidayClear" class="rdg-ui-btn red-ui-button red-ui-button-small" data-i18n="[title]german-holidays.placeholder.btnHolidayClear" style="margin-top: 4px;"><i class="fa fa-eraser"></i> <span data-i18n="german-holidays.label.btnHolidayClear"></span></button> &nbsp;
+            <select type="text" id="node-regionSel"  class="rdg-ui-btn red-ui-button" data-i18n="[title]german-holidays.placeholder.btnHolidayAddPre" style="margin-top: 4px;width:200px">
+                <option value="" data-i18n="german-holidays.region.none"></option>
+                <option value="A" data-i18n="german-holidays.region.AUSTRIA"></option>
+                <option value="ALL" data-i18n="german-holidays.region.ALL"></option>
+                <option value="BUND" data-i18n="german-holidays.region.BUND"></option>
+                <option value="BW" data-i18n="german-holidays.region.BW"></option>
+                <option value="BY" data-i18n="german-holidays.region.BY"></option>
+                <option value="BE" data-i18n="german-holidays.region.BE"></option>
+                <option value="BB" data-i18n="german-holidays.region.BB"></option>
+                <option value="HB" data-i18n="german-holidays.region.HB"></option>
+                <option value="HH" data-i18n="german-holidays.region.HH"></option>
+                <option value="HE" data-i18n="german-holidays.region.HE"></option>
+                <option value="MV" data-i18n="german-holidays.region.MV"></option>
+                <option value="NI" data-i18n="german-holidays.region.NI"></option>
+                <option value="NW" data-i18n="german-holidays.region.NW"></option>
+                <option value="RP" data-i18n="german-holidays.region.RP"></option>
+                <option value="SL" data-i18n="german-holidays.region.SL"></option>
+                <option value="SN" data-i18n="german-holidays.region.SN"></option>
+                <option value="ST" data-i18n="german-holidays.region.ST"></option>
+                <option value="SH" data-i18n="german-holidays.region.SH"></option>
+                <option value="TH" data-i18n="german-holidays.region.TH"></option>
+            </select>
+            <button type="button" id="node-button-btnHolidayAddPre"  class="rdg-ui-btn red-ui-button" data-i18n="[title]german-holidays.placeholder.btnHolidayAddPre" style="margin-top: 4px;"><i class="fa fa-plus-square"></i> <span data-i18n="german-holidays.label.btnHolidayAddPre"></span></button>
         </div>
-        <button type="button" id="node-button-clearHolidays" class="rdg-ui-btn"><i class="fa fa-minus-square"></i> <span data-i18n="german-holidays.label.clearHolidayBtn"></span></button> &nbsp;
-        <select type="text" id="node-regionSel" style="width:200px">
-            <option value="" data-i18n="german-holidays.region.none"></option>
-            <option value="A" data-i18n="german-holidays.region.AUSTRIA"></option>
-            <option value="ALL" data-i18n="german-holidays.region.ALL"></option>
-            <option value="BUND" data-i18n="german-holidays.region.BUND"></option>
-            <option value="BW" data-i18n="german-holidays.region.BW"></option>
-            <option value="BY" data-i18n="german-holidays.region.BY"></option>
-            <option value="BE" data-i18n="german-holidays.region.BE"></option>
-            <option value="BB" data-i18n="german-holidays.region.BB"></option>
-            <option value="HB" data-i18n="german-holidays.region.HB"></option>
-            <option value="HH" data-i18n="german-holidays.region.HH"></option>
-            <option value="HE" data-i18n="german-holidays.region.HE"></option>
-            <option value="MV" data-i18n="german-holidays.region.MV"></option>
-            <option value="NI" data-i18n="german-holidays.region.NI"></option>
-            <option value="NW" data-i18n="german-holidays.region.NW"></option>
-            <option value="RP" data-i18n="german-holidays.region.RP"></option>
-            <option value="SL" data-i18n="german-holidays.region.SL"></option>
-            <option value="SN" data-i18n="german-holidays.region.SN"></option>
-            <option value="ST" data-i18n="german-holidays.region.ST"></option>
-            <option value="SH" data-i18n="german-holidays.region.SH"></option>
-            <option value="TH" data-i18n="german-holidays.region.TH"></option>
-        </select>
-        <button type="button" id="node-button-addHolidays" class="rdg-ui-btn"><i class="fa fa-plus-square"></i> </button>
-        <br>
         <input type="hidden" id="node-input-region">
     </div>
 
@@ -38,11 +38,11 @@
     <div>
         <label for="node-input-specialday-container-row"><i class="fa fa-list"></i> <span data-i18n="german-holidays.label.specialdayList"></span></label>
         <div class="node-input-specialday-container-row">
-            <ol id="node-input-specialday-container"></ol>
+            <ol id="node-input-specialday-container" class="node-input-specialday-container"></ol>
+            <button type="button" id="node-button-btnSpecialdayAdd" class="rdg-ui-btn red-ui-button red-ui-button-small" data-i18n="[title]german-holidays.placeholder.btnSpecialdayAdd" style="margin-top: 4px;"><i class="fa fa-plus"></i> <span data-i18n="german-holidays.label.btnSpecialdayAdd"></span></button> &nbsp;
+            <button type="button" id="node-button-btnSpecialdayClear" class="rdg-ui-btn red-ui-button red-ui-button-small" data-i18n="[title]german-holidays.placeholder.btnSpecialdayClear" style="margin-top: 4px;"><i class="fa fa-eraser"></i> <span data-i18n="german-holidays.label.btnSpecialdayClear"></span></button> &nbsp;
+            <button type="button" id="node-button-btnSpecialdayAddPre" class="rdg-ui-btn red-ui-button red-ui-button-small" data-i18n="[title]german-holidays.placeholder.btnSpecialdayAddPre" style="margin-top: 4px;"><i class="fa fa-plus-circle"></i> <span data-i18n="german-holidays.label.btnSpecialdayAddPre"></span></button>
         </div>
-        <button type="button" id="node-button-clearSpecialDays" class="rdg-ui-btn"><i class="fa fa-minus-circle"></i> <span data-i18n="german-holidays.label.clearSpecialdayBtn"></span></button> &nbsp;
-        <button type="button" id="node-button-addSpecialDays" class="rdg-ui-btn"><i class="fa fa-plus-circle"></i> <span data-i18n="german-holidays.label.addSpecialdayBtn"></span></button>
-        <br>
     </div>
 
     <div class="form-tips" data-i18n="[html]german-holidays.tips.specialday"></div>
@@ -1192,16 +1192,22 @@
                     });
                 },
                 resizeItem: _edtLstResizeItem,
+                addButton: false,
                 sortable: true,
-                removable: true
+                removable: true,
+                scrollOnAdd: true,
+                connectWith: $('#node-input-specialday-container')
             });
             // #endregion holiday-container
             // #region specialday-container
             $('#node-input-specialday-container').css('min-height', '200px').css('min-width', '200px').editableList({
                 addItem: _edtLstAddItem,
                 resizeItem: _edtLstResizeItem,
+                addButton: false,
                 sortable: true,
-                removable: true
+                removable: true,
+                scrollOnAdd: true,
+                connectWith: $('#node-input-holiday-container')
             });
             // #endregion specialday-container
 
@@ -1479,37 +1485,47 @@
             // #endregion dialog
 
             // #region Button
-            const $clearHolidayBtn = $('#node-button-clearHolidays');
-            $clearHolidayBtn.click(() => {
+            const $btnHolidayAdd = $('#node-button-btnHolidayAdd');
+            $btnHolidayAdd.click(() => {
+                $('#node-input-holiday-container').editableList('addItem', {});
+            });
+
+            const $btnHolidayClear = $('#node-button-btnHolidayClear');
+            $btnHolidayClear.click(() => {
                 $('#node-input-holiday-container').editableList('empty');
             });
 
-            const $addHolidayBtn = $('#node-button-addHolidays');
-            $addHolidayBtn.click(() => {
+            const $btnHolidayAddPre = $('#node-button-btnHolidayAddPre');
+            $btnHolidayAddPre.click(() => {
                 _addHolidays(node, $('#node-regionSel').val());
                 $dialog.dialog('close');
             });
             $('#node-regionSel').change(() => {
                 const b = !$('#node-regionSel').val();
-                $addHolidayBtn.prop('disabled', b);
+                $btnHolidayAddPre.prop('disabled', b);
                 if (b) {
-                    $addHolidayBtn.hide();
-                    $addHolidayBtn.button('disable');
+                    $btnHolidayAddPre.hide();
+                    $btnHolidayAddPre.button('disable');
                 } else {
-                    $addHolidayBtn.show();
-                    $addHolidayBtn.button('enable');
+                    $btnHolidayAddPre.show();
+                    $btnHolidayAddPre.button('enable');
                 }
 
             });
             $('#node-regionSel').change();
 
-            const $clearSpecialdayBtn = $('#node-button-clearSpecialDays');
-            $clearSpecialdayBtn.click(() => {
+            const $btnSpecialdayAdd = $('#node-button-btnSpecialdayAdd');
+            $btnSpecialdayAdd.click(() => {
+                $('#node-input-specialday-container').editableList('addItem', {});
+            });
+
+            const $btnSpecialdayClear = $('#node-button-btnSpecialdayClear');
+            $btnSpecialdayClear.click(() => {
                 $('#node-input-specialday-container').editableList('empty');
             });
 
-            const $addSpecialdayBtn = $('#node-button-addSpecialDays');
-            $addSpecialdayBtn.click(() => {
+            const $btnSpecialdayAddPre = $('#node-button-btnSpecialdayAddPre');
+            $btnSpecialdayAddPre.click(() => {
                 _addSpecialdays(node);
                 $dialog.dialog('close');
             });

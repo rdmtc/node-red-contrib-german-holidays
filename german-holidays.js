@@ -127,7 +127,7 @@ const holidayDef = {
         name :  'Fronleichnam',
         month: easterX,
         day: 60,
-        regions: ['BW', 'HE', 'NW', 'RP', 'SL', 'ALL'],
+        regions: ['BW', 'BY', 'HE', 'NW', 'RP', 'SL', 'ALL'],
         character: characteristic.holiday
     },
     MARIAHIMMELFAHRT: {

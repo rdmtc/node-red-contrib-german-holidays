@@ -306,6 +306,18 @@
         console.log(node.specialdays); // eslint-disable-line
     }
 
+    function _edtLstResizeItem(row) {
+        const newWidth = row.width() - 10;
+        const $name = row.find('.node-input-item-name');
+        const $month = row.find('.node-input-item-month');
+        const $day = row.find('.node-input-item-day');
+        const $btn = row.find('.node-button-item-edit');
+        // row1
+        $month.width(50);
+        $day.width(50);
+        const btnWidth = $btn.width();
+        $name.width(newWidth - 165 - btnWidth);
+    }
     RED.nodes.registerType('german-holidays', {
         category: 'function',
         defaults: {
@@ -1072,19 +1084,6 @@
             }
             // #endregion list generic functions
             // #region container generic
-            function _edtLstResizeItem(row) {
-                const newWidth = row.width() - 10;
-                const $name = row.find('.node-input-item-name');
-                const $month = row.find('.node-input-item-month');
-                const $day = row.find('.node-input-item-day');
-                const $btn = row.find('.node-button-item-edit');
-                // row1
-                $month.width(50);
-                $day.width(50);
-                const btnWidth = $btn.width();
-                $name.width(newWidth - 165 - btnWidth);
-            }
-
             function _edtLstAddItem(containerRow, containerIndex, data) {
                 containerRow.css({ overflow: 'hidden', whiteSpace: 'nowrap' });
                 const row = $('<div/>').appendTo(containerRow);
@@ -1541,5 +1540,13 @@
             const node = this;
             saveHolidays(node);
             saveSpecialdays(node);
+        },
+        oneditresize(_size) {
+            if (typeof $().editableList !== 'undefined') {
+                const postrules = $('#node-input-rule-container').editableList('items');
+                postrules.each(function(_i) {
+                    _edtLstResizeItem($(this));
+                });
+            }
         }
     });</script>

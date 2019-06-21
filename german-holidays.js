@@ -229,6 +229,15 @@ function _pad2(n) { // always returns a string
 function _dateToString(d) {
     return d.getUTCFullYear() + '-' + _pad2(d.getUTCMonth() + 1) + '-' + _pad2(d.getUTCDate()) + 'T' + _pad2(d.getUTCHours()) + ':' + _pad2(d.getUTCMinutes()) + 'Z';
 }
+
+/**
+ * checks if a value is a valid Date object
+ * @param {*} d - a value to check
+ * @returns {boolean} returns __true__ if it is a valid Date, otherwhise __false__
+ */
+function _isValidDate(d) {
+    return d instanceof Date && !isNaN(d);
+}
 /*******************************************************************************************************/
 /**
  * determinates the current week number of UTC timestamp.
@@ -688,7 +697,7 @@ module.exports = function (RED) {
                     }
                 } else if ((typeof outMsg.data.ts === 'undefined') && ((typeof msg.payload === 'string') || (msg.payload instanceof Date)) || (typeof msg.payload === 'number')) {
                     const dto = new Date(msg.payload);
-                    if (dto !== 'Invalid Date' && !isNaN(dto)) {
+                    if (_isValidDate(dto)) {
                         outMsg.data.comment = 'data.ts from payload [string] "' + msg.payload + '" = ' + dto.toISOString();
                         outMsg.data.ts = dto;
                     }
@@ -698,7 +707,7 @@ module.exports = function (RED) {
                     outMsg.data.comment = 'data.ts [date] = ' + outMsg.data.ts.toISOString();
                 } else if (typeof outMsg.data.ts === 'string' || (typeof outMsg.data.ts === 'number')) {
                     const dto = new Date(outMsg.data.ts);
-                    if (dto !== 'Invalid Date' && !isNaN(dto)) {
+                    if (_isValidDate(dto)) {
                         outMsg.data.comment = 'data.ts [string] "' + outMsg.data.ts + '" = ' + dto.toISOString();
                         outMsg.data.ts = dto;
                     } else {
@@ -749,7 +758,7 @@ module.exports = function (RED) {
 
                 if ((typeof outMsg.data.date !== 'undefined') && ((outMsg.data.date instanceof Date) || (typeof outMsg.data.date === 'string'))) {
                     const dto = new Date(outMsg.data.date);
-                    if (dto !== 'Invalid Date' && !isNaN(dto)) {
+                    if (_isValidDate(dto)) {
                         outMsg.data.comment = 'data date';
                         outMsg.data.year = dto.getUTCFullYear();
                         const specialdays = _getSpecialDaysOfYear(this, outMsg.data.year, outMsg.data.region);

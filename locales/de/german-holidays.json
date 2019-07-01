@@ -54,7 +54,7 @@
         },
         "region": {
             "none": "<wählen um vordefinierte Hinzugefügt werden sollen>",
-            "AUSTRIA": "Österreich",
+            "A": "Österreich",
             "ALL": "alle Deutsche",
             "BUND": "allgemeine Deutsche",
             "BW": "Baden-Württemberg",

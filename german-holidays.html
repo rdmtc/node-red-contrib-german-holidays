@@ -7,26 +7,6 @@
             <button type="button" id="node-button-btnHolidayAdd" class="rdg-ui-btn red-ui-button red-ui-button-small" data-i18n="[title]german-holidays.placeholder.btnHolidayAdd" style="margin-top: 4px;"><i class="fa fa-plus"></i> <span data-i18n="german-holidays.label.btnHolidayAdd"></span></button> &nbsp;
             <button type="button" id="node-button-btnHolidayClear" class="rdg-ui-btn red-ui-button red-ui-button-small" data-i18n="[title]german-holidays.placeholder.btnHolidayClear" style="margin-top: 4px;"><i class="fa fa-eraser"></i> <span data-i18n="german-holidays.label.btnHolidayClear"></span></button> &nbsp;
             <select type="text" id="node-regionSel"  class="rdg-ui-btn red-ui-button" data-i18n="[title]german-holidays.placeholder.btnHolidayAddPre" style="margin-top: 4px;width:200px">
-                <option value="" data-i18n="german-holidays.region.none"></option>
-                <option value="A" data-i18n="german-holidays.region.AUSTRIA"></option>
-                <option value="ALL" data-i18n="german-holidays.region.ALL"></option>
-                <option value="BUND" data-i18n="german-holidays.region.BUND"></option>
-                <option value="BW" data-i18n="german-holidays.region.BW"></option>
-                <option value="BY" data-i18n="german-holidays.region.BY"></option>
-                <option value="BE" data-i18n="german-holidays.region.BE"></option>
-                <option value="BB" data-i18n="german-holidays.region.BB"></option>
-                <option value="HB" data-i18n="german-holidays.region.HB"></option>
-                <option value="HH" data-i18n="german-holidays.region.HH"></option>
-                <option value="HE" data-i18n="german-holidays.region.HE"></option>
-                <option value="MV" data-i18n="german-holidays.region.MV"></option>
-                <option value="NI" data-i18n="german-holidays.region.NI"></option>
-                <option value="NW" data-i18n="german-holidays.region.NW"></option>
-                <option value="RP" data-i18n="german-holidays.region.RP"></option>
-                <option value="SL" data-i18n="german-holidays.region.SL"></option>
-                <option value="SN" data-i18n="german-holidays.region.SN"></option>
-                <option value="ST" data-i18n="german-holidays.region.ST"></option>
-                <option value="SH" data-i18n="german-holidays.region.SH"></option>
-                <option value="TH" data-i18n="german-holidays.region.TH"></option>
             </select>
             <button type="button" id="node-button-btnHolidayAddPre"  class="rdg-ui-btn red-ui-button" data-i18n="[title]german-holidays.placeholder.btnHolidayAddPre" style="margin-top: 4px;"><i class="fa fa-plus-square"></i> <span data-i18n="german-holidays.label.btnHolidayAddPre"></span></button>
         </div>
@@ -1500,7 +1480,13 @@
                 _addHolidays(node, $('#node-regionSel').val());
                 $dialog.dialog('close');
             });
-            $('#node-regionSel').change(() => {
+
+            const $selHolidayAddPre = $('#node-regionSel');
+            $selHolidayAddPre.append($('<option></option>').val('').text(node._('german-holidays.region.none')));
+            allRegions.forEach((_val, _index) => {
+                $selHolidayAddPre.append($('<option></option>').val(_val).text(node._('german-holidays.region.' + _val)));
+            });
+            $selHolidayAddPre.change(() => {
                 const b = !$('#node-regionSel').val();
                 $btnHolidayAddPre.prop('disabled', b);
                 if (b) {
@@ -1512,7 +1498,7 @@
                 }
 
             });
-            $('#node-regionSel').change();
+            $selHolidayAddPre.change();
 
             const $btnSpecialdayAdd = $('#node-button-btnSpecialdayAdd');
             $btnSpecialdayAdd.click(() => {

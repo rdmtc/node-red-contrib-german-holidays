@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+#### 0.1.9: Maintenance Release
+
+- fix display problem in node-red 0.2.x, caused by preparations for node-red 1.0
+
 #### 0.1.8: Maintenance Release
 
 - fix, added Fronleichnam to region BY

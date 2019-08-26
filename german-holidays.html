@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<script type="text/x-red" data-template-name="german-holidays">
+<script type="text/html" data-template-name="german-holidays">
     <div>
         <label for="node-input-holiday-container-row"><i class="fa fa-list"></i> <span data-i18n="german-holidays.label.holidayList"></span></label>
         <div class="node-input-holiday-container-row">
@@ -89,7 +89,7 @@
 
 
 <!-- Next, some simple help text is provided for the node. -->
-<script type="text/x-red" data-help-name="german-holidays">
+<script type="text/html" data-help-name="german-holidays">
     <body>
     <h3>About</h3>
     <p>Gets german holidays</p>
@@ -456,6 +456,14 @@
                     regions: [],
                     character: characteristic.religion
                 },
+                WELTFRAUENTAG: {
+                    name: 'Weltfrauentag',
+                    namerAlt: 'International Women\'s Day',
+                    month: 3,
+                    day: 8,
+                    regions: [],
+                    character: characteristic.actionday
+                },
                 PALMSONNTAG: {
                     name: 'Palmsonntag', // 7 Tage vor dem Ostersonntag
                     month: easterX,
@@ -674,6 +682,13 @@
                     regions: [],
                     character: characteristic.calendar
                 },
+                FRIEDENSFEST: {
+                    name: 'Friedensfest',
+                    month: 8,
+                    day: 8,
+                    regions: [],
+                    character: characteristic.religion
+                },
                 MARIAHIMMELFAHRT: {
                     name: 'Mariä Himmelfahrt',
                     month: 8,
@@ -687,6 +702,13 @@
                     day: 1,
                     regions: [],
                     character: characteristic.calendar
+                },
+                WELTKINDERTAG: {
+                    name: 'Weltkindertag',
+                    month: 9,
+                    day: 20,
+                    regions: ['TH', 'ALL'],
+                    character: characteristic.customday
                 },
                 MICHAELISTAG: {
                     name: 'Michaelistag', // Tag Erzengels Michael und aller Engel

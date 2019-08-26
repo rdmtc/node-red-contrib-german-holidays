@@ -1,5 +1,15 @@
 ### CHANGELOG
 
+#### 0.1.11: Maintenance Release
+
+- added Weltkindertag as holiday for Thüringen
+- added WELTFRAUENTAG as special day
+- added FRIEDENSFEST as special day
+
+#### 0.1.10: Maintenance Release
+
+- updated dependencies
+
 #### 0.1.9: Maintenance Release
 
 - fix display problem in node-red 0.2.x, caused by preparations for node-red 1.0

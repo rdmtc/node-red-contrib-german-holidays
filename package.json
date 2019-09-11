@@ -54,7 +54,7 @@
       "german-holidays": "german-holidays.js"
     }
   },
-  "dependencies": {
+  "peerDependencies": {
     "util": ">=0.8.0"
   },
   "devDependencies": {

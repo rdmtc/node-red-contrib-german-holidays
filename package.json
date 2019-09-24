@@ -50,6 +50,7 @@
   },
   "homepage": "https://github.com/rdmtc/node-red-contrib-german-holidays#readme",
   "node-red": {
+    "version": ">=0.19.0",
     "nodes": {
       "german-holidays": "german-holidays.js"
     }

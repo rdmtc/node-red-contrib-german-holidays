@@ -183,35 +183,6 @@ const holidayDef = {
 };
 
 /*******************************************************************************************************/
-const errorHandler = function (node, err, messageText, stateText) {
-    if (!err) {
-        return true;
-    }
-
-    if (err.message) {
-    // const msg = err.message.toLowerCase();
-        messageText += ':' + err.message;
-    } else {
-        messageText += '! (No error message given!)';
-    }
-
-    if (node) {
-        node.error(messageText);
-        node.debug(JSON.stringify(err, Object.getOwnPropertyNames(err)));
-        node.status({
-            fill: 'red',
-            shape: 'ring',
-            text: stateText
-        });
-    } else if (console) {
-        console.error(messageText); // eslint-disable-line
-        console.error(JSON.stringify(err, Object.getOwnPropertyNames(err))); // eslint-disable-line
-    }
-
-    return false;
-};
-
-/*******************************************************************************************************/
 /**
  * creates a string with two digits
  * @param {number} n number to format
@@ -666,7 +637,17 @@ module.exports = function (RED) {
             return this.getDataForDate(date, daysObjects, 0);
         };
 
-        this.on('input', function (msg) {
+        this.done = (text, msg) => {
+            if (text) {
+                return this.error(text, msg);
+            }
+            return null;
+        };
+
+        this.on('input', function (msg, send, done) {
+            // If this is pre-1.0, 'send' will be undefined, so fallback to node.send
+            send = send || this.send;
+            done = done || this.done;
             // this.debug('Holiday!! Start');
             try {
                 /********************************************
@@ -732,24 +713,26 @@ module.exports = function (RED) {
                 // this.debug(JSON.stringify(outMsg, Object.getOwnPropertyNames(outMsg)));
                 //-------------------------------------------------------------------
                 if (this.holidaysArray.length < 0) {
-                    this.error('configuration error: No Holiday is defined. At least one Holiday must be configured!');
+                    // this.error('configuration error: No Holiday is defined. At least one Holiday must be configured!');
                     this.status({
                         fill: 'red',
                         shape: 'dot',
                         text: 'No Region given!'
                     });
+                    done('configuration error: No Holiday is defined. At least one Holiday must be configured!' ,msg);
                     return;
                 }
 
                 if (typeof outMsg.data.region !== 'undefined' && outMsg.data.region !== '' && outMsg.data.region !== null) {
                     outMsg.data.region = outMsg.data.region.toUpperCase();
                     if (allRegions.indexOf(outMsg.data.region) === -1) {
-                        this.error('Invalid region: ' + outMsg.data.region + '! Must be one of ' + allRegions.toString());
+                        // this.error('Invalid region: ' + outMsg.data.region + '! Must be one of ' + allRegions.toString());
                         this.status({
                             fill: 'red',
                             shape: 'dot',
                             text: 'Invalid Region given!'
                         });
+                        done('Invalid region: ' + outMsg.data.region + '! Must be one of ' + allRegions.toString() ,msg);
                         return;
                     }
                 } else {
@@ -763,12 +746,13 @@ module.exports = function (RED) {
                         outMsg.data.year = dto.getUTCFullYear();
                         const specialdays = _getSpecialDaysOfYear(this, outMsg.data.year, outMsg.data.region);
                         outMsg.payload = this.getDataForDate(dto, specialdays);
-                        this.send(outMsg);
                         this.status({
                             fill: 'grey',
                             shape: 'ring',
                             text: _dateToString(dto)
                         });
+                        send(outMsg); // this.send(outMsg);
+                        done();
                         return;
                     }
                 }
@@ -780,12 +764,13 @@ module.exports = function (RED) {
                     const dataObjs = _getSpecialDaysOfYear(this, outMsg.data.year, outMsg.data.region);
 
                     outMsg.payload = this.getDataForDay(outMsg.data.ts, outMsg.data.day, dataObjs);
-                    this.send(outMsg);
                     this.status({
                         fill: 'grey',
                         shape: 'ring',
                         text: _dateToString(outMsg.data.ts)
                     });
+                    send(outMsg); // this.send(outMsg);
+                    done();
                     return;
                 }
 
@@ -903,9 +888,17 @@ module.exports = function (RED) {
                     shape: 'dot',
                     text: _dateToString(outMsg.data.ts)
                 });
-                this.send(outMsg);
+                send(outMsg); // this.send(outMsg);
+                done();
             } catch (err) {
-                errorHandler(this, err, 'Exception occurred on get german holidays', 'internal error');
+                this.status({
+                    fill: 'red',
+                    shape: 'ring',
+                    text: 'internal error:' + err.message
+                });
+                this.log('Exception occurred on get german holidays:' + err.message);
+                this.log(JSON.stringify(err, Object.getOwnPropertyNames(err)));
+                done('Exception occurred on get german holidays:' + err.message);
             }
         });
     }

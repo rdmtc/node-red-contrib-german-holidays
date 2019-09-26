@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+#### 0.1.13: critical bug fix
+
+- fixed bug with the code prepared for Node-Red 1.0. The recommend way for be backward compatible doesn't work. This is [also](https://discourse.nodered.org/t/knowing-when-a-node-is-done-new-node-api/15737/9) confirmed by @knolleary.
+
 #### 0.1.12: Maintenance Release
 
  - more changes for node-red 1.0 (https://nodered.org/blog/2019/09/20/node-done)

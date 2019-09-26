@@ -636,18 +636,12 @@ module.exports = function (RED) {
 
             return this.getDataForDate(date, daysObjects, 0);
         };
-
-        this.done = (text, msg) => {
-            if (text) {
-                return this.error(text, msg);
-            }
-            return null;
-        };
+        const node = this;
 
         this.on('input', function (msg, send, done) {
             // If this is pre-1.0, 'send' will be undefined, so fallback to node.send
-            send = send || this.send;
-            done = done || this.done;
+            done = done || function (text, msg) { if (text) { return node.error(text, msg); } return null; };
+            send = send || function (...args) { node.send.apply(node, args); };
             // this.debug('Holiday!! Start');
             try {
                 /********************************************

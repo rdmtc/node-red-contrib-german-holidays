@@ -55,9 +55,6 @@
       "german-holidays": "german-holidays.js"
     }
   },
-  "peerDependencies": {
-    "util": ">=0.8.0"
-  },
   "devDependencies": {
     "camo-purge": "^1.0.2",
     "eslint": "^5.15.3",

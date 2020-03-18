@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+#### 0.1.15 - maintenance
+
+- updated dependencies
+
 #### 0.1.14 - maintenance
 
 - removed peer dependencies

@@ -777,11 +777,11 @@ module.exports = function (RED) {
                     tomorrow: {},
                     dayAfterTomorrow: {},
                     afterTheDayAfterTomorrow: {},
-                    hollidays: dayObjs.holidays,
+                    holidays: dayObjs.holidays,
                     specialdays: dayObjs.specialdays,
                     next: {
-                        hollidays : [],
-                        hollidaysDiff : [],
+                        holidays : [],
+                        holidaysDiff : [],
                         specialdays: [],
                         specialdaysDiff: []
                     },
@@ -815,23 +815,23 @@ module.exports = function (RED) {
                 const tNow = outMsg.data.ts.getTime();
                 // const t7 = outMsg.data.ts.getTime() + 604800000;
 
-                for (let i = 0; i < outMsg.payload.hollidays.length; i++) {
-                    const hd = outMsg.payload.hollidays[i];
+                for (let i = 0; i < outMsg.payload.holidays.length; i++) {
+                    const hd = outMsg.payload.holidays[i];
                     const d = hd.date;
 
                     const time = d.getTime();
                     if (time > tNow) {
                         hd.diff = (time - tNow);
                         hd.diffDays = Math.ceil(hd.diff / (1000 * 3600 * 24));
-                        outMsg.payload.next.hollidays.push(hd);
-                        if (outMsg.payload.next.hollidays.length > 9) {
+                        outMsg.payload.next.holidays.push(hd);
+                        if (outMsg.payload.next.holidays.length > 9) {
                             break;
                         }
                     }
                 }
-                if (outMsg.payload.next.hollidays[0]) {
-                    outMsg.payload.next.holliday = outMsg.payload.next.hollidays[0];
-                    outMsg.payload.next.hollidayDiff = outMsg.payload.next.hollidays[0].diffDays;
+                if (outMsg.payload.next.holidays[0]) {
+                    outMsg.payload.next.holiday = outMsg.payload.next.holidays[0];
+                    outMsg.payload.next.holidayDiff = outMsg.payload.next.holidays[0].diffDays;
                 }
 
                 for (let i = 0; i < outMsg.payload.specialdays.length; i++) {
@@ -870,9 +870,9 @@ module.exports = function (RED) {
                     outMsg.payload.next.weekendDay = _newDay(undefined, date, RED._('german-holidays.days.6'), RED._('german-holidays.days.13'));
                 }
 
-                outMsg.payload.next.weekendOrHolidayDiff = (outMsg.payload.next.hollidayDiff) ? Math.min(outMsg.payload.next.hollidayDiff, outMsg.payload.next.weekendDayDiff) : outMsg.payload.next.weekendDayDiff;
-                if (outMsg.payload.next.holliday && (outMsg.payload.next.weekendOrHolidayDiff === outMsg.payload.next.hollidayDiff)) {
-                    outMsg.payload.next.weekendOrHoliday = outMsg.payload.next.holliday;
+                outMsg.payload.next.weekendOrHolidayDiff = (outMsg.payload.next.holidayDiff) ? Math.min(outMsg.payload.next.holidayDiff, outMsg.payload.next.weekendDayDiff) : outMsg.payload.next.weekendDayDiff;
+                if (outMsg.payload.next.holiday && (outMsg.payload.next.weekendOrHolidayDiff === outMsg.payload.next.holidayDiff)) {
+                    outMsg.payload.next.weekendOrHoliday = outMsg.payload.next.holiday;
                 } else {
                     outMsg.payload.next.weekendOrHoliday = outMsg.payload.next.weekendDay;
                 }

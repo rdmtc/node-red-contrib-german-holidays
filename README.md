@@ -14,10 +14,10 @@ This node are for getting holidays or information if today/tomorrow/... is a hol
 
 The Holidays can be setup as fixed dates or dates based on Easter, Advent. Pre defined Holidays for german exists, but these must not be used.
 
-Warning, Version 1.0 breaks to existing!
-
-- Changes payload
-- Not configured Holidays will not be used (no backwards compatibility). Existing nodes needs to be opened, saved and deployed once!
+> :warning: **Warning! Version 1.0 breaks to existing!** :warning:
+>
+> - Changes payload
+> - Not configured Holidays will not be used (no backwards compatibility). Existing nodes needs to be opened, saved and deployed once!
 
 ## Installation
 

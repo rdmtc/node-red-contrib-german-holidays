@@ -13,27 +13,6 @@
  * Released under the MIT license
  */
 
-const allRegions = [
-    'BW',
-    'BY',
-    'BE',
-    'BB',
-    'HB',
-    'HE',
-    'HH',
-    'MV',
-    'NI',
-    'NW',
-    'RP',
-    'SL',
-    'SN',
-    'ST',
-    'SH',
-    'TH',
-    'BUND',
-    'ALL'
-];
-
 const characteristic = {
     unspecified: 0,
     calendar: 1,
@@ -55,132 +34,6 @@ const characteristic = {
 
 const easterX = -1;
 const adventX = -2;
-
-const holidayDef = {
-    NEUJAHRSTAG: {
-        name : 'Neujahrstag', // 1.1.
-        month: 1,
-        day: 1,
-        regions: allRegions,
-        character: characteristic.holiday
-    },
-    HEILIGEDREIKOENIGE: {
-        name : 'Heilige Drei Könige', // 6.1.
-        nameAlt: 'Epiphanias',
-        month: 1,
-        day: 6,
-        regions: ['BW', 'BY', 'ST', 'ALL'],
-        character: characteristic.holiday
-    },
-    KARFREITAG: {
-        name : 'Karfreitag',
-        month: easterX,
-        day: -2,
-        regions: allRegions,
-        character: characteristic.holiday
-    },
-    OSTERSONNTAG: {
-        name :  'Ostersonntag',
-        month: easterX,
-        day: 0,
-        regions: ['BB', 'ALL'],
-        character: characteristic.holiday
-    },
-    OSTERMONTAG: {
-        name :  'Ostermontag',
-        month: easterX,
-        day: 1,
-        regions: allRegions,
-        character: characteristic.holiday
-    },
-    TAG_DER_ARBEIT: {
-        name :  'Tag der Arbeit', // 1. Mai
-        nameAlt: 'Maifeiertag',
-        month: 5,
-        day: 1,
-        regions: allRegions,
-        character: characteristic.holiday
-    },
-    CHRISTIHIMMELFAHRT: {
-        name :  'Christi Himmelfahrt',
-        nameAlt: 'Vatertag',
-        month: easterX,
-        day: 39,
-        regions: allRegions,
-        character: characteristic.holiday
-    },
-    PFINGSTSONNTAG: {
-        name :  'Pfingstsonntag',
-        month: easterX,
-        day: 49,
-        regions: ['BB', 'ALL'],
-        character: characteristic.holiday
-    },
-    PFINGSTMONTAG: {
-        name :  'Pfingstmontag',
-        month: easterX,
-        day: 50,
-        regions: allRegions,
-        character: characteristic.holiday
-    },
-    FRONLEICHNAM: {
-        name :  'Fronleichnam',
-        month: easterX,
-        day: 60,
-        regions: ['BW', 'BY', 'HE', 'NW', 'RP', 'SL', 'ALL'],
-        character: characteristic.holiday
-    },
-    MARIAHIMMELFAHRT: {
-        name :  'Mariä Himmelfahrt',
-        month: 8,
-        day: 15,
-        regions: ['SL', 'BY', 'ALL'],
-        character: characteristic.holiday
-    },
-    DEUTSCHEEINHEIT: {
-        name :  'Tag der Deutschen Einheit',
-        month: 10,
-        day: 3,
-        regions: allRegions,
-        character: characteristic.holiday
-    },
-    REFORMATIONSTAG: {
-        name :  'Reformationstag', // 31. Oktober
-        nameAlt: 'Halloween',
-        month: 10,
-        day: 31,
-        regions: ['BB', 'MV', 'SN', 'ST', 'TH', 'ALL'],
-        character: characteristic.holiday
-    },
-    ALLERHEILIGEN: {
-        name :  'Allerheiligen',
-        month: 11,
-        day: 1,
-        regions: ['BW', 'BY', 'NW', 'RP', 'SL', 'ALL'],
-        character: characteristic.holiday
-    },
-    BUBETAG: {
-        name :  'Buß- und Bettag',
-        month: adventX,
-        day: -32,
-        regions: ['SN', 'ALL'],
-        character: characteristic.holiday
-    },
-    ERSTERWEIHNACHTSFEIERTAG: {
-        name :  '1. Weihnachtstag',
-        month: 12,
-        day: 25,
-        regions: allRegions,
-        character: characteristic.holiday
-    },
-    ZWEITERWEIHNACHTSFEIERTAG: {
-        name : '2. Weihnachtstag',
-        month: 12,
-        day: 26,
-        regions: allRegions,
-        character: characteristic.holiday
-    }
-};
 
 /*******************************************************************************************************/
 /**
@@ -224,12 +77,17 @@ function _getWeekNumber(d) {
     return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
 }
 
+/**
+ * check if default value could be used
+ * @param {*} node The Node object
+ * @param {*} ts the timestamp
+ */
 function _checkDefault(node, ts) {
     const newYear = (new Date()).getUTCFullYear();
     if (newYear !== node.default.year) {
         node.default.ts = ts;
         node.default.year = newYear;
-        node.default.dayObjs = _getSpecialDaysOfYear(node, node.default.year, undefined, true, true);
+        node.default.dayObjs = _getSpecialDaysOfYear(node, node.default.year, true, true);
     }
 }
 
@@ -242,7 +100,7 @@ function _pushUnique(arr, el) {
     if (!el) {
         return;
     }
-    const pos = arr.findIndex( (x) => {
+    const pos = arr.findIndex( x => {
         return (el.day === x.day) && (el.month === x.month) && (el.year === x.year);
     });
     if (pos > -1) {
@@ -252,36 +110,18 @@ function _pushUnique(arr, el) {
 }
 
 /**
- * added default holidays for a region
- * @param {Array} arrayToAdd array to add
- * @param {String} region region for adding
- */
-function _addToArrayForRegion(arrayToAdd, region) {
-    if (region && region !== '') {
-        Object.keys(holidayDef).forEach((key) => {
-            const d = holidayDef[key];
-            if (d.regions.includes(region)) {
-                d.id = key;
-                arrayToAdd.push(d);
-            }
-        });
-    }
-}
-
-/**
  * creates all data of special and holidays of a year
  * @param {*} node  -  the node object for debuging
  * @param {Number} year  -  the year for calculation of the special days
- * @param {String} [region]  -  force to recalculate, otherwise load existing data
  * @param {Boolean} [force]  -  force to recalculate, otherwise load existing data
  * @param {Boolean} [calcNext]  -  calculate the holiday also for the next year
  * @returns objects: Array
  * @private
  */
-function _getSpecialDaysOfYear(node, year, region, force, calcNext) {
-    node.debug(`_getSpecialDaysOfYear year=${year}, region=${region}, force=${force}, calcNext=${calcNext}`);
+function _getSpecialDaysOfYear(node, year, force, calcNext) {
+    node.debug(`_getSpecialDaysOfYear year=${year}, force=${force}, calcNext=${calcNext}`);
 
-    if (node.default.dayObjs && (node.default.year === year) && (force !== true) && !region) {
+    if (node.default.dayObjs && (node.default.year === year) && (force !== true)) {
         // node.debug('return default obj');
         return node.default.dayObjs;
     }
@@ -289,10 +129,8 @@ function _getSpecialDaysOfYear(node, year, region, force, calcNext) {
     const easter = _getEasterDate(year);
     const advent4th = _getAdvent4th(year);
 
-
     const holidayObjects = [];
     const specialdaysObjects = [];
-    _addToArrayForRegion(holidayObjects, region);
     _addDaysToArray(node.holidaysArray, holidayObjects, year, easter, advent4th, node.characters);
     _addDaysToArray(node.specialdaysArray, specialdaysObjects, year, easter, advent4th, node.characters);
 
@@ -467,6 +305,12 @@ function _newDay(id, date, name, nameAlt, character, characteristics) {
     return obj;
 }
 
+/**
+ * get the name of an array
+ * @param {*} character character to test if set
+ * @param {*} arr array to check
+ * @returns {Array}
+ */
 function _getCharacterNames(character, arr) {
     const result = [];
     if(character && arr) {
@@ -528,6 +372,10 @@ function _toUtcTimestamp(date) {
     return d.getTime();
 }
 
+/**
+ * converts a Date to a timestamp Object
+ * @param {Date} date Date to convert
+ */
 function _toTimestamp(date) {
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
@@ -535,6 +383,11 @@ function _toTimestamp(date) {
 }
 
 module.exports = function (RED) {
+    'use strict';
+    /**
+     * genearla node function
+     * @param {*} config Node-Red config for the Node
+     */
     function germanHolidaysNode(config) {
         RED.nodes.createNode(this, config);
         this.default = {  };
@@ -543,14 +396,8 @@ module.exports = function (RED) {
 
         // this.debug('Holiday!!');
         // this.debug(JSON.stringify(config, Object.getOwnPropertyNames(config)));
-
-        if (config.region && config.region !== '' && config.region !== null && typeof config.region !== 'undefined') {
-            _addToArrayForRegion(this.holidaysArray, config.region);
-            delete config.region;
-        }
-
         this.characters = [];
-        Object.keys(characteristic).forEach((key) => {
+        Object.keys(characteristic).forEach(key => {
             const id = characteristic[key];
             this.characters.push({
                 key,
@@ -648,7 +495,7 @@ module.exports = function (RED) {
                 * versenden:
                 *********************************************/
                 // var creds = RED.nodes.getNode(config.creds); - not used
-                const attrs = ['region', 'day', 'date', 'ts', 'year'];
+                const attrs = ['day', 'date', 'ts', 'year'];
 
                 const outMsg = RED.util.cloneMessage(msg);
                 outMsg.data = {};
@@ -717,28 +564,12 @@ module.exports = function (RED) {
                     return;
                 }
 
-                if (typeof outMsg.data.region !== 'undefined' && outMsg.data.region !== '' && outMsg.data.region !== null) {
-                    outMsg.data.region = outMsg.data.region.toUpperCase();
-                    if (allRegions.indexOf(outMsg.data.region) === -1) {
-                        // this.error('Invalid region: ' + outMsg.data.region + '! Must be one of ' + allRegions.toString());
-                        this.status({
-                            fill: 'red',
-                            shape: 'dot',
-                            text: 'Invalid Region given!'
-                        });
-                        done('Invalid region: ' + outMsg.data.region + '! Must be one of ' + allRegions.toString() ,msg);
-                        return;
-                    }
-                } else {
-                    delete outMsg.data.region;
-                }
-
                 if ((typeof outMsg.data.date !== 'undefined') && ((outMsg.data.date instanceof Date) || (typeof outMsg.data.date === 'string'))) {
                     const dto = new Date(outMsg.data.date);
                     if (_isValidDate(dto)) {
                         outMsg.data.comment = 'data date';
                         outMsg.data.year = dto.getUTCFullYear();
-                        const specialdays = _getSpecialDaysOfYear(this, outMsg.data.year, outMsg.data.region);
+                        const specialdays = _getSpecialDaysOfYear(this, outMsg.data.year);
                         outMsg.payload = this.getDataForDate(dto, specialdays);
                         this.status({
                             fill: 'grey',
@@ -755,7 +586,7 @@ module.exports = function (RED) {
 
                 if (typeof outMsg.data.day !== 'undefined' || !isNaN(outMsg.data.day)) {
                     outMsg.data.year = outMsg.data.ts.getUTCFullYear();
-                    const dataObjs = _getSpecialDaysOfYear(this, outMsg.data.year, outMsg.data.region);
+                    const dataObjs = _getSpecialDaysOfYear(this, outMsg.data.year);
 
                     outMsg.payload = this.getDataForDay(outMsg.data.ts, outMsg.data.day, dataObjs);
                     this.status({
@@ -768,7 +599,7 @@ module.exports = function (RED) {
                     return;
                 }
 
-                const dayObjs = _getSpecialDaysOfYear(this, outMsg.data.year, outMsg.data.region);
+                const dayObjs = _getSpecialDaysOfYear(this, outMsg.data.year);
 
                 outMsg.payload = {
                     // lastUpdate: outMsg.data.ts.toISOString(),

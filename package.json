@@ -1,7 +1,7 @@
 {
   "name": "node-red-contrib-german-holidays",
-  "version": "0.1.15",
-  "description": "NodeRED nodes to get german holidays",
+  "version": "1.0.0",
+  "description": "NodeRED nodes to get holidays or special days (not even german holidays)",
   "keywords": [
     "node-red",
     "german-holidays",
@@ -50,7 +50,7 @@
   },
   "homepage": "https://github.com/rdmtc/node-red-contrib-german-holidays#readme",
   "node-red": {
-    "version": ">=0.19.0",
+    "version": ">=1.0.0",
     "nodes": {
       "german-holidays": "german-holidays.js"
     }
@@ -59,8 +59,8 @@
     "camo-purge": "^1.0.2",
     "eslint": "^6.8.0",
     "eslint-plugin-html": "^6.0.0",
-    "eslint-plugin-jsdoc": "^21.0.0",
-    "eslint-plugin-json": "^2.1.0",
+    "eslint-plugin-jsdoc": "^22.1.0",
+    "eslint-plugin-json": "^2.1.1",
     "eslint-plugin-node": "^11.0.0"
   },
   "disabledSettings": {
@@ -127,6 +127,16 @@
       "eqeqeq": "error",
       "no-else-return": "error",
       "prefer-arrow-callback": "error",
+      "no-confusing-arrow": [
+        "error",
+        {
+          "allowParens": true
+        }
+      ],
+      "arrow-parens": [
+        "error",
+        "as-needed"
+      ],
       "no-console": "warn",
       "no-unused-vars": [
         "error",
@@ -146,7 +156,23 @@
         }
       ],
       "no-var": "error",
+      "object-shorthand": [
+        "error",
+        "always"
+      ],
       "prefer-const": "error",
+      "prefer-rest-params": "error",
+      "no-useless-concat": "error",
+      "no-template-curly-in-string": "error",
+      "require-jsdoc": "warn",
+      "rest-spread-spacing": [
+        "error",
+        "never"
+      ],
+      "symbol-description": "error",
+      "array-callback-return": "error",
+      "consistent-return": "error",
+      "no-lone-blocks": "error",
       "linebreak-style": [
         "warn",
         "unix"

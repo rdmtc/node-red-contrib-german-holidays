@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### 1.0.0 - maintenance
+
+- #7 Fixed typo - Interface change implied
+- set Node-Red 1.0 or above as the required Version
+- removed backward compatibility. Node will only used holidays setup before. If a node was not changed since 0.1.0 it will no longer work! Need to open of the node settings in node-Red, Save and deploy is necessary for migration!
+
 #### 0.1.15 - maintenance
 
 - updated dependencies

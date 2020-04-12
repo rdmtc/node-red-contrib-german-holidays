@@ -16,7 +16,8 @@ The Holidays can be setup as fixed dates or dates based on Easter, Advent. Pre d
 
 > :warning: **Warning! Version 1.0 breaks to existing!** :warning:
 >
-> - Changes payload
+> - Requires Node-Red 1.0 or later!
+> - Changed payload (holiday* instead of holliday*)!
 > - Not configured Holidays will not be used (no backwards compatibility). Existing nodes needs to be opened, saved and deployed once!
 
 ## Installation

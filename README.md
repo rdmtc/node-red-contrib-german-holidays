@@ -14,6 +14,11 @@ This node are for getting holidays or information if today/tomorrow/... is a hol
 
 The Holidays can be setup as fixed dates or dates based on Easter, Advent. Pre defined Holidays for german exists, but these must not be used.
 
+Warning, Version 1.0 breaks to existing!
+
+- Changes payload
+- Not configured Holidays will not be used (no backwards compatibility). Existing nodes needs to be opened, saved and deployed once!
+
 ## Installation
 
 `npm install node-red-contrib-german-holidays`
@@ -105,18 +110,18 @@ if the input has no day or date property (default use case) the the payload is a
 - `msg.payload.dayAfterTomorrow` _enh-day-object_ day-object for the day after tomorrow.
 - `msg.payload.afterTheDayAfterTomorrow` _enh-day-object_ day-object for the day after tomorrow.
 - `msg.payload.next` _object_ object representing information about the next holiday.
-- `msg.payload.next.holliday` _enh-day-object_ object representing the next holiday.
-- `msg.payload.next.hollidays` _array_ array of the next 10 holiday (`msg.payload.next.hollidays.0` is equal to `msg.payload.next.holliday`), every _enh-day-object_ has additional a `diffDays` property which is the count of days until this holiday and a `diff` which represents the difference in milliseconds.
-- `msg.payload.next.hollidayDiff` _number_ count of days until next holiday.
+- `msg.payload.next.holiday` _enh-day-object_ object representing the next holiday.
+- `msg.payload.next.holidays` _array_ array of the next 10 holiday (`msg.payload.next.holidays.0` is equal to `msg.payload.next.holiday`), every _enh-day-object_ has additional a `diffDays` property which is the count of days until this holiday and a `diff` which represents the difference in milliseconds.
+- `msg.payload.next.holidayDiff` _number_ count of days until next holiday.
 - `msg.payload.next.specialday` _enh-day-object_ object representing the next special day.
 - `msg.payload.next.specialdays` _array_ array of the next 10 special days (`msg.payload.next.specialdays.0` is equal to `msg.payload.next.specialday`), every _enh-day-object_ has additional a `diffDays` property which is the count of days until this holiday and a `diff` which represents the difference in milliseconds.
 - `msg.payload.next.weekendDay` _enh-day-object_ object representing the next Saturday or Sunday (if it is Saturday).
 - `msg.payload.next.weekendDayDiff` _number_ count of days until next Saturday or Sunday (if it is Saturday).
 - `msg.payload.next.weekendOrHoliday` _enh-day-object_ object representing the next holiday or Saturday or Sunday (next free day).
 - `msg.payload.next.weekendOrHolidayDiff` _number_ count of days until next holiday or Saturday or Sunday (next free day).
-- `msg.payload.hollidays` _enh-day-object_ An array of objects for every Holiday in the year.
-- `msg.payload.hollidays` _array_ An array of objects for every Holiday in the year.
-- `msg.payload.hollidaysNum` _array_ An array of numbers for every Holiday in the year.
+- `msg.payload.holidays` _enh-day-object_ An array of objects for every Holiday in the year.
+- `msg.payload.holidays` _array_ An array of objects for every Holiday in the year.
+- `msg.payload.holidaysNum` _array_ An array of numbers for every Holiday in the year.
 - `msg.payload.weekNumber` _number_ weekNumber for today.
 - `msg.payload.weekNumberEven` _boolean_ Is `true` if the weekNumber is even.
 

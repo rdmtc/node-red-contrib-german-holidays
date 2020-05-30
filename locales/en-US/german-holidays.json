@@ -25,7 +25,8 @@
             "id": "ID",
             "name":"name",
             "nameAlt":"alternate name",
-            "exampleDate": "exemplary date:"
+            "exampleDate": "exemplary date:",
+            "payload": "add data"
         },
         "placeholder": {
             "region": "select state for holidays",

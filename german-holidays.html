@@ -81,6 +81,10 @@
             <select type="text" id="dialog-input-dayofweek" name="dialog-input-dayofweek" style="width:40%" >
             </select>
         </div>
+        <div class="form-row">
+            <label for="dialog-input-payload">add. payload</label>
+            <input type="text" name="dialog-input-payload" id="dialog-input-payload" class="text ui-widget-content ui-corner-all">
+        </div>
         <div>
             <label id="dialog-label-date-out"></label>
         </div>
@@ -247,6 +251,9 @@
 <!-- Finally, the node type is registered along with all of its properties   -->
 <!-- The example below shows a small subset of the properties that can be set-->
 <script type="text/javascript">
+    /**
+     * get the data od a day
+     */
     function getData(rule) {
         return {
             id: rule.find('.node-input-item-id').val(),
@@ -256,10 +263,15 @@
             month: parseInt(rule.find('.node-input-item-month').val()),
             day: parseInt(rule.find('.node-input-item-day').val()),
             nth: parseInt(rule.find('.node-input-item-nth').val()),
-            dow: parseInt(rule.find('.node-input-item-dow').val())
+            dow: parseInt(rule.find('.node-input-item-dow').val()),
+            plType: rule.find('.node-input-item-plType').val(),
+            plValue: rule.find('.node-input-item-plValue').val()
         };
     }
 
+    /**
+     * save a holiday
+     */
     function saveHolidays(node) {
         console.log('saveHolidays'); // eslint-disable-line
         node.holidays = [];
@@ -273,6 +285,9 @@
         console.log(node.holidays); // eslint-disable-line
     }
 
+    /**
+     * save a special day
+     */
     function saveSpecialdays(node) {
         console.log('saveSpecialdays'); // eslint-disable-line
         node.specialdays = [];
@@ -286,6 +301,9 @@
         console.log(node.specialdays); // eslint-disable-line
     }
 
+    /**
+     * resizes the list item
+     */
     function _edtLstResizeItem(row) {
         const newWidth = row.width() - 10;
         const $name = row.find('.node-input-item-name');
@@ -298,6 +316,7 @@
         const btnWidth = $btn.width();
         $name.width(newWidth - 165 - btnWidth);
     }
+
     RED.nodes.registerType('german-holidays', {
         category: 'function',
         defaults: {
@@ -901,6 +920,9 @@
             $('.rdg-ui-btn').button(); // ui-button ui-widget ui-corner-all
 
             // #region generic DateTimeFunctions
+            /**
+             * calculates the easter date
+             */
             function _getEasterDate(year) {
                 const C = Math.floor(year / 100);
                 const N = year - 19 * Math.floor(year / 19);
@@ -1018,6 +1040,9 @@
                 arr.push(el);
             }
 
+            /**
+             * loads the holiday data
+             */
             function _loadHolidays(node) {
                 console.log('_loadHolidays'); // eslint-disable-line
                 console.log(node.holidays); // eslint-disable-line
@@ -1028,6 +1053,9 @@
                 }
             }
 
+            /**
+             * adding a holiday
+             */
             function _addHolidays(node, region) {
                 saveHolidays(node);
 
@@ -1042,7 +1070,9 @@
                             month: d.month,
                             day: d.day,
                             nth: d.nth,
-                            dow: d.dow
+                            dow: d.dow,
+                            plValue: '',
+                            plType:'none'
                         });
                     }
                 });
@@ -1050,6 +1080,9 @@
                 _loadHolidays(node);
             }
 
+            /**
+             * loads a special day
+             */
             function _loadSpecialdays(node) {
                 console.log('loadSpecialdays'); // eslint-disable-line
                 console.log(node.specialdays); // eslint-disable-line
@@ -1060,6 +1093,9 @@
                 }
             }
 
+            /**
+             * adding a special day
+             */
             function _addSpecialdays(node) {
                 saveHolidays(node);
                 saveSpecialdays(node);
@@ -1074,8 +1110,9 @@
                         month: d.month,
                         day: d.day,
                         nth: d.nth,
-                        dow: d.dow
-
+                        dow: d.dow,
+                        plValue: '',
+                        plType:'none'
                     };
                     if (!node.holidays.some(e => (e.month === obj.month && e.day === obj.day))) {
                         _pushUnique(node.specialdays, obj);
@@ -1086,6 +1123,9 @@
             }
             // #endregion list generic functions
             // #region container generic
+            /**
+             * adds an item ti the list
+             */
             function _edtLstAddItem(containerRow, containerIndex, data) {
                 containerRow.css({ overflow: 'hidden', whiteSpace: 'nowrap' });
                 const row = $('<div/>').appendTo(containerRow);
@@ -1146,6 +1186,17 @@
                     class: 'node-input-item-dow',
                     type: 'hidden',
                     value: ((data.day % 7) || 0)
+                }).appendTo(row);
+                // other
+                $('<input/>', {
+                    class: 'node-input-item-plValue',
+                    type: 'hidden',
+                    value: (data.plValue || '')
+                }).appendTo(row);
+                $('<input/>', {
+                    class: 'node-input-item-plType',
+                    type: 'hidden',
+                    value: (data.plType || 'none')
                 }).appendTo(row);
                 // edit Button
                 // <a id="node-config-lookup-ipaddress" class="btn"><i id="node-config-lookup-ipaddress-icon" class="fa fa-search"></i></a>
@@ -1241,10 +1292,35 @@
             const $dialogMonth = $('#dialog-input-month');
             const $dialogNthdow = $('#dialog-input-nthdow');
             const $dialogDayofweek = $('#dialog-input-dayofweek');
+            const $dialogPayload = $('#dialog-input-payload');
 
             const $dialogDaysRel = $('#dialog-input-daysRel');
             const $dialogLabel = $('#dialog-label-date-out');
 
+
+            $dialogPayload.typedInput({
+                default: 'none',
+                types: [
+                    {
+                        value:'none',
+                        label:'N/A',
+                        hasValue:false
+                    },
+                    'msg',
+                    'flow',
+                    'global',
+                    'str',
+                    'num',
+                    'bool',
+                    'json',
+                    'bin',
+                    'date',
+                    'env']
+            });
+
+            /**
+             * Loads the data into the dialog
+             */
             function _dialogLoadData(rule) {
                 $dialogConnFields = rule;
                 $dialogId.val(rule.find('.node-input-item-id').val());
@@ -1259,6 +1335,9 @@
                 $dialogDayofweek.val(String(day % 7));
                 $dialogDate.datepicker('setDate', null);
                 $dialogMonth.val('1');
+
+                $dialogPayload.typedInput('type',(rule.find('.node-input-item-plType').val() || 'none'));
+                $dialogPayload.typedInput('value',(rule.find('.node-input-item-plValue').val() || ''));
 
                 if (month >= 1 && month <= 12) {
                     $dialogDateType.val('date');
@@ -1286,6 +1365,9 @@
                 $dialog.dialog('open');
             }
 
+            /**
+             * Saves the Dialog Data
+             */
             function _dialogSaveData() {
                 console.log('dialogSaveData'); // eslint-disable-line
 
@@ -1293,6 +1375,8 @@
                 $dialogConnFields.find('.node-input-item-name').val($dialogName.val());
                 $dialogConnFields.find('.node-input-item-nameAlt').val($dialogNameAlt.val());
                 $dialogConnFields.find('.node-input-item-character').val($dialogCharacter.val());
+                $dialogConnFields.find('.node-input-item-plType').val($dialogPayload.typedInput('type'));
+                $dialogConnFields.find('.node-input-item-plValue').val($dialogPayload.typedInput('value'));
                 switch ($dialogDateType.val()) {
                     case 'easter':
                         $dialogConnFields.find('.node-input-item-month').val('-1');
@@ -1335,6 +1419,9 @@
                 $dialog.dialog( 'close' );
             }
 
+            /**
+             * Handles if the data has changed
+             */
             function _dialogDateOutChg() {
                 let date = null;
                 let date2 = null;
@@ -1420,6 +1507,7 @@
             $("label[for='dialog-input-date']").text(node._('german-holidays.label.date'));
             $("label[for='dialog-input-month']").text(node._('german-holidays.label.month'));
             $("label[for='dialog-input-month']").text(node._('german-holidays.label.month'));
+            $("label[for='dialog-input-payload']").text(node._('german-holidays.label.payload'));
 
 
             $dialogDateType.change(() => {

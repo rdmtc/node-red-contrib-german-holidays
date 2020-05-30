@@ -17,7 +17,7 @@ The Holidays can be setup as fixed dates or dates based on Easter, Advent. Pre d
 > :warning: **Warning! Version 1.0 breaks to existing!** :warning:
 >
 > - Requires Node-Red 1.0 or later!
-> - Changed payload (holiday* instead of holliday*)!
+> - Changed payload (holiday* instead of holiday*)!
 > - Not configured Holidays will not be used (no backwards compatibility). Existing nodes needs to be opened, saved and deployed once!
 
 ## Installation
@@ -72,6 +72,7 @@ base object for a day representation
 - `date` _number_ the day as JavaScript date.
 - `dateString` _string_ the date of the day as string.
 - `dateISOString` _string_ the date of the day as ISO string.
+- `data` _any_ optional only available if additional data is set.
 
 ### enhanced day object **enh-day-object**
 
@@ -100,6 +101,7 @@ This object has all properties of the generic day object:
 - (optional) `isBetweenSundayAndHoliday` _string_ is true if the day is a Monday when Tuesday is a holiday (only available on standard output for today, tomorrow and dayAfterTomorrow).
 - (optional) `isBetweenHolidayAndSaturday` _string_ is true if the day is a Friday when Thursday is a holiday (only available on standard output for today, tomorrow and dayAfterTomorrow).
 - (optional) `isBetweenWeekendOrHoliday` _string_ is true if the day is not a Saturday, Sunday or a holiday, but the day before or after is Saturday, Sunday or a holiday (only available on standard output for today, tomorrow and dayAfterTomorrow).
+- (optional) `data` _any_ optional only available if additional data is set.
 
 ### Output message object
 
@@ -125,6 +127,7 @@ if the input has no day or date property (default use case) the the payload is a
 - `msg.payload.holidaysNum` _array_ An array of numbers for every Holiday in the year.
 - `msg.payload.weekNumber` _number_ weekNumber for today.
 - `msg.payload.weekNumberEven` _boolean_ Is `true` if the weekNumber is even.
+- (optional) `msg.payload.data` _any_ is the same as `msg.payload.today.data` and only available if additional data is available for today.
 
 ## Usage
 
@@ -144,6 +147,7 @@ For bugs, questions and discussions please use the
 [GitHub Issues](https://github.com/Hypnos3/node-red-contrib-german-holidays/issues).
 
 ### :moneybag: Donations [![Donate](https://img.shields.io/badge/donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=32NJPXPMR9YV8)
+
 Even for those that don't have the technical knowhow to help developing on there are ways to support development. So if you want to donate some money please feel free to send money via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=32NJPXPMR9YV8).
 
 ## LICENSE
@@ -158,5 +162,6 @@ This was developed by using the https://github.com/sfakir/feiertagejs.
 ## Other
 
 this node is published also here:
-  - [NPM package](https://www.npmjs.com/package/node-red-contrib-german-holidays)
-  - [Node-Red](https://flows.nodered.org/node/node-red-contrib-german-holidays)
+
+- [NPM package](https://www.npmjs.com/package/node-red-contrib-german-holidays)
+- [Node-Red](https://flows.nodered.org/node/node-red-contrib-german-holidays)

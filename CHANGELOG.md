@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+#### 1.0.1 - maintenance
+
+- added possibility to define additional payload data for a holiday or a special day. This could be used to directly send additional data based on the day which are today #10
+
 #### 1.0.0 - maintenance
 
 - #7 Fixed typo - Interface change implied

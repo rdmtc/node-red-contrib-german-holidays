@@ -270,10 +270,11 @@ function _makeDate(year, naturalMonthOrRef, day) {
  * @param {String} [nameAlt]  -  alterntive name of the day
  * @param {*} [character]  -  character of the day
  * @param {*} [characteristics]  -  characteristics of the day
+ * @param {*} [data]  -  additional data for the day
  * @returns day
  * @private
  */
-function _newDay(id, date, name, nameAlt, character, characteristics) {
+function _newDay(id, date, name, nameAlt, character, characteristics, data) {
     if (!date) {
         return null;
     }
@@ -283,6 +284,7 @@ function _newDay(id, date, name, nameAlt, character, characteristics) {
         name,
         nameAlt,
         character,
+        data,
         dayOfWeek: date.getDay(), // date.getUTCDay(),
         day: date.getDate(), // date.getUTCDate(),
         month: date.getMonth(), // date.getUTCMonth(),
@@ -343,7 +345,21 @@ function _addDaysToArray(daysDefinitionArray, outArr, year, easter_date, advent4
                 } else if (month === adventX) {
                     month = advent4th;
                 }
-                _pushUnique(outArr, _newDay(d.id, _makeDate(year, month, day), d.name, d.nameAlt, d.character, _getCharacterNames(d.character, characters)));
+                _pushUnique(
+                    outArr,
+                    _newDay(
+                        d.id,
+                        _makeDate(year, month, day),
+                        d.name,
+                        d.nameAlt,
+                        d.character,
+                        _getCharacterNames(d.character, characters),
+                        {
+                            type: d.plType,
+                            value: d.plValue
+                        }
+                    )
+                );
             }
         });
     }
@@ -407,6 +423,21 @@ module.exports = function (RED) {
         });
 
         // const node = this;
+        /**
+         * process special data
+         */
+        this.getPayloadData = (data, msg) => {
+            if (data) {
+                if (data.type && data.value) {
+                    try {
+                        return RED.util.evaluateNodeProperty(data.value, data.type, this, msg);
+                    } catch (err) {
+                        this.error('Error getting additional data',err);
+                    }
+                }
+            }
+            return null;
+        };
 
         /**
          * get the data for a date.
@@ -414,9 +445,10 @@ module.exports = function (RED) {
          * @param date date to get data for
          * @param daysObjects list of daysObjects
          * @param offsetToday (optional)
+         * @param msg the incomming message object
          * @returns object of all information for the day
          */
-        this.getDataForDate = (date, daysObjects, offsetToday) => {
+        this.getDataForDate = (date, daysObjects, offsetToday, msg) => {
             const d = date.getDay(); // gets the day of week
             const result = _newDay(undefined, date, RED._('german-holidays.days.' + d), RED._('german-holidays.days.' + (d + 7)));
             result.type = [{
@@ -424,7 +456,8 @@ module.exports = function (RED) {
                 name: result.name,
                 nameAlt: result.nameAlt,
                 character: result.character,
-                characteristics: result.characteristics
+                characteristics: result.characteristics,
+                data: result.data
             }];
 
             result.isSunday = (result.dayOfWeek === 0);
@@ -448,10 +481,12 @@ module.exports = function (RED) {
                 result.id = result.holiday.id;
                 result.name = result.holiday.name;
                 result.nameAlt = result.holiday.nameAlt;
+                result.data = this.getPayloadData(result.holiday.data, msg);
             } else if (result.isSpecialday) {
                 result.id = result.specialday.id;
                 result.name = result.specialday.name;
                 result.nameAlt = result.specialday.nameAlt;
+                result.data = this.getPayloadData(result.specialday.data, msg);
             }
 
             if (result.holiday) {
@@ -474,14 +509,14 @@ module.exports = function (RED) {
          * @param {*} daysObjects Holidays object Data
          * @returns object of all information for the day
          */
-        this.getDataForDay = (date, offsetToday, daysObjects) => {
+        this.getDataForDay = (date, offsetToday, daysObjects, msg) => {
             if (offsetToday !== 0) {
                 const d = new Date(date);
                 d.setDate(d.getDate() + offsetToday);
-                return this.getDataForDate(d, daysObjects, offsetToday);
+                return this.getDataForDate(d, daysObjects, offsetToday, msg);
             }
 
-            return this.getDataForDate(date, daysObjects, 0);
+            return this.getDataForDate(date, daysObjects, 0, msg);
         };
         const node = this;
 
@@ -570,7 +605,7 @@ module.exports = function (RED) {
                         outMsg.data.comment = 'data date';
                         outMsg.data.year = dto.getUTCFullYear();
                         const specialdays = _getSpecialDaysOfYear(this, outMsg.data.year);
-                        outMsg.payload = this.getDataForDate(dto, specialdays);
+                        outMsg.payload = this.getDataForDate(dto, specialdays, undefined, msg);
                         this.status({
                             fill: 'grey',
                             shape: 'ring',
@@ -588,7 +623,7 @@ module.exports = function (RED) {
                     outMsg.data.year = outMsg.data.ts.getUTCFullYear();
                     const dataObjs = _getSpecialDaysOfYear(this, outMsg.data.year);
 
-                    outMsg.payload = this.getDataForDay(outMsg.data.ts, outMsg.data.day, dataObjs);
+                    outMsg.payload = this.getDataForDay(outMsg.data.ts, outMsg.data.day, dataObjs, msg);
                     this.status({
                         fill: 'grey',
                         shape: 'ring',
@@ -618,11 +653,13 @@ module.exports = function (RED) {
                     },
                     weekNumber: _getWeekNumber(outMsg.data.ts)
                 };
-                outMsg.payload.yesterday = this.getDataForDay(outMsg.data.ts, -1, dayObjs);
-                outMsg.payload.today = this.getDataForDate(outMsg.data.ts, dayObjs, 0); // getDataForDay(outMsg.data.ts, 0, holidays);
-                outMsg.payload.tomorrow = this.getDataForDay(outMsg.data.ts, 1, dayObjs);
-                outMsg.payload.dayAfterTomorrow = this.getDataForDay(outMsg.data.ts, 2, dayObjs);
-                outMsg.payload.afterTheDayAfterTomorrow = this.getDataForDay(outMsg.data.ts, 3, dayObjs);
+                outMsg.payload.yesterday = this.getDataForDay(outMsg.data.ts, -1, dayObjs, msg);
+                outMsg.payload.today = this.getDataForDate(outMsg.data.ts, dayObjs, 0, msg); // getDataForDay(outMsg.data.ts, 0, holidays, msg);
+                outMsg.payload.tomorrow = this.getDataForDay(outMsg.data.ts, 1, dayObjs, msg);
+                outMsg.payload.dayAfterTomorrow = this.getDataForDay(outMsg.data.ts, 2, dayObjs, msg);
+                outMsg.payload.afterTheDayAfterTomorrow = this.getDataForDay(outMsg.data.ts, 3, dayObjs, msg);
+
+                outMsg.payload.data = outMsg.payload.today.data;
 
                 outMsg.payload.weekNumberEven = !(outMsg.payload.weekNumber % 2);
 

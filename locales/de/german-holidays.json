@@ -25,7 +25,8 @@
             "id": "ID",
             "name": "Name",
             "nameAlt": "Alternativer Name",
-            "exampleDate": "beispielhaftes Datum:"
+            "exampleDate": "beispielhaftes Datum:",
+            "payload": "zus. Daten"
         },
         "placeholder": {
             "region": "wähle region der Feiertage",

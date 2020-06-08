@@ -940,7 +940,7 @@
                 const L = I - J;
                 const M = 3 + Math.floor((L + 40) / 44);
                 const D = L + 28 - 31 * Math.floor(M / 4);
-                return new Date(Date.UTC(year, M - 1, D));
+                return new Date(year, M - 1, D);
             }
 
             /**
@@ -998,7 +998,7 @@
             function _makeDate(year, naturalMonthOrRef, day) {
                 console.log(`_makeDate year=${year} naturalMonthOrRef=${naturalMonthOrRef} day=${day} `); // eslint-disable-line
                 if (typeof year === 'object') {
-                    year = year.getUTCFullYear();
+                    year = year.getFullYear();
                 }
 
                 if (typeof naturalMonthOrRef === 'object' && !isNaN(day)) {
@@ -1018,7 +1018,7 @@
                 }
 
                 if (naturalMonthOrRef <= 12 && day >= 1 && day <= 31) {
-                    return new Date(Date.UTC(year, naturalMonthOrRef - 1, day));
+                    return new Date(year, naturalMonthOrRef - 1, day);
                 }
                 return null;
             }
@@ -1274,7 +1274,7 @@
             // #endregion migrate
 
             // #region dialog
-            const year = (new Date()).getUTCFullYear();
+            const year = (new Date()).getFullYear();
             const easter_date = _getEasterDate(year);
             const advent4th_date = _getAdvent4th(year);
 
@@ -1342,8 +1342,8 @@
                 if (month >= 1 && month <= 12) {
                     $dialogDateType.val('date');
                     const date = new Date();
-                    date.setUTCHours(0,0,0,0);
-                    date.setUTCMonth(month - 1,day);
+                    date.setHours(0,0,0,0);
+                    date.setMonth(month - 1,day);
                     $dialogDate.datepicker('setDate', date);
                 } else if (month >= 13 && month <= 24) {
                     $dialogDateType.val('weekdayfirst');
@@ -1411,8 +1411,8 @@
                     default: {
                         const date = $dialogDate.datepicker( 'getDate' );
                         if (date !== null) {
-                            $dialogConnFields.find('.node-input-item-month').val(String(date.getUTCMonth() + 1));
-                            $dialogConnFields.find('.node-input-item-day').val(date.getUTCDate());
+                            $dialogConnFields.find('.node-input-item-month').val(String(date.getMonth() + 1));
+                            $dialogConnFields.find('.node-input-item-day').val(date.getDate());
                         }
                     }
                 }

@@ -51,7 +51,38 @@ function _pad2(n) { // always returns a string
  *  @returns {string} date representation
  */
 function _dateToString(d) {
+    // return d.getUTCFullYear() + '-' + _pad2(d.getUTCMonth() + 1) + '-' + _pad2(d.getUTCDate()) + 'T' + _pad2(d.getUTCHours()) + ':' + _pad2(d.getUTCMinutes()) + 'Z';
+    const date = new Date(d); // copy instance
+    const offset = date.getTimezoneOffset();
+    const h = Math.floor(Math.abs(offset) / 60);
+    const m = Math.abs(offset) % 60;
+    date.setMinutes(date.getMinutes() - offset); // apply custom timezone
+    return date.getUTCFullYear() + '-' // return custom format
+        + _pad2(date.getUTCMonth() + 1) + '-'
+        + _pad2(date.getUTCDate()) + 'T'
+        + _pad2(date.getUTCHours()) + ':'
+        + _pad2(date.getUTCMinutes()) + ':'
+        + _pad2(date.getUTCSeconds())
+        + (offset === 0 ? 'Z' : (offset < 0 ? '+' : '-') + _pad2(h) + ':' + _pad2(m));
+}
+
+/**
+ * Format a date do a string similar to ISO format, but with no secondy or milliseconds to be shorter
+ * @param {Date} d Date to format
+ *  @returns {string} date representation
+ */
+function _dateToUTCString(d) {
     return d.getUTCFullYear() + '-' + _pad2(d.getUTCMonth() + 1) + '-' + _pad2(d.getUTCDate()) + 'T' + _pad2(d.getUTCHours()) + ':' + _pad2(d.getUTCMinutes()) + 'Z';
+}
+
+/**
+ * formates a Date to a string (no time YYYY-MM-DD)
+ * @param {Date} d Date to format
+ * @returns {string} Date string in the format YYYY-MM-DD
+ * @private
+ */
+function _dateToDateString(d) {
+    return  d.getFullYear() + '-' +  _pad2(d.getMonth() + 1) + '-' + _pad2(d.getDate());
 }
 
 /**
@@ -67,13 +98,27 @@ function _isValidDate(d) {
  * determinates the current week number of UTC timestamp.
  * @param d date for determinate week number
  * @returns number current week number
- */
-function _getWeekNumber(d) {
+ *
+function _getUTCWeekNumber(d) {
     // Copy date so don't modify original
     d = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
     const dayNum = d.getUTCDay() || 7;
     d.setUTCDate(d.getUTCDate() + 4 - dayNum);
     const yearStart = Date.UTC(d.getUTCFullYear(), 0, 1);
+    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+} /* */
+
+/**
+ * determinates the current week number of  timestamp.
+ * @param d date for determinate week number
+ * @returns number current week number
+ */
+function _getWeekNumber(d) {
+    // Copy date so don't modify original
+    d = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 1);
+    const dayNum = d.getDay() || 7;
+    d.setDate(d.getDate() + 4 - dayNum);
+    const yearStart = new Date(d.getFullYear(), 0, 1);
     return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
 }
 
@@ -81,9 +126,23 @@ function _getWeekNumber(d) {
  * check if default value could be used
  * @param {*} node The Node object
  * @param {*} ts the timestamp
+ *
+function _checkUTCDefault(node, ts) {
+    const newYear = (new Date()).getUTCFullYear();
+    if (newYear !== node.default.year) {
+        node.default.ts = ts;
+        node.default.year = newYear;
+        node.default.dayObjs = _getSpecialDaysOfYear(node, node.default.year, true, true);
+    }
+} /* */
+
+/**
+ * check if default value could be used
+ * @param {*} node The Node object
+ * @param {*} ts the timestamp
  */
 function _checkDefault(node, ts) {
-    const newYear = (new Date()).getUTCFullYear();
+    const newYear = (new Date()).getFullYear();
     if (newYear !== node.default.year) {
         node.default.ts = ts;
         node.default.year = newYear;
@@ -179,7 +238,8 @@ function _getEasterDate(year) {
     const L = I - J;
     const M = 3 + Math.floor((L + 40) / 44);
     const D = L + 28 - 31 * Math.floor(M / 4);
-    return new Date(Date.UTC(year, M - 1, D));
+    // return new Date(Date.UTC(year, M - 1, D));
+    return new Date(year, M - 1, D);
 }
 
 /**
@@ -203,7 +263,8 @@ function _getAdvent4th(year) {
  * @returns {Date}  -  new Date
  */
 function _firstNthWeekdayOfMonth(year, month, dayOfWeek, n) {
-    const date = new Date(Date.UTC(year, month, 1));
+    // const date = new Date(Date.UTC(year, month, 1));
+    const date = new Date(year, month, 1);
     const add = (dayOfWeek - date.getDay() + 7) % 7 + n * 7;
     date.setDate(1 + add);
     return date;
@@ -218,7 +279,8 @@ function _firstNthWeekdayOfMonth(year, month, dayOfWeek, n) {
  * @returns {Date}  -  new Date
  */
 function _lastNthWeekdayOfMonth(year, month, dayOfWeek, n) {
-    const date = new Date(Date.UTC(year, month + 1, 0));
+    // const date = new Date(Date.UTC(year, month + 1, 0));
+    const date = new Date(year, month + 1, 0);
     const dy = date.getDay(); // day of week
     if ( dy < dayOfWeek) {
         dayOfWeek -= 7;
@@ -237,7 +299,8 @@ function _lastNthWeekdayOfMonth(year, month, dayOfWeek, n) {
  */
 function _makeDate(year, naturalMonthOrRef, day) {
     if (typeof year === 'object') {
-        year = year.getUTCFullYear();
+        // year = year.getUTCFullYear();
+        year = year.getFullYear();
     }
 
     if (typeof naturalMonthOrRef === 'object' && !isNaN(day)) {
@@ -257,7 +320,8 @@ function _makeDate(year, naturalMonthOrRef, day) {
     }
 
     if (naturalMonthOrRef <= 12 && day >= 1 && day <= 31) {
-        return new Date(Date.UTC(year, naturalMonthOrRef - 1, day));
+        // return new Date(Date.UTC(year, naturalMonthOrRef - 1, day));
+        return new Date(year, naturalMonthOrRef - 1, day);
     }
     return null;
 }
@@ -293,12 +357,14 @@ function _newDay(id, date, name, nameAlt, character, characteristics, data) {
         date, // : new Date(year, month, day, hours, minutes, seconds, milliseconds),
         ts: _toTimestamp(date),
         tsUTC: _toUtcTimestamp(date),
-        dateString: _localeDateObjectToDateString(date),
+        dateString: _dateToDateString(date),
+        dateTimeString: _dateToString(date),
+        dateUTCTimeString: _dateToUTCString(date),
         dateISOString: date.toISOString(),
         characteristics,
         equals(date) {
-            const string = _localeDateObjectToDateString(date);
-            return this.dateString === string;
+            const str = _dateToDateString(date);
+            return this.dateString === str;
         }
     };
     if (!obj.id) {
@@ -363,18 +429,6 @@ function _addDaysToArray(daysDefinitionArray, outArr, year, easter_date, advent4
             }
         });
     }
-}
-
-/**
- *
- * @param {Date} date
- * @returns {string}
- * @private
- */
-function _localeDateObjectToDateString(date) {
-    date = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
-    date.setUTCHours(0, 0, 0, 0);
-    return date.toISOString().slice(0, 10);
 }
 
 /**
@@ -583,8 +637,8 @@ module.exports = function (RED) {
                     outMsg.data.comment = 'use default timestamp ' + outMsg.data.ts.toISOString();
                 }
 
-                // outMsg.data.year = outMsg.data.ts.getFullYear();
-                outMsg.data.year = outMsg.data.ts.getUTCFullYear();
+                // outMsg.data.year = outMsg.data.ts.getUTCFullYear();
+                outMsg.data.year = outMsg.data.ts.getFullYear();
 
                 // this.debug(JSON.stringify(outMsg, Object.getOwnPropertyNames(outMsg)));
                 //-------------------------------------------------------------------
@@ -603,7 +657,8 @@ module.exports = function (RED) {
                     const dto = new Date(outMsg.data.date);
                     if (_isValidDate(dto)) {
                         outMsg.data.comment = 'data date';
-                        outMsg.data.year = dto.getUTCFullYear();
+                        // outMsg.data.year = dto.getUTCFullYear();
+                        outMsg.data.year = dto.getFullYear();
                         const specialdays = _getSpecialDaysOfYear(this, outMsg.data.year);
                         outMsg.payload = this.getDataForDate(dto, specialdays, undefined, msg);
                         this.status({
@@ -620,7 +675,8 @@ module.exports = function (RED) {
                 _checkDefault(this, outMsg.data.ts);
 
                 if (typeof outMsg.data.day !== 'undefined' || !isNaN(outMsg.data.day)) {
-                    outMsg.data.year = outMsg.data.ts.getUTCFullYear();
+                    // outMsg.data.year = outMsg.data.ts.getUTCFullYear();
+                    outMsg.data.year = outMsg.data.ts.getFullYear();
                     const dataObjs = _getSpecialDaysOfYear(this, outMsg.data.year);
 
                     outMsg.payload = this.getDataForDay(outMsg.data.ts, outMsg.data.day, dataObjs, msg);

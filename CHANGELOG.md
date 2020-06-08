@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+#### 1.0.2 - bug fix
+
+- changed completely from UTC to local time, because in some time-zones day calculated wrong
+
 #### 1.0.1 - maintenance
 
 - added possibility to define additional payload data for a holiday or a special day. This could be used to directly send additional data based on the day which are today #10

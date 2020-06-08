@@ -1,12 +1,10 @@
 # node-red-contrib-german-holidays for NodeRED
-
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/hypnos3/node-red-contrib-german-holidays/graphs/commit-activity)
-[![GitHub version](https://badge.fury.io/gh/Hypnos3%2Fnode-red-contrib-german-holidays.svg)](https://github.com/hypnos3/node-red-contrib-german-holidays)
-[![NPM version](https://badge.fury.io/js/node-red-contrib-german-holidays.svg)](http://badge.fury.io/js/node-red-contrib-german-holidays)
-[![HitCount](http://hits.dwyl.io/hypnos3/node-red-contrib-german-holidays.svg)](http://hits.dwyl.io/hypnos3/node-red-contrib-german-holidays)
-[![Dependencies Status](https://david-dm.org/hypnos3/node-red-contrib-german-holidays/status.svg)](https://david-dm.org/hypnos3/node-red-contrib-german-holidays)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/rdmtc/node-red-contrib-german-holidays/graphs/commit-activity)
+[![Dependencies Status](https://img.shields.io/david/rdmtc/node-red-contrib-german-holidays.svg)](https://david-dm.org/rdmtc/node-red-contrib-german-holidays)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Issues](https://img.shields.io/github/issues/hypnos3/node-red-contrib-german-holidays.svg?style=flat-square)](https://github.com/hypnos3/node-red-contrib-german-holidays/issues)
+[![Issues](https://img.shields.io/github/issues/rdmtc/node-red-contrib-german-holidays.svg?style=flat-square)](https://github.com/rdmtc/node-red-contrib-german-holidays/issues)
+[![NPM](https://img.shields.io/npm/dm/node-red-contrib-german-holidays)](https://github.com/rdmtc/node-red-contrib-german-holidays/releases/)
+[![NPM](https://nodei.co/npm/node-red-contrib-german-holidays.png)](https://nodei.co/npm/node-red-contrib-german-holidays/)
 
 <!-- [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) -->
 

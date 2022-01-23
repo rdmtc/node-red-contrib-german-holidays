@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### 1.0.3 - maintenance release
+
+- merged pull requests by @rucksman
+  - added "isWeekendOrHolidayOrSpecialday" #21
+  - Add Weltfrauentag as holiday in Berlin #22
+- Dependencies update
+
 #### 1.0.2 - bug fix
 
 - changed completely from UTC to local time, because in some time-zones day calculated wrong

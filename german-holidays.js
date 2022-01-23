@@ -521,6 +521,7 @@ module.exports = function (RED) {
             result.isHoliday = ((typeof result.holiday !== 'undefined') && (result.holiday !== null));
             result.specialday = daysObjects.specialdays.find(specialday => specialday.equals(date));
             result.isSpecialday = ((typeof result.specialday !== 'undefined') && (result.specialday !== null));
+            result.isHolidayOrSpecialday = result.isHoliday || result.isSpecialday;
 
             if (offsetToday) {
                 result.dayOffset = offsetToday;
@@ -530,7 +531,6 @@ module.exports = function (RED) {
             result.isSunOrHoliday = result.isSunday || result.isHoliday;
             result.isWeekendOrHoliday = result.isSaturday || result.isSunday || result.isHoliday;
             result.isWeekendOrHolidayOrSpecialday = result.isSaturday || result.isSunday || result.isHoliday || result.isSpecialday;
-            result.isHolidayOrSpecialday = result.isHoliday || result.isSpecialday;
 
             if (result.isHoliday) {
                 result.id = result.holiday.id;

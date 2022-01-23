@@ -82,7 +82,7 @@
             </select>
         </div>
         <div class="form-row dialog-input-ovwtext-row">
-            <label for="dialog-input-ovwtext">text</label>
+            <label for="dialog-input-ovwtext" id="dialog-input-ovwtext-lbl">text</label>
             <input type="text" name="dialog-input-ovwtext" id="dialog-input-ovwtext" class="text ui-widget-content ui-corner-all">
         </div>
         <div class="form-row">
@@ -1603,6 +1603,7 @@
                         $('.dialog-input-dowRel-row').hide();
                         $('.dialog-input-daysRel-row').hide();
                         $('.dialog-input-ovwtext-row').show();
+                        $('#dialog-input-ovwtext-lbl').text(node._('german-holidays.label.'+$dialogDateType.val()));
                         break;
                     default:
                         $('.dialog-input-date-row').show();

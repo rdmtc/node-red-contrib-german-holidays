@@ -30,7 +30,10 @@
             "nameAlt":"alternate name",
             "exampleDate": "exemplary date:",
             "payload": "add data",
-            "ovwtext": "text for overwrite"
+            "ovwtext": "text",
+            "ovwpayloadequal":"text of payload",
+            "ovwpayloadcontain":"text of payload",
+            "ovwtopic":"text of topic"
         },
         "placeholder": {
             "region": "select state for holidays",

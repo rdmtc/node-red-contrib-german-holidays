@@ -30,7 +30,10 @@
             "nameAlt": "Alternativer Name",
             "exampleDate": "beispielhaftes Datum:",
             "payload": "zus. Daten",
-            "ovwtext": "text zum überschreiben"
+            "ovwtext": "text",
+            "ovwpayloadequal":"payload text",
+            "ovwpayloadcontain":"payload text",
+            "ovwtopic":"topic text"
         },
         "placeholder": {
             "region": "wähle region der Feiertage",

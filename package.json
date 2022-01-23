@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-german-holidays",
-  "version": "1.0.2-beta2",
+  "version": "1.0.3",
   "description": "NodeRED nodes to get holidays or special days (not even german holidays)",
   "keywords": [
     "node-red",
@@ -54,10 +54,10 @@
     }
   },
   "devDependencies": {
-    "eslint": "^7.1.0",
-    "eslint-plugin-html": "^6.0.2",
-    "eslint-plugin-jsdoc": "^26.0.0",
-    "eslint-plugin-json": "^2.1.1",
+    "eslint": "^8.7.0",
+    "eslint-plugin-html": "^6.2.0",
+    "eslint-plugin-jsdoc": "^37.6.3",
+    "eslint-plugin-json": "^3.1.0",
     "eslint-plugin-node": "^11.1.0"
   },
   "disabledSettings": {

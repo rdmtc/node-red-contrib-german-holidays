@@ -602,8 +602,9 @@ module.exports = function (RED) {
 
             result.isWeekend = result.isSunday || result.isSaturday;
             result.isSunOrHoliday = result.isSunday || result.isHoliday;
-            result.isWeekendOrHoliday = result.isSaturday || result.isSunday || result.isHoliday;
             result.isHolidayOrSpecialday = result.isHoliday || result.isSpecialday;
+            result.isWeekendOrHoliday = result.isSaturday || result.isSunday || result.isHoliday;
+            result.isWeekendOrHolidayOrSpecialday = result.isSaturday || result.isSunday || result.isHoliday || result.isSpecialday;
 
             if (result.isHoliday) {
                 result.id = result.holiday.id;

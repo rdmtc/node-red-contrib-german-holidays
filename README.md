@@ -163,3 +163,4 @@ this node is published also here:
 
 - [NPM package](https://www.npmjs.com/package/node-red-contrib-german-holidays)
 - [Node-Red](https://flows.nodered.org/node/node-red-contrib-german-holidays)
+- [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7U3315ED)

@@ -34,6 +34,9 @@ const characteristic = {
 
 const easterX = -1;
 const adventX = -2;
+const ovwTopicX = -3;
+const ovwPlEX = -4;
+const ovwPlCX = -5;
 
 /*******************************************************************************************************/
 /**
@@ -209,9 +212,16 @@ function _getSpecialDaysOfYear(node, year, force, calcNext) {
         (a, b) => a.date.getTime() - b.date.getTime()
     );
 
+    const holidayOverwriteObjects = [];
+    const specialdaysOverwriteObjects = [];
+    _addOverwritesToArray(node.holidaysArray, holidayOverwriteObjects, node.characters);
+    _addOverwritesToArray(node.specialdaysArray, specialdaysOverwriteObjects, node.characters);
+
     return {
         holidays: holidayObjects,
-        specialdays: specialdaysObjects
+        specialdays: specialdaysObjects,
+        overwriteHolidays: holidayOverwriteObjects,
+        overwriteSpecialdays: specialdaysOverwriteObjects
     };
 }
 
@@ -405,12 +415,13 @@ function _addDaysToArray(daysDefinitionArray, outArr, year, easter_date, advent4
         daysDefinitionArray.forEach(d => {
             let month = parseInt(d.month);
             const day = parseInt(d.day);
-            if (!isNaN(month) && !isNaN(day) && month <= 24 && month !== 0 && month >= -3) {
+            if (!isNaN(month) && !isNaN(day) && month <= 24 && month !== 0 && month >= -2) {
                 if (month === easterX) {
                     month = easter_date;
                 } else if (month === adventX) {
                     month = advent4th;
                 }
+
                 _pushUnique(
                     outArr,
                     _newDay(
@@ -426,6 +437,35 @@ function _addDaysToArray(daysDefinitionArray, outArr, year, easter_date, advent4
                         }
                     )
                 );
+            }
+        });
+    }
+}
+
+/**
+ * add extra day definition to an day array
+ * @param {Array} daysDefinitionArray  -  extra day definition array
+ * @param {Array} outArr  -  day array
+ * @param {Array} characters  -  array of characteristics
+ */
+function _addOverwritesToArray(daysDefinitionArray, outArr, characters) {
+    if (daysDefinitionArray && daysDefinitionArray.length > 0) {
+        daysDefinitionArray.forEach(d => {
+            const month = parseInt(d.month);
+            if (month === ovwTopicX || month === ovwPlEX || month === ovwPlCX) {
+                outArr.push({
+                    id: d.id,
+                    type: month,
+                    overwrite: d.overwrite,
+                    name: d.name,
+                    nameAlt: d.nameAlt,
+                    character: d.character,
+                    characteristics: _getCharacterNames(d.character, characters),
+                    data : {
+                        type: d.plType,
+                        value: d.plValue
+                    }
+                });
             }
         });
     }
@@ -498,11 +538,10 @@ module.exports = function (RED) {
          * @param RED Red Data
          * @param date date to get data for
          * @param daysObjects list of daysObjects
-         * @param offsetToday (optional)
          * @param msg the incomming message object
          * @returns object of all information for the day
          */
-        this.getDataForDate = (date, daysObjects, offsetToday, msg) => {
+        this.getDataForDate = (date, daysObjects, msg) => {
             const d = date.getDay(); // gets the day of week
             const result = _newDay(undefined, date, RED._('german-holidays.days.' + d), RED._('german-holidays.days.' + (d + 7)));
             result.type = [{
@@ -517,18 +556,53 @@ module.exports = function (RED) {
             result.isSunday = (result.dayOfWeek === 0);
             result.isSaturday = (result.dayOfWeek === 6);
 
-            result.holiday = daysObjects.holidays.find(holiday => holiday.equals(date));
-            result.isHoliday = ((typeof result.holiday !== 'undefined') && (result.holiday !== null));
-            result.specialday = daysObjects.specialdays.find(specialday => specialday.equals(date));
-            result.isSpecialday = ((typeof result.specialday !== 'undefined') && (result.specialday !== null));
-            result.isHolidayOrSpecialday = result.isHoliday || result.isSpecialday;
+            const ovwrHd = daysObjects.overwriteHolidays.find(day => {
+                return (day.type == ovwTopicX && ('' + msg.topic).includes(day.overwrite)) || // eslint-disable-line eqeqeq
+                        (day.type == ovwPlEX && ('' + msg.payload) == day.overwrite) || // eslint-disable-line eqeqeq
+                        (day.type == ovwPlCX && ('' + msg.payload).includes(day.overwrite)); // eslint-disable-line eqeqeq
+            });
+            if (ovwrHd) {
+                result.isHoliday = true;
+                result.isHolidayOverwritten = true;
+                result.holiday = _newDay(
+                    ovwrHd.id,
+                    date,
+                    ovwrHd.name,
+                    ovwrHd.nameAlt,
+                    ovwrHd.character,
+                    ovwrHd.characteristics,
+                    ovwrHd.data
+                );
+            } else {
+                result.holiday = daysObjects.holidays.find(holiday => holiday.equals(date));
+                result.isHoliday = ((typeof result.holiday !== 'undefined') && (result.holiday !== null));
+            }
 
-            if (offsetToday) {
-                result.dayOffset = offsetToday;
+            const ovwrSd = daysObjects.overwriteSpecialdays.find(day => {
+                return (day.type == ovwTopicX && ('' + msg.topic).includes(day.overwrite)) || // eslint-disable-line eqeqeq
+                        (day.type == ovwPlEX && ('' + msg.payload) == day.overwrite) || // eslint-disable-line eqeqeq
+                        (day.type == ovwPlCX && ('' + msg.payload).includes(day.overwrite)); // eslint-disable-line eqeqeq
+            });
+            if (ovwrSd) {
+                result.isSpecialday = true;
+                result.isSpecialdayOverwritten = true;
+                result.specialday = _newDay(
+                    ovwrSd.id,
+                    date,
+                    ovwrSd.name,
+                    ovwrSd.nameAlt,
+                    ovwrSd.character,
+                    ovwrSd.characteristics,
+                    ovwrSd.data
+                );
+            } else {
+                result.specialday = daysObjects.specialdays.find(specialday => specialday.equals(date));
+                result.isSpecialday = ((typeof result.specialday !== 'undefined') && (result.specialday !== null));
             }
 
             result.isWeekend = result.isSunday || result.isSaturday;
             result.isSunOrHoliday = result.isSunday || result.isHoliday;
+            result.isHolidayOrSpecialday = result.isHoliday || result.isSpecialday;
             result.isWeekendOrHoliday = result.isSaturday || result.isSunday || result.isHoliday;
             result.isWeekendOrHolidayOrSpecialday = result.isSaturday || result.isSunday || result.isHoliday || result.isSpecialday;
 
@@ -565,13 +639,16 @@ module.exports = function (RED) {
          * @returns object of all information for the day
          */
         this.getDataForDay = (date, offsetToday, daysObjects, msg) => {
+            let result;
             if (offsetToday !== 0) {
                 const d = new Date(date);
                 d.setDate(d.getDate() + offsetToday);
-                return this.getDataForDate(d, daysObjects, offsetToday, msg);
+                result = this.getDataForDate(d, daysObjects, msg);
+            } else {
+                result = this.getDataForDate(date, daysObjects, msg);
             }
-
-            return this.getDataForDate(date, daysObjects, 0, msg);
+            result.dayOffset = offsetToday;
+            return result;
         };
         const node = this;
 
@@ -606,12 +683,6 @@ module.exports = function (RED) {
                         if ((msg.payload[attr] != null) && (msg.payload[attr] !== '')) { // eslint-disable-line
                             outMsg.data[attr] = msg.payload[attr];
                         }
-                    }
-                } else if ((typeof outMsg.data.ts === 'undefined') && ((typeof msg.payload === 'string') || (msg.payload instanceof Date)) || (typeof msg.payload === 'number')) {
-                    const dto = new Date(msg.payload);
-                    if (_isValidDate(dto)) {
-                        outMsg.data.comment = 'data.ts from payload [string] "' + msg.payload + '" = ' + dto.toISOString();
-                        outMsg.data.ts = dto;
                     }
                 }
 
@@ -661,7 +732,7 @@ module.exports = function (RED) {
                         // outMsg.data.year = dto.getUTCFullYear();
                         outMsg.data.year = dto.getFullYear();
                         const specialdays = _getSpecialDaysOfYear(this, outMsg.data.year);
-                        outMsg.payload = this.getDataForDate(dto, specialdays, undefined, msg);
+                        outMsg.payload = this.getDataForDate(dto, specialdays, msg);
                         this.status({
                             fill: 'grey',
                             shape: 'ring',
@@ -711,7 +782,7 @@ module.exports = function (RED) {
                     weekNumber: _getWeekNumber(outMsg.data.ts)
                 };
                 outMsg.payload.yesterday = this.getDataForDay(outMsg.data.ts, -1, dayObjs, msg);
-                outMsg.payload.today = this.getDataForDate(outMsg.data.ts, dayObjs, 0, msg); // getDataForDay(outMsg.data.ts, 0, holidays, msg);
+                outMsg.payload.today = this.getDataForDay(outMsg.data.ts, 0, dayObjs, msg);
                 outMsg.payload.tomorrow = this.getDataForDay(outMsg.data.ts, 1, dayObjs, msg);
                 outMsg.payload.dayAfterTomorrow = this.getDataForDay(outMsg.data.ts, 2, dayObjs, msg);
                 outMsg.payload.afterTheDayAfterTomorrow = this.getDataForDay(outMsg.data.ts, 3, dayObjs, msg);

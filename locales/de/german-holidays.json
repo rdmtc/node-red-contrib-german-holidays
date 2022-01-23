@@ -14,6 +14,9 @@
             "rel4ThAdvent": "🎄  relativ zum 4. Advent",
             "relDayOfWeekFirst": "erster Wochentag im Monat",
             "relDayOfWeekLast": "letzter Wochentag im Monat",
+            "overwriteByPayloadE": "wenn Payload ist gleich",
+            "overwriteByPayloadC": "wenn Payload enthält",
+            "overwriteByTopic": "wenn Topic enthält",
             "dialogtitle": "Eintrag bearbeiten",
             "date": "Datum",
             "month": "Monat",
@@ -26,7 +29,11 @@
             "name": "Name",
             "nameAlt": "Alternativer Name",
             "exampleDate": "beispielhaftes Datum:",
-            "payload": "zus. Daten"
+            "payload": "zus. Daten",
+            "ovwtext": "text",
+            "ovwpayloadequal":"payload text",
+            "ovwpayloadcontain":"payload text",
+            "ovwtopic":"topic text"
         },
         "placeholder": {
             "region": "wähle region der Feiertage",

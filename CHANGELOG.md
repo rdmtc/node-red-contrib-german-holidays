@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+#### 1.1.0 - enhancement
+
+- added possibility for define holiday or special day overwrites
+
 #### 1.0.3 - maintenance release
 
 - merged pull requests by @rucksman

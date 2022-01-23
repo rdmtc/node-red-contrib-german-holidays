@@ -81,6 +81,10 @@
             <select type="text" id="dialog-input-dayofweek" name="dialog-input-dayofweek" style="width:40%" >
             </select>
         </div>
+        <div class="form-row dialog-input-ovwtext-row">
+            <label for="dialog-input-ovwtext" id="dialog-input-ovwtext-lbl">text</label>
+            <input type="text" name="dialog-input-ovwtext" id="dialog-input-ovwtext" class="text ui-widget-content ui-corner-all">
+        </div>
         <div class="form-row">
             <label for="dialog-input-payload">add. payload</label>
             <input type="text" name="dialog-input-payload" id="dialog-input-payload" class="text ui-widget-content ui-corner-all">
@@ -265,7 +269,8 @@
             nth: parseInt(rule.find('.node-input-item-nth').val()),
             dow: parseInt(rule.find('.node-input-item-dow').val()),
             plType: rule.find('.node-input-item-plType').val(),
-            plValue: rule.find('.node-input-item-plValue').val()
+            plValue: rule.find('.node-input-item-plValue').val(),
+            overwrite:  rule.find('.node-input-item-overwrite').val()
         };
     }
 
@@ -1168,6 +1173,9 @@
                 for (let index = 0; index <= 23; index++) {
                     $month.append($('<option></option>').val(index + 13).text(node._('german-holidays.relday.' + String(index))));
                 }
+                $month.append($('<option></option>').val(-3).text(node._('german-holidays.label.overwriteByTopic')));
+                $month.append($('<option></option>').val(-4).text(node._('german-holidays.label.overwriteByPayloadE')));
+                $month.append($('<option></option>').val(-5).text(node._('german-holidays.label.overwriteByPayloadC')));
                 // day
                 const $day = $('<input/>', {
                     class: 'node-input-item-day',
@@ -1198,6 +1206,11 @@
                     type: 'hidden',
                     value: (data.plType || 'none')
                 }).appendTo(row);
+                $('<input/>', {
+                    class: 'node-input-item-overwrite',
+                    type: 'hidden',
+                    value: (data.overwrite || '')
+                }).appendTo(row);
                 // edit Button
                 // <a id="node-config-lookup-ipaddress" class="btn"><i id="node-config-lookup-ipaddress-icon" class="fa fa-search"></i></a>
                 const $btn = $('<a />', {
@@ -1207,12 +1220,17 @@
                 $month.change(() => {
                     const month = $month.val();
                     if (month >= 1 && month <= 12) {
+                        $day.show();
                         $day.attr({
                             'max' : 31,
                             'min' : 1,
                             'step' : 1
                         });
+                    } else if (month < -2) {
+                        $day.prop('disabled', true);
+                        $day.hide();
                     } else if (month < 1) {
+                        $day.show();
                         $day.attr({
                             'max' : 370,
                             'min' : -370,
@@ -1220,6 +1238,7 @@
                         });
                     } else {
                         $day.prop('disabled', true);
+                        $day.show();
                     }
                 });
                 $month.val(isNaN(data.month) ? 1 : data.month);
@@ -1290,6 +1309,7 @@
             const $dialogDateType = $('#dialog-input-date-type');
             const $dialogDate = $('#dialog-input-date');
             const $dialogMonth = $('#dialog-input-month');
+            const $dialogOvwText = $('#dialog-input-ovwtext');
             const $dialogNthdow = $('#dialog-input-nthdow');
             const $dialogDayofweek = $('#dialog-input-dayofweek');
             const $dialogPayload = $('#dialog-input-payload');
@@ -1328,6 +1348,7 @@
                 $dialogNameAlt.val(rule.find('.node-input-item-nameAlt').val());
                 $dialogCharacter.val(rule.find('.node-input-item-character').val());
                 $dialogDaysRel.val(rule.find('.node-input-item-day').val());
+                $dialogOvwText.val(rule.find('.node-input-item-overwrite').val());
 
                 const month = parseInt(rule.find('.node-input-item-month').val());
                 const day = parseInt($dialogDaysRel.val());
@@ -1357,6 +1378,15 @@
                 } else if (month === -2) {
                     $dialogDateType.val('advent');
                     $dialogMonth.val('-2');
+                } else if (month === -3) {
+                    $dialogDateType.val('ovwtopic');
+                    $dialogMonth.val('-3');
+                } else if (month === -4) {
+                    $dialogDateType.val('ovwpayloadequal');
+                    $dialogMonth.val('-4');
+                } else if (month === -5) {
+                    $dialogDateType.val('ovwpayloadcontain');
+                    $dialogMonth.val('-5');
                 } else {
                     $dialogDateType.val('date');
                     $dialogDate.datepicker('setDate', null);
@@ -1377,6 +1407,8 @@
                 $dialogConnFields.find('.node-input-item-character').val($dialogCharacter.val());
                 $dialogConnFields.find('.node-input-item-plType').val($dialogPayload.typedInput('type'));
                 $dialogConnFields.find('.node-input-item-plValue').val($dialogPayload.typedInput('value'));
+                $dialogConnFields.find('.node-input-item-overwrite').val($dialogOvwText.val());
+
                 switch ($dialogDateType.val()) {
                     case 'easter':
                         $dialogConnFields.find('.node-input-item-month').val('-1');
@@ -1406,6 +1438,21 @@
                         const val = (nth * 7 + parseInt($dialogDayofweek.val()));
                         $dialogDaysRel.val(String(val));
                         $dialogConnFields.find('.node-input-item-day').val(String(val));
+                        break;
+                    }
+                    case 'ovwtopic': {
+                        $dialogConnFields.find('.node-input-item-month').val('-3');
+                        $dialogConnFields.find('.node-input-item-day').val($dialogOvwText.val());
+                        break;
+                    }
+                    case 'ovwpayloadequal': {
+                        $dialogConnFields.find('.node-input-item-month').val('-4');
+                        $dialogConnFields.find('.node-input-item-day').val(0);
+                        break;
+                    }
+                    case 'ovwpayloadcontain': {
+                        $dialogConnFields.find('.node-input-item-month').val('-5');
+                        $dialogConnFields.find('.node-input-item-day').val(0);
                         break;
                     }
                     default: {
@@ -1456,6 +1503,18 @@
                         $("label[for='dialog-input-nthdow']").text(node._('german-holidays.label.dowRelLast'));
                         break;
                     }
+                    case 'ovwpayloadequal': {
+                        date = new Date();
+                        break;
+                    }
+                    case 'ovwpayloadcontain': {
+                        date = new Date();
+                        break;
+                    }
+                    case 'ovwtopic': {
+                        date = new Date();
+                        break;
+                    }
                     default: {
                         date = $dialogDate.datepicker('getDate');
                         break;
@@ -1490,6 +1549,9 @@
             $dialogDateType.append($('<option></option>').val('advent').text(node._('german-holidays.label.rel4ThAdvent')));
             $dialogDateType.append($('<option></option>').val('weekdayfirst').text(node._('german-holidays.label.relDayOfWeekFirst')));
             $dialogDateType.append($('<option></option>').val('weekdaylast').text(node._('german-holidays.label.relDayOfWeekLast')));
+            $dialogDateType.append($('<option></option>').val('ovwtopic').text(node._('german-holidays.label.overwriteByTopic')));
+            $dialogDateType.append($('<option></option>').val('ovwpayloadequal').text(node._('german-holidays.label.overwriteByPayloadE')));
+            $dialogDateType.append($('<option></option>').val('ovwpayloadcontain').text(node._('german-holidays.label.overwriteByPayloadC')));
 
             for (let index = 1; index <= 12; index++) {
                 $dialogMonth.append($('<option></option>').val(index).text(node._('german-holidays.month.' + String(index - 1))));
@@ -1506,9 +1568,8 @@
             $("label[for='dialog-input-date-type']").text(node._('german-holidays.label.dateType'));
             $("label[for='dialog-input-date']").text(node._('german-holidays.label.date'));
             $("label[for='dialog-input-month']").text(node._('german-holidays.label.month'));
-            $("label[for='dialog-input-month']").text(node._('german-holidays.label.month'));
             $("label[for='dialog-input-payload']").text(node._('german-holidays.label.payload'));
-
+            $("label[for='dialog-input-ovwtext']").text(node._('german-holidays.label.ovwtext'));
 
             $dialogDateType.change(() => {
                 switch ($dialogDateType.val()) {
@@ -1517,12 +1578,14 @@
                         $('.dialog-input-month-row').hide();
                         $('.dialog-input-dowRel-row').hide();
                         $('.dialog-input-daysRel-row').show();
+                        $('.dialog-input-ovwtext-row').hide();
                         break;
                     case 'advent':
                         $('.dialog-input-date-row').hide();
                         $('.dialog-input-month-row').hide();
                         $('.dialog-input-dowRel-row').hide();
                         $('.dialog-input-daysRel-row').show();
+                        $('.dialog-input-ovwtext-row').hide();
                         break;
                     case 'weekdayfirst':
                     case 'weekdaylast':
@@ -1530,12 +1593,24 @@
                         $('.dialog-input-month-row').show();
                         $('.dialog-input-dowRel-row').show();
                         $('.dialog-input-daysRel-row').hide();
+                        $('.dialog-input-ovwtext-row').hide();
+                        break;
+                    case 'ovwpayloadequal':
+                    case 'ovwpayloadcontain':
+                    case 'ovwtopic':
+                        $('.dialog-input-date-row').hide();
+                        $('.dialog-input-month-row').hide();
+                        $('.dialog-input-dowRel-row').hide();
+                        $('.dialog-input-daysRel-row').hide();
+                        $('.dialog-input-ovwtext-row').show();
+                        $('#dialog-input-ovwtext-lbl').text(node._('german-holidays.label.'+$dialogDateType.val()));
                         break;
                     default:
                         $('.dialog-input-date-row').show();
                         $('.dialog-input-month-row').hide();
                         $('.dialog-input-dowRel-row').hide();
                         $('.dialog-input-daysRel-row').hide();
+                        $('.dialog-input-ovwtext-row').hide();
                 }
                 _dialogDateOutChg();
             });
@@ -1545,6 +1620,7 @@
             $dialogNthdow.change(() => { _dialogDateOutChg(); });
             $dialogDayofweek.change(() => { _dialogDateOutChg(); });
             $dialogDate.change(() => { _dialogDateOutChg(); });
+            $dialogOvwText.change(() => { _dialogDateOutChg(); });
 
             const $dialog = $('#dialog-edit-day').dialog({
                 title: node._('german-holidays.label.dialogtitle'),

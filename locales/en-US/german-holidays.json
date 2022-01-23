@@ -14,6 +14,9 @@
             "rel4ThAdvent": "🎄  relative to 4th. advent",
             "relDayOfWeekFirst":"first weekday in the month",
             "relDayOfWeekLast":"last weekday in the month",
+            "overwriteByPayloadE": "if Payload equals",
+            "overwriteByPayloadC": "if Payload contains",
+            "overwriteByTopic": "if Topic contains",
             "dialogtitle": "edit entry",
             "date": "Date",
             "month": "Month",
@@ -26,7 +29,8 @@
             "name":"name",
             "nameAlt":"alternate name",
             "exampleDate": "exemplary date:",
-            "payload": "add data"
+            "payload": "add data",
+            "ovwtext": "text for overwrite"
         },
         "placeholder": {
             "region": "select state for holidays",
